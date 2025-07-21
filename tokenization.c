@@ -87,9 +87,4 @@ void	tokenization(t_data *data)
 			free(token);
 		}
 	}
-	while(tokens)
-	{
-		printf("%s %d\n", tokens->value, tokens->type);
-		tokens = tokens->next;
-	}
 }
