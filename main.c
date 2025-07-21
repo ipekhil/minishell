@@ -2,9 +2,6 @@
 
 void routine_loop(t_data *data)
 {
-	char *line;
-
-	line = NULL;
 	while (1)
 	{
 		data->line = readline("minishell> ");
@@ -27,6 +24,7 @@ int main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
+	(void)env;
 	init_data(&data);
 	routine_loop(&data);
 }

@@ -15,18 +15,21 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-
-typedef struct s_data
-{
-	char	*line;
-}			t_data;
-
 typedef struct s_token {
     char          *value;
     int				type;
     struct s_token *next;
 } t_token;
 
-void routine_loop();
+typedef struct s_data
+{
+	char	*line;
+    t_token *tokens;
+}			t_data;
+
+
+
+void routine_loop(t_data *data);
+void tokenization(t_data *data);
 
 #endif
