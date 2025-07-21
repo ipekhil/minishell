@@ -1,146 +1,95 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenization.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
+/*   Updated: 2025/07/22 00:27:24 by sude             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int is_space(char c)
+int	get_operator_type(char *line, int i)
 {
-	if ((c <= 13 && c >= 9) || c == 32)
+	if (line[i] == '<' && line[i + 1] == '<')
+		return (0);
+	else if (line[i] == '>' && line[i + 1] == '>')
 		return (1);
-	return (0);
+	else if (line[i] == '<' )
+		return (2);
+	else if (line[i] == '>')
+		return (3);
+	else if (line[i] == '|')
+		return (4);
+	return (-1);
 }
 
-int is_alpha(char c)
+char	*get_op_token(char *line, int size)
 {
-	if (c <= 122 && c >= 97)
-		return (1);
-	return (0);
+	char	*token;
+
+	token = malloc(sizeof(char) * (size + 1));
+	if (!token)
+		return (NULL);
+	token[size] = '\0';
+	ft_strlcpy(token, line, size + 1);
+	return (token);
 }
 
-int get_length(char *str)
+void	handle_operator_token(t_token **tokens, char *line, int *i)
 {
-	int i;
-	char c;
+	int		type;
+	int		size;
+	char	*token;
+
+	type = get_operator_type(&line[*i], 0);
+	size = 1;
+	if (type == 0 || type == 1)
+		size = 2;
+	token = get_op_token(&line[*i], size);
+	add_token(tokens, token, type);
+	free(token);
+	*i += size;
+}
+
+void	handle_quoted_token(t_token **tokens, char *line, int *i)
+{
+	char	*token;
+
+	token = get_quoted_token(line, i);
+	add_token(tokens, token, WORD);
+	free(token);
+}
+
+void	tokenization(t_data *data)
+{
+	t_token		*tokens;
+	char		*token;
+	int			i;
 
 	i = 0;
-	if(str[i] == '"' || str[i] == '\'')
+	tokens = NULL;
+	while (data->line[i])
 	{
-		c = str[i++];
-		while(str[i] != c && str[i] != '\0')
+		while (ft_isspace(data->line[i]))
 			i++;
-		if(str[i] == c)
-			return(i + 1);
+		if (data->line[i] == '"' || data->line[i] == '\'')
+			handle_quoted_token(&tokens, data->line, &i);
+		else if (ft_isoperator(data->line[i]))
+			handle_operator_token(&tokens, data->line, &i);
 		else
-			return (-1);
-	}
-	while (str[i] && !is_space(str[i]))
-		i++;
-	return (i);
-}
-
-int get_num_of_words(char *str)
-{
-	int i;
-	char c;
-	int count;
-
-	i = 0;
-	count  = 0;
-	while(str[i])
-	{	
-		while(is_space(str[i]))
-			i++;
-		c = str[i++];
-		if(c == '"' || c == '\'')
 		{
-			while(str[i] != c && str[i] != '\0')
-				i++;
-			if(str[i] == c)
-				i++;
-			else
-				return (-1);
-			if(is_space(str[i]) || str[i] == '\0')
-			{
-				i++;
-				count +=1;
-			}
-		}
-		else
-		{
-			while(!is_space(str[i]) && str[i] != '\0')
-				i++;
-			if(is_space(str[i]) || str[i] == '\0')
-				count += 1;
-			else
-				return -1;
+			token = get_token(data->line, &i);
+			add_token(&tokens, token, WORD);
+			free(token);
 		}
 	}
-	return (count);
-}
-
-int get_words(char *line, char *word)
-{
-	int i;
-	int j;
-	char c;
-
-	i = 0;
-	j = 0;
-	if(line[i] == '"' || line[i] == '\'')
+	while(tokens)
 	{
-		c = line[i];
-		word[j++] = line[i++];
-		while(line[i] != c && line[i] != '\0')
-		{
-			word[j] = line[i];
-			j++;
-			i++;
-		}	
-		if(line[i] == c)
-			word[j++] = line[i++];
-		word[j] = '\0';
-	}
-	else
-	{
-		while (!is_space(line[i]) && line[i] != '\0')
-			word[j++] = line[i++];
-		word[j] = '\0';
-	}
-	return i;
-}
-
-char **without_spaces(t_data *data, int i, int k)
-{
-	char **words;
-
-	words = malloc(sizeof(char *) * (get_num_of_words(data->line) + 1));
-	printf("kelime sayısı: %d\n",get_num_of_words(data->line));
-	if(!words)
-		return NULL;
-	while(data->line[i])
-	{
-		while(is_space(data->line[i]))
-			i++;
-		if(data->line[i] && !is_space(data->line[i]))
-		{
-			if(get_length(&(data->line[i])) == -1)
-				return NULL;
-			words[k] = malloc(sizeof(char) * (get_length(&(data->line[i])) + 1));
-			if(!words[k])
-				return NULL;
-			i =  i + get_words(&(data->line[i]), words[k]);
-			k++;
-		}
-	}
-	words[k] = NULL;
-	return(words);
-}
-
-void tokenization(t_data *data)
-{
-	char **deneme = without_spaces(data, 0, 0);
-	int i = 0;
-
-	while(deneme[i])
-	{
-			printf("%d. elemen: %s\n",i, deneme[i]);
-		i++;
+		printf("%s %d\n", tokens->value, tokens->type);
+		tokens = tokens->next;
 	}
 }

@@ -1,5 +1,7 @@
 SRCS	=	main.c \
-			tokenization.c
+			tokenization.c \
+			utils.c \
+			tokenization_utils.c
 
 OBJS	= $(SRCS:.c=.o)
 
