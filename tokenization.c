@@ -135,12 +135,17 @@ char **without_spaces(t_data *data, int i, int k)
 
 void tokenization(t_data *data)
 {
-	char **deneme = without_spaces(data, 0, 0);
-	int i = 0;
-
-	while(deneme[i])
-	{
-			printf("%d. elemen: %s\n",i, deneme[i]);
-		i++;
-	}
+    char **words = without_spaces(data, 0, 0);
+    int i = 0;
+    int count = 0;
+    while (words[count])
+        count++;
+    data->tokens = malloc(sizeof(t_token) * count);
+    data->token_count = count;
+    for (i = 0; i < count; i++) {
+        data->tokens[i].value = words[i];
+        data->tokens[i].type = WORD; // veya uygun tip
+        data->tokens[i].next = (i < count - 1) ? &data->tokens[i + 1] : NULL;
+    }
+    free(words); // Eğer words içindeki stringler tokenlara taşındıysa
 }
