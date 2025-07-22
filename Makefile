@@ -1,7 +1,8 @@
 SRCS	=	main.c \
 			tokenization.c \
 			utils.c \
-			tokenization_utils.c
+			tokenization_utils.c\
+			free.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -16,7 +17,7 @@ NAME	= minishell
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(NAME)
 
 clean:
 	@echo "[DELETING...]"

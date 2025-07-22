@@ -48,5 +48,6 @@ char	*get_token(char *line, int *i);
 void	add_token(t_token **tokens, char *token, int type);
 int		ft_isspace(char c);
 int		ft_isoperator(char c);
+void	free_token(t_token *head);
 
 #endif

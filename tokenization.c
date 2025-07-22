@@ -73,29 +73,27 @@ static int	handle_token(t_token **tokens, char *line, int *i, int quoted)
 
 int	tokenization(t_data *data)
 {
-	t_token		*tokens;
 	int			i;
 
 	i = 0;
-	tokens = NULL;
 	while (data->line[i])
 	{
 		if (data->line[i] == '"' || data->line[i] == '\'')
 		{
-			if (handle_token(&tokens, data->line, &i, 1) == -1)
+			if (handle_token(&data->tokens, data->line, &i, 1) == -1)
 				return (-1);
 		}
 		else if (ft_isspace(data->line[i]))
 			while (ft_isspace(data->line[i]))
 				i++;
 		else if (ft_isoperator(data->line[i]))
-			handle_operator_token(&tokens, data->line, &i);
+			handle_operator_token(&data->tokens, data->line, &i);
 		else
 		{
-			if (handle_token(&tokens, data->line, &i, 1) == -1)
+			if (handle_token(&data->tokens, data->line, &i, 0) == -1)
 				return (-1);
 		}
 	}
-	expander(data);
+	//expander(data);
 	return (0);
 }

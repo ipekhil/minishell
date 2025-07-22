@@ -34,7 +34,7 @@ char	*get_quoted_token(char *line, int *i)
 	token = malloc(sizeof(char) * (len + 1));
 	if (!token)
 		return (NULL);
-	token[len + 1] = '\0';
+	token[len] = '\0';
 	ft_strlcpy(token, &line[start], len + 1);
 	(*i)++;
 	return (token);

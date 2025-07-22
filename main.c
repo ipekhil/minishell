@@ -23,6 +23,7 @@ void	routine_loop(t_data *data)
 			add_history(data->line);
 		if (tokenization(data) == -1)
 			return ;
+		free_token(data->tokens);
 		free(data->line);
 	}
 }
