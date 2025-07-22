@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/07/22 00:21:01 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/22 13:27:42 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	routine_loop(t_data *data)
 			break ;
 		if (data->line && data->line[0] != '\0')
 			add_history(data->line);
-		tokenization(data);
+		if (tokenization(data) == -1)
+			return ;
 		free(data->line);
 	}
 }

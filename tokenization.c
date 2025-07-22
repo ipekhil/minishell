@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/07/22 00:27:24 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/22 14:16:45 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,36 +55,47 @@ void	handle_operator_token(t_token **tokens, char *line, int *i)
 	*i += size;
 }
 
-void	handle_quoted_token(t_token **tokens, char *line, int *i)
+static int	handle_token(t_token **tokens, char *line, int *i, int quoted)
 {
 	char	*token;
 
-	token = get_quoted_token(line, i);
+	token = NULL;
+	if (quoted)
+		token = get_quoted_token(line, i);
+	else
+		token = get_token(line, i);
+	if (token == NULL)
+		return (-1);
 	add_token(tokens, token, WORD);
 	free(token);
+	return (0);
 }
 
-void	tokenization(t_data *data)
+int	tokenization(t_data *data)
 {
 	t_token		*tokens;
-	char		*token;
 	int			i;
 
 	i = 0;
 	tokens = NULL;
 	while (data->line[i])
 	{
-		while (ft_isspace(data->line[i]))
-			i++;
 		if (data->line[i] == '"' || data->line[i] == '\'')
-			handle_quoted_token(&tokens, data->line, &i);
+		{
+			if (handle_token(&tokens, data->line, &i, 1) == -1)
+				return (-1);
+		}
+		else if (ft_isspace(data->line[i]))
+			while (ft_isspace(data->line[i]))
+				i++;
 		else if (ft_isoperator(data->line[i]))
 			handle_operator_token(&tokens, data->line, &i);
 		else
 		{
-			token = get_token(data->line, &i);
-			add_token(&tokens, token, WORD);
-			free(token);
+			if (handle_token(&tokens, data->line, &i, 1) == -1)
+				return (-1);
 		}
 	}
+	expander(data);
+	return (0);
 }

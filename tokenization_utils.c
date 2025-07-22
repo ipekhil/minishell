@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:09 by sude              #+#    #+#             */
-/*   Updated: 2025/07/22 00:26:50 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/22 14:17:42 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,21 @@ char	*get_quoted_token(char *line, int *i)
 	int		start;
 
 	len = 0;
-	quote = line[(*i)++];
-	start = *i;
-	while (line[*i] != quote && line[*i] != '\0')
-	{
-		len++;
+	quote = line[*i];
+	start = (*i)++;
+	while (++len > 0 && line[*i] != quote && line[*i] != '\0')
 		(*i)++;
-	}
-	if (line[*i] == '\0')
+	if (line[*i] == quote)
+		len++;
+	else
 	{
-		printf("Error: Unmatched quote\n");
+		printf("ERROR, unmatched quote\n");
 		return (NULL);
 	}
 	token = malloc(sizeof(char) * (len + 1));
 	if (!token)
 		return (NULL);
-	token[len] = '\0';
+	token[len + 1] = '\0';
 	ft_strlcpy(token, &line[start], len + 1);
 	(*i)++;
 	return (token);

@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/07/22 00:24:25 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/22 14:07:46 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_data
 }				t_data;
 
 void	routine_loop(t_data *data);
-void	tokenization(t_data *data);
+int		tokenization(t_data *data);
 t_token	*split_tokens(char **space_sep);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	*get_quoted_token(char *line, int *i);
