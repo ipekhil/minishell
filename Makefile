@@ -5,7 +5,8 @@ SRCS	=	main.c \
 			builtins/echo_builtin.c \
 			builtins/pwd_builtin.c \
 			builtins/env_utils.c \
-
+			tokenization_utils.c\
+			free.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -28,14 +29,6 @@ $(LIBFT):
 
 $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
-
-test: $(NAME)
-	@echo "=== PWD Test ==="
-	@echo "pwd" | ./$(NAME)
-	@echo "=== Echo Test ==="
-	@echo "echo hello world" | ./$(NAME)
-	@echo "=== Env Test ==="
-	@echo "env | head -5" | ./$(NAME)
 
 clean:
 	@echo "[DELETING...]"
