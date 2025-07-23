@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/07/22 14:16:45 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/23 23:16:14 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ char	*get_op_token(char *line, int size)
 	token = malloc(sizeof(char) * (size + 1));
 	if (!token)
 		return (NULL);
-	token[size] = '\0';
 	ft_strlcpy(token, line, size + 1);
 	return (token);
 }
@@ -51,7 +50,6 @@ void	handle_operator_token(t_token **tokens, char *line, int *i)
 		size = 2;
 	token = get_op_token(&line[*i], size);
 	add_token(tokens, token, type);
-	free(token);
 	*i += size;
 }
 
@@ -62,12 +60,11 @@ static int	handle_token(t_token **tokens, char *line, int *i, int quoted)
 	token = NULL;
 	if (quoted)
 		token = get_quoted_token(line, i);
-	else
+	else if (quoted == 0)
 		token = get_token(line, i);
 	if (token == NULL)
 		return (-1);
 	add_token(tokens, token, WORD);
-	free(token);
 	return (0);
 }
 
@@ -80,20 +77,20 @@ int	tokenization(t_data *data)
 	{
 		if (data->line[i] == '"' || data->line[i] == '\'')
 		{
-			if (handle_token(&data->tokens, data->line, &i, 1) == -1)
+			if (handle_token(&(data->tokens), data->line, &i, 1) == -1)
 				return (-1);
 		}
 		else if (ft_isspace(data->line[i]))
 			while (ft_isspace(data->line[i]))
 				i++;
 		else if (ft_isoperator(data->line[i]))
-			handle_operator_token(&data->tokens, data->line, &i);
+			handle_operator_token(&(data->tokens), data->line, &i);
 		else
 		{
-			if (handle_token(&data->tokens, data->line, &i, 0) == -1)
+			if (handle_token(&(data->tokens), data->line, &i, 0) == -1)
 				return (-1);
 		}
 	}
-	//expander(data);
+	expander(data);
 	return (0);
 }
