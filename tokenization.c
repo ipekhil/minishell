@@ -50,6 +50,8 @@ void	handle_operator_token(t_token **tokens, char *line, int *i)
 		size = 2;
 	token = get_op_token(&line[*i], size);
 	add_token(tokens, token, type);
+	if(token)
+		free(token);
 	*i += size;
 }
 
@@ -65,6 +67,7 @@ static int	handle_token(t_token **tokens, char *line, int *i, int quoted)
 	if (token == NULL)
 		return (-1);
 	add_token(tokens, token, WORD);
+	free(token);
 	return (0);
 }
 

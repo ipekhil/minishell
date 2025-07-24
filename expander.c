@@ -14,21 +14,20 @@
 
 char	*extract_key(char *token_val)
 {
-	int		i;
 	int		l;
+	int		i;
 	char	*key_to_search;
 
-	i = 0;
 	l = 0;
+	i = -1;
 	while (token_val[l] != '\'' && token_val[l]
 		&& token_val[l] != '"' && !ft_isspace(token_val[l]))
 		l++;
 	key_to_search = malloc(sizeof(char) * (l + 1));
-	while (i < l)
-	{
+	if (!key_to_search)
+		return (NULL);
+	while (++i < l)
 		key_to_search[i] = token_val[i];
-		i++;
-	}
 	key_to_search[l] = '\0';
 	return (key_to_search);
 }
@@ -44,25 +43,27 @@ char	*get_value_of_key(t_env *env, char *key)
 	return (NULL);
 }
 
-int	get_quote_len(t_data *data, int i)
+int	get_quote_len(t_data *data, t_token *token, int i)
 {
 	int		len;
 	char	*key;
 	char	*value;
 
+
 	len = 0;
-	while (data->tokens->value[i] != '"' && data->tokens->value[i] != '\0')
+	key = NULL;
+	value = NULL;
+	while (token->value[i] != '"' && token->value[i] != '\0')
 	{
-		if (data->tokens->value[i] == '$')
+		if (token->value[i] == '$')
 		{
 			i++;
-			key = extract_key(&(data->tokens->value[i]));
+			key = extract_key(&(token->value[i]));
 			i += ft_strlen(key);
 			value = get_value_of_key(data->env, key);
 			if (value)
 				len += ft_strlen(value);
-			else
-				value = "";
+			free(key);
 		}
 		i++;
 		len++;
@@ -72,86 +73,120 @@ int	get_quote_len(t_data *data, int i)
 
 void	append_value(char *exp_value, char *value, int *a_index)
 {
-	int	i;
-
-	i = 0;
+	int i = 0;
+	if (!value)
+		return;
 	while (value[i] != '\0')
 		exp_value[(*a_index)++] = value[i++];
 }
 
-void	double_quote_expand(t_data *data, int i)
+void	double_quote_expand(t_data *data, t_token *token, t_expander *node, int i)
 {
 	char	*key;
 	char	*value;
 	int		len;
 	int		a_index;
 
-	a_index = 0;
-	value = NULL;
 	key = NULL;
-	len = get_quote_len(data, 1);
-	data->expander->exp_value = malloc(sizeof(char) * (len + 1));
-	while (data->tokens->value[i] != '"' && data->tokens->value[i] != '\0')
+	value = NULL;
+	a_index = 0;
+	len = get_quote_len(data, token, i);
+	node->exp_value = malloc(sizeof(char) * (len + 1));
+	if (!node->exp_value)
+		return;
+	while (token->value[i] != '"' && token->value[i] != '\0')
 	{
-		if (data->tokens->value[i] == '$')
+		if (token->value[i] == '$')
 		{
 			i++;
-			key = extract_key(&data->tokens->value[i]);
+			key = extract_key(&token->value[i]);
 			i += ft_strlen(key);
 			value = get_value_of_key(data->env, key);
-			append_value(data->expander->exp_value, value, &a_index);
+			append_value(node->exp_value, value, &a_index);
+			free(key);
 		}
 		if (data->tokens->value[i] != '"')
-			data->expander->exp_value[a_index++] = data->tokens->value[i];
+			node->exp_value[a_index++] = token->value[i];
 		i++;
 	}
-	data->expander->exp_value[a_index] = '\0';
+	node->exp_value[a_index] = '\0';
 }
 
-void	single_quote_expand(t_data *data, int i)
+void	single_quote_expand(t_token *token, t_expander *node, int i)
 {
 	int	len;
 	int	k;
 
 	len = 0;
-	while (data->tokens->value[i++] != '\'')
-		len++;
-	data->expander->exp_value = malloc(sizeof(char) * (len + 1));
-	i = 1;
 	k = 0;
+	while (token->value[i + len] != '\'' && token->value[i + len] != '\0')
+		len++;
+	node->exp_value = malloc(sizeof(char) * (len + 1));
+	if (!node->exp_value)
+		return;
 	while (k < len)
-		data->expander->exp_value[k++] = data->tokens->value[i++];
-	data->expander->exp_value[k] = '\0';
+		node->exp_value[k++] = token->value[i++];
+	node->exp_value[k] = '\0';
 }
 
-void	expand_unquoted(t_data *data, int i)
+void	expand_unquoted(t_data *data, t_token *token, t_expander *node)
 {
-	int		len;
-	int		k;
 	char	*key;
 	char	*value;
+	int		len;
+	int		k;
 
-	key = extract_key(&(data->tokens->value[i]));
-	value = get_value_of_key(data->env, key);
-	len = ft_strlen(value);
-	data->expander->exp_value = malloc(sizeof(char) * (len + 1));
 	k = -1;
+	key = extract_key(&(token->value[1]));
+	value = get_value_of_key(data->env, key);
+	if (!value)
+		value = "";
+	len = ft_strlen(value);
+	node->exp_value = malloc(sizeof(char) * (len + 1));
+	if (!node->exp_value)
+	{
+		free(key);
+		return;
+	}
 	while (value[++k] != '\0')
-		data->expander->exp_value[k] = value[k];
-	data->expander->exp_value[k] = '\0';
+		node->exp_value[k] = value[k];
+	node->exp_value[k] = '\0';
+	free(key);
 }
 
-void	expander(t_data *data)
+void    expander(t_data *data)
 {
-	data->expander = malloc(sizeof(t_expander));
-	while (data->tokens)
-	{
-		if (data->tokens->value[0] == '"')
-			double_quote_expand(data, 1);
-		if (data->tokens->value[0] == '\'')
-			single_quote_expand(data, 1);
-		if (data->tokens->value[0] == '$')
-			expand_unquoted(data, 1);
-		data->tokens = data->tokens->next;
-	}
+    t_expander *new_node;
+    t_expander *last;
+    t_token *tmp;
+
+	tmp = data->tokens;
+    data->expander = NULL;
+    while (tmp)
+    {
+        new_node = malloc(sizeof(t_expander));
+        if (!new_node)
+            return ;
+        new_node->exp_value = NULL;
+        new_node->next = NULL;
+        if (tmp->value[0] == '"')
+            double_quote_expand(data, tmp, new_node, 1);
+        else if (tmp->value[0] == '\'')
+            single_quote_expand(tmp, new_node, 1);
+        else if (tmp->value[0] == '$')
+            expand_unquoted(data, tmp, new_node);
+        else
+            new_node->exp_value = strdup(tmp->value);
+        if (!data->expander)
+            data->expander = new_node;
+        else
+        {
+            last = data->expander;
+            while (last->next)
+                last = last->next;
+            last->next = new_node;
+        }
+        tmp = tmp->next;
+    }
 }
+

@@ -93,6 +93,8 @@ void	get_env(t_env **env, char **envp)
 	{
 		j = 0;
 		new_node = malloc(sizeof(t_env));
+		if (!new_node)
+			return ;
 		new_node->next = NULL;
 		if (get_env_key(new_node, envp[i], &j) == -1)
 			return ;

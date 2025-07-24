@@ -43,7 +43,7 @@ typedef struct s_env
 typedef struct s_expander
 {
 	char				*exp_value;
-	char				*type;
+	int					type;
 	struct s_expander	*next;
 }						t_expander;
 
@@ -55,6 +55,7 @@ typedef struct s_data
 	t_expander	*expander;
 }				t_data;
 
+void	free_expander(t_expander *head);
 void	routine_loop(t_data *data);
 int		tokenization(t_data *data);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
@@ -68,5 +69,7 @@ int		ft_isoperator(char c);
 void	free_token(t_token *head);
 void	get_env(t_env **env, char **envp);
 void	expander(t_data *data);
+void	free_all(t_data *data);
+char	*ft_strdup(const char *s1);
 
 #endif

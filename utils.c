@@ -70,3 +70,20 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	}
 	return (srcsize);
 }
+
+char	*ft_strdup(const char *s1)
+{
+	int		size;
+	int		i;
+	char	*ptr;
+
+	i = -1;
+	size = ft_strlen(s1);
+	ptr = (char *) malloc(size + 1);
+	if (ptr == NULL)
+		return (NULL);
+	while (++i < size)
+		ptr[i] = s1[i];
+	ptr[i] = '\0';
+	return (ptr);
+}

@@ -18,13 +18,18 @@ void	routine_loop(t_data *data)
 	{
 		data->line = readline("minishell> ");
 		if (!data->line || strcmp(data->line, "exit") == 0)
+		{
+			free_all(data);
 			break ;
+		}
 		if (data->line && data->line[0] != '\0')
 			add_history(data->line);
 		if (tokenization(data) == -1)
 			return ;
 		free_token(data->tokens);
 		data->tokens = NULL;
+		free_expander(data->expander);
+		data->expander = NULL;
 		free(data->line);
 	}
 }
@@ -34,6 +39,7 @@ void	init_data(t_data *data)
 	data->line = NULL;
 	data->tokens = NULL;
 	data->env = NULL;
+	data->expander = NULL;
 }
 
 int	main(int argc, char **argv, char **env)

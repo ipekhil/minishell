@@ -49,7 +49,7 @@ void	add_token(t_token **tokens, char *token, int type)
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
 		return ;
-	new_token->value = strdup(token);
+	new_token->value = ft_strdup(token);
 	new_token->type = type;
 	new_token->next = NULL;
 	if (!*tokens)
