@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/07/24 00:05:08 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/24 20:13:36 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ char	*extract_key(char *token_val)
 
 	i = 0;
 	l = 0;
-	while (token_val[l] && token_val[l] != '"' && !ft_isspace(token_val[l]))
+	while (token_val[l] != '\'' && token_val[l]
+		&& token_val[l] != '"' && !ft_isspace(token_val[l]))
 		l++;
 	key_to_search = malloc(sizeof(char) * (l + 1));
 	while (i < l)
@@ -106,11 +107,39 @@ void	double_quote_expand(t_data *data, int i)
 	}
 	data->expander->exp_value[a_index] = '\0';
 }
-/*
+
 void	single_quote_expand(t_data *data, int i)
 {
+	int	len;
+	int	k;
 
-}*/
+	len = 0;
+	while (data->tokens->value[i++] != '\'')
+		len++;
+	data->expander->exp_value = malloc(sizeof(char) * (len + 1));
+	i = 1;
+	k = 0;
+	while (k < len)
+		data->expander->exp_value[k++] = data->tokens->value[i++];
+	data->expander->exp_value[k] = '\0';
+}
+
+void	expand_unquoted(t_data *data, int i)
+{
+	int		len;
+	int		k;
+	char	*key;
+	char	*value;
+
+	key = extract_key(&(data->tokens->value[i]));
+	value = get_value_of_key(data->env, key);
+	len = ft_strlen(value);
+	data->expander->exp_value = malloc(sizeof(char) * (len + 1));
+	k = -1;
+	while (value[++k] != '\0')
+		data->expander->exp_value[k] = value[k];
+	data->expander->exp_value[k] = '\0';
+}
 
 void	expander(t_data *data)
 {
@@ -119,12 +148,10 @@ void	expander(t_data *data)
 	{
 		if (data->tokens->value[0] == '"')
 			double_quote_expand(data, 1);
-		if (!data->expander->exp_value)
-			printf("yok\n");
-		else
-			printf("%s\n", data->expander->exp_value);
-		/*if (data->tokens->value[0] == '\'')
-			single_quote_expand(data, 1);*/
+		if (data->tokens->value[0] == '\'')
+			single_quote_expand(data, 1);
+		if (data->tokens->value[0] == '$')
+			expand_unquoted(data, 1);
 		data->tokens = data->tokens->next;
 	}
 }

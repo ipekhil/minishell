@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/07/23 23:16:14 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/24 15:17:03 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,11 @@ int	tokenization(t_data *data)
 				return (-1);
 		}
 	}
+	/*while (data->tokens)
+	{
+		printf("%s\n", data->tokens->value);
+		data->tokens = data->tokens->next;
+	}*/
 	expander(data);
 	return (0);
 }
