@@ -68,6 +68,8 @@ void	free_expander(t_expander *head)
 void	free_all(t_data *data)
 {
 	free_token(data->tokens);
+	data->tokens = NULL;
 	free_env(data->env);
-	free_expander(data->expander);
+	free_expander(data->expander);;
+	data->expander = NULL;
 }

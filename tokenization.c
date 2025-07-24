@@ -81,7 +81,10 @@ int	tokenization(t_data *data)
 		if (data->line[i] == '"' || data->line[i] == '\'')
 		{
 			if (handle_token(&(data->tokens), data->line, &i, 1) == -1)
+			{
+				free_all(data);
 				return (-1);
+			}
 		}
 		else if (ft_isspace(data->line[i]))
 			while (ft_isspace(data->line[i]))
@@ -91,7 +94,10 @@ int	tokenization(t_data *data)
 		else
 		{
 			if (handle_token(&(data->tokens), data->line, &i, 0) == -1)
+			{
+				free_all(data);
 				return (-1);
+			}
 		}
 	}
 	/*while (data->tokens)
