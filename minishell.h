@@ -47,20 +47,22 @@ typedef struct s_expander
 	struct s_expander	*next;
 }						t_expander;
 
-typedef struct s_data
-{
-	char		*line;
-	t_token		*tokens;
-	t_env		*env;
-	t_expander	*expander;
-}				t_data;
-
 typedef struct s_parser
 {
 	char 		**args;
 	struct s_parser	*next;
 }		t_parser;
 
+typedef struct s_data
+{
+	char		*line;
+	t_token		*tokens;
+	t_env		*env;
+	t_expander	*expander;
+	t_parser	*parser;
+}				t_data;
+
+void	free_parser(t_parser *head);
 void	free_expander(t_expander *head);
 void	routine_loop(t_data *data);
 int		tokenization(t_data *data);
@@ -79,7 +81,8 @@ void	free_all(t_data *data);
 char	*ft_strdup(const char *s1);
 
 //parser
-t_parser *parser(t_data *data);
+void parser(t_data *data);
+void print_parser(t_parser *parser);
 void print_parser(t_parser *parser);
 
 

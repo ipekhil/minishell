@@ -194,4 +194,5 @@ void    expander(t_data *data)
 		printf("Expanded Value: %s\n", data->expander->exp_value);
 		data->expander = data->expander->next;
 	}*/
+	parser(data);
 }

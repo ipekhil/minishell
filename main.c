@@ -26,11 +26,13 @@ void	routine_loop(t_data *data)
 			add_history(data->line);
 		if (tokenization(data) == -1)
 			return ;
-		parser(data);
+		print_parser(data->parser);
 		free_token(data->tokens);
 		data->tokens = NULL;
 		free_expander(data->expander);
 		data->expander = NULL;
+		free_parser(data->parser);
+		data->parser = NULL;
 		free(data->line);
 	}
 }
@@ -41,6 +43,7 @@ void	init_data(t_data *data)
 	data->tokens = NULL;
 	data->env = NULL;
 	data->expander = NULL;
+	data->parser = NULL;
 }
 
 int	main(int argc, char **argv, char **env)

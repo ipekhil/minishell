@@ -74,7 +74,7 @@ void	free_parser(t_parser *head)
 	while (current != NULL)
 	{
 		next = current->next;
-		if (current->args)
+		if(current->args)
 			free(current->args);
 		if (current)
 			free(current);
@@ -89,4 +89,6 @@ void	free_all(t_data *data)
 	free_env(data->env);
 	free_expander(data->expander);;
 	data->expander = NULL;
+	free_parser(data->parser);
+	data->parser = NULL;
 }
