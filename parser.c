@@ -98,7 +98,6 @@ t_parser *all_tokens_parse(t_data *data, t_expander *tokens)
 
 void	parser(t_data *data)
 {
-	printf("parser\n");
 	if (!data || !data->expander)
 		return ;
 	data->parser = all_tokens_parse(data, data->expander);
