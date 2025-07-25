@@ -72,7 +72,7 @@ void add_command_to_parser(t_parser **list, t_parser *new_node)
 	current->next = new_node;
 }
 
-t_parser *all_tokens_parse(t_data *data, t_expander *tokens)
+void all_tokens_parse(t_data *data, t_expander *tokens)
 {
 	t_expander *current;
 	t_expander *start;
@@ -93,12 +93,11 @@ t_parser *all_tokens_parse(t_data *data, t_expander *tokens)
 	}
 	new_node = new_parser_node(start, current);
 	add_command_to_parser(&data->parser, new_node);
-	return (data->parser);
 }
 
 void	parser(t_data *data)
 {
 	if (!data || !data->expander)
 		return ;
-	data->parser = all_tokens_parse(data, data->expander);
+	all_tokens_parse(data, data->expander);
 }
