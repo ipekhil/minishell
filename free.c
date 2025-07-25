@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 02:35:29 by sude              #+#    #+#             */
-/*   Updated: 2025/07/25 19:08:32 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/07/26 00:10:06 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,23 @@ void	free_expander(t_expander *head)
 		next = current->next;
 		if(current->exp_value)
 			free(current->exp_value);
+		if (current)
+			free(current);
+		current = next;
+	}
+}
+
+void	free_parser(t_parser *head)
+{
+	t_parser	*current;
+	t_parser	*next;
+
+	current = head;
+	while (current != NULL)
+	{
+		next = current->next;
+		if (current->args)
+			free(current->args);
 		if (current)
 			free(current);
 		current = next;
