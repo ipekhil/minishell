@@ -10,7 +10,9 @@ t_parser *new_parser_node(t_token *start, t_token *end)
 	while (current != end)
 	{
 		if (current->type == 5)
-		count++;
+			count++;
+		if (current->type != 5)
+			break ;
 		current = current->next;
 	}
 	t_parser *node = malloc(sizeof(t_parser));
@@ -28,6 +30,8 @@ t_parser *new_parser_node(t_token *start, t_token *end)
 			node->args[count] = current->value;
 			count++;
 		}
+		if (current->type != 5)
+			count = 0;
 		current = current->next;
 	}
 	node->args[count] = NULL;
@@ -71,7 +75,29 @@ void add_command_to_parser(t_parser **list, t_parser *new_node)
 	current->next = new_node;
 }
 
+t_parser *all_tokens_parse(t_token *tokens)
+{
+	t_token *current;
+	t_token *start;
+	t_parser *list;
+	t_parser *new_node;
 
+	current = tokens;
+	start = current;
+	while (current)
+	{
+		if (current->type == 4)
+		{
+			printf("start: %s\n", start->value);
+			new_node = new_parser_node(start, current);
+			add_command_to_parser(&list, new_node);
+			start = current->next;
+			printf("start: %s\n", start->value);
+		}
+		current = current->next;
+	}
+	return (list);
+}
 
 t_parser *parser(t_data *data)
 {
