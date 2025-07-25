@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/07/25 17:34:34 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/07/25 23:55:58 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ char	*ft_strdup(const char *s1);
 //parser
 t_parser *parser(t_data *data);
 void print_parser(t_parser *parser);
-t_parser *new_parser_node(t_token *start, t_token *end);
 
 
 

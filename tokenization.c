@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/07/25 14:45:07 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/07/25 23:59:42 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	handle_operator_token(t_token **tokens, char *line, int *i)
 		size = 2;
 	token = get_op_token(&line[*i], size);
 	add_token(tokens, token, type);
-	if(token)
+	if (token)
 		free(token);
 	*i += size;
 }

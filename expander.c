@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/07/25 16:31:20 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/07/26 00:03:35 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,12 @@ void    expander(t_data *data)
                 last = last->next;
             last->next = new_node;
         }
+		new_node->type = tmp->type;
         tmp = tmp->next;
     }
+	/*while(data->expander)
+	{
+		printf("Expanded Value: %s\n", data->expander->exp_value);
+		data->expander = data->expander->next;
+	}*/
 }

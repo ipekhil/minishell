@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-t_parser *new_parser_node(t_token *start, t_token *end)
+t_parser *new_parser_node(t_expander *start, t_expander *end)
 {
-	t_token *current;
+	t_expander *current;
 	int	count;
 
 	count = 0;
@@ -25,7 +25,7 @@ t_parser *new_parser_node(t_token *start, t_token *end)
 	{
 		if (current->type == 5)
 		{
-			node->args[count] = current->value;
+			node->args[count] = current->exp_value;
 			printf("node->args[%d]: %s\n", count, node->args[count]);
 			count++;
 		}
@@ -72,10 +72,10 @@ void add_command_to_parser(t_parser **list, t_parser *new_node)
 	current->next = new_node;
 }
 
-t_parser *all_tokens_parse(t_token *tokens)
+t_parser *all_tokens_parse(t_expander *tokens)
 {
-	t_token *current;
-	t_token *start;
+	t_expander *current;
+	t_expander *start;
 	t_parser *list;
 	t_parser *new_node;
 
@@ -84,6 +84,7 @@ t_parser *all_tokens_parse(t_token *tokens)
 	start = current;
 	while (current)
 	{
+		printf("Current Token: %s, Type: %d\n", current->exp_value, current->type);
 		if (current->type == 4)
 		{
 			new_node = new_parser_node(start, current);
@@ -100,9 +101,9 @@ t_parser *all_tokens_parse(t_token *tokens)
 t_parser *parser(t_data *data)
 {
 	printf("parser\n");
-	if (!data || !data->tokens)
+	if (!data || !data->expander)
 		return (NULL);
-	t_parser *deneme = all_tokens_parse(data->tokens);
+	t_parser *deneme = all_tokens_parse(data->expander);
 	print_parser(deneme);
 	return (deneme);
 }
