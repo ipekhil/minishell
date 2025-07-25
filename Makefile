@@ -4,7 +4,8 @@ SRCS	=	main.c \
 			tokenization_utils.c\
 			free.c \
 			get_env.c \
-			expander.c
+			expander.c \
+			parser.c
 
 OBJS	= $(SRCS:.c=.o)
 

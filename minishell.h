@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/07/23 23:00:36 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/25 17:34:34 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,12 @@ typedef struct s_data
 	t_expander	*expander;
 }				t_data;
 
+typedef struct s_parser
+{
+	char 		**args;
+	struct s_parser	*next;
+}		t_parser;
+
 void	free_expander(t_expander *head);
 void	routine_loop(t_data *data);
 int		tokenization(t_data *data);
@@ -71,5 +77,13 @@ void	get_env(t_env **env, char **envp);
 void	expander(t_data *data);
 void	free_all(t_data *data);
 char	*ft_strdup(const char *s1);
+
+//parser
+t_parser *parser(t_data *data);
+void print_parser(t_parser *parser);
+t_parser *new_parser_node(t_token *start, t_token *end);
+
+
+
 
 #endif

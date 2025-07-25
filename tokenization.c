@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/07/24 15:17:03 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/25 14:45:07 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,10 @@ int	tokenization(t_data *data)
 		if (data->line[i] == '"' || data->line[i] == '\'')
 		{
 			if (handle_token(&(data->tokens), data->line, &i, 1) == -1)
+			{
+				free_all(data);
 				return (-1);
+			}
 		}
 		else if (ft_isspace(data->line[i]))
 			while (ft_isspace(data->line[i]))
@@ -91,7 +94,10 @@ int	tokenization(t_data *data)
 		else
 		{
 			if (handle_token(&(data->tokens), data->line, &i, 0) == -1)
+			{
+				free_all(data);
 				return (-1);
+			}
 		}
 	}
 	/*while (data->tokens)

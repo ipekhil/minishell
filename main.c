@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/07/23 02:31:01 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/25 17:39:54 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	routine_loop(t_data *data)
 			add_history(data->line);
 		if (tokenization(data) == -1)
 			return ;
+		parser(data);
 		free_token(data->tokens);
 		data->tokens = NULL;
 		free_expander(data->expander);

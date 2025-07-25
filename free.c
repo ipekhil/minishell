@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 02:35:29 by sude              #+#    #+#             */
-/*   Updated: 2025/07/23 02:35:32 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/25 14:39:11 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,9 @@ void	free_expander(t_expander *head)
 void	free_all(t_data *data)
 {
 	free_token(data->tokens);
+	data->tokens = NULL;
 	free_env(data->env);
+	data->env = NULL;
 	free_expander(data->expander);
+	data->expander = NULL;
 }
