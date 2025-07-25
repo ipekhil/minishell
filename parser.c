@@ -107,6 +107,8 @@ t_parser *parser(t_data *data)
 	t_parser *parser = new_parser_node(data->tokens, NULL);
 	if (!parser)
 		return (NULL);
-	print_parser(parser);
-	return (parser);
+	t_parser *deneme = all_tokens_parse(data->tokens);
+	add_command_to_parser(&parser, deneme);
+	print_parser(deneme);
+	return (deneme);
 }
