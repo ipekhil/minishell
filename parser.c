@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_parser *new_parser_node(t_expander *start, t_expander *end)
+int	count_args(t_expander *start, t_expander *end)
 {
 	t_expander *current;
 	int	count;
@@ -13,27 +13,99 @@ t_parser *new_parser_node(t_expander *start, t_expander *end)
 			count++;
 		current = current->next;
 	}
-	t_parser *node = malloc(sizeof(t_parser));
-	if (!node)
-		return (NULL);
-	node->args = malloc(sizeof(char *) * (count + 1));
-	if (!node->args)
-		return (NULL);
+	return (count);
+}
+
+t_redirection	*new_redirection_node(t_expander *current)
+{
+	t_redirection	*node;
+
+	if (current->next && current->next->type == 5)
+	{
+		node = malloc(sizeof(t_redirection));
+		if (!node)
+			return (NULL);
+		node->type = current->type;
+		node->filename = current->next->exp_value;
+		node->next = NULL;
+		return (node);
+	}
+	return (NULL);
+}
+
+void	add_redirection_to_parser(t_redirection **list, t_redirection *new_node)
+{
+	t_redirection *current;
+
+	if (!list || !new_node)
+		return ;
+	if (!*list)
+	{
+		*list = new_node;
+		return ;
+	}
+	current = *list;
+	while (current->next)
+		current = current->next;
+	current->next = new_node;
+}
+
+void	parse_command(t_expander *start, t_expander *end, t_parser *node)
+{
+	t_expander *current;
+	t_redirection *new_node;
+	int	count;
+
 	count = 0;
 	current = start;
 	while (current != end)
 	{
 		if (current->type == 5)
 		{
-			node->args[count] = current->exp_value;
+			node->args[count] = ft_strdup(current->exp_value);
 			printf("node->args[%d]: %s\n", count, node->args[count]);
 			count++;
 		}
+		else if (current->type >= 0 && current->type <= 3)
+		{
+			printf("REDİRECTION\n");
+			new_node = new_redirection_node(current);
+			if (new_node)
+			{
+				add_redirection_to_parser(&node->redirection, new_node);
+				current = current->next;
+			}
+		}
 		current = current->next;
 	}
+}
+
+t_parser *new_parser_node(t_expander *start, t_expander *end)
+{
+	t_parser	*node;
+	int			count;
+
+	node = malloc(sizeof(t_parser));
+	if (!node)
+		return (NULL);
+	node->redirection = NULL;
+	count = count_args(start, end);
+	node->args = malloc(sizeof(char *) * (count + 1));
+	if (!node->args)
+		return (NULL);
+	parse_command(start, end, node);
 	node->args[count] = NULL;
 	node->next = NULL;
 	return (node);
+}
+
+void print_redirections(t_redirection *redir)
+{
+	while (redir)
+	{
+		printf("  redir type: %d, filename: %s\n", redir->type, redir->filename);
+		redir = redir->next;
+	}
 }
 
 void print_parser(t_parser *parser)
@@ -44,6 +116,8 @@ void print_parser(t_parser *parser)
 	while (current)
 	{
 		printf("⎯⎯⎯⎯⎯⎯⎯⎯ New Command ⎯⎯⎯⎯⎯⎯⎯⎯\n");
+
+		// Argümanları yazdır
 		if (current->args)
 		{
 			for (i = 0; current->args[i]; i++)
@@ -51,9 +125,17 @@ void print_parser(t_parser *parser)
 		}
 		else
 			printf("  (no arguments)\n");
+
+		// Redirection varsa yazdır
+		if (current->redirection)
+			print_redirections(current->redirection);
+		else
+			printf("  (no redirections)\n");
+
 		current = current->next;
 	}
 }
+
 
 void add_command_to_parser(t_parser **list, t_parser *new_node)
 {

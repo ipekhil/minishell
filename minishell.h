@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/07/25 23:55:58 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/26 18:51:14 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,17 @@ typedef struct s_expander
 	struct s_expander	*next;
 }						t_expander;
 
+typedef struct s_redirection
+{
+	int						type;
+	char					*filename;
+	struct s_redirection	*next;
+}		t_redirection;
+
 typedef struct s_parser
 {
-	char 		**args;
+	char 			**args;
+	t_redirection	*redirection;
 	struct s_parser	*next;
 }		t_parser;
 

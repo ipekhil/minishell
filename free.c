@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 02:35:29 by sude              #+#    #+#             */
-/*   Updated: 2025/07/26 00:10:06 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/27 14:28:01 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,19 @@ void	free_parser(t_parser *head)
 {
 	t_parser	*current;
 	t_parser	*next;
+	int			i;
 
 	current = head;
 	while (current != NULL)
 	{
 		next = current->next;
-		if(current->args)
+		if (current->args)
+		{
+			i = -1;
+			while (current->args[++i])
+				free(current->args[i]);
 			free(current->args);
+		}
 		if (current)
 			free(current);
 		current = next;

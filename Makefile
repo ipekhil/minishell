@@ -5,7 +5,8 @@ SRCS	=	main.c \
 			free.c \
 			get_env.c \
 			expander.c \
-			parser.c
+			parser.c \
+			redirection.c
 
 OBJS	= $(SRCS:.c=.o)
 
