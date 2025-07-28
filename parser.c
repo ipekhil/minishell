@@ -26,7 +26,7 @@ t_redirection	*new_redirection_node(t_expander *current)
 		if (!node)
 			return (NULL);
 		node->type = current->type;
-		node->filename = current->next->exp_value;
+		node->filename = ft_strdup(current->next->exp_value);
 		node->next = NULL;
 		return (node);
 	}
@@ -85,56 +85,58 @@ t_parser *new_parser_node(t_expander *start, t_expander *end)
 	t_parser	*node;
 	int			count;
 
+	node = NULL;
 	node = malloc(sizeof(t_parser));
 	if (!node)
 		return (NULL);
 	node->redirection = NULL;
+	node->args = NULL;
 	count = count_args(start, end);
-	node->args = malloc(sizeof(char *) * (count + 1));
+	node->args = ft_calloc((count + 1), sizeof(char *));
 	if (!node->args)
 		return (NULL);
 	parse_command(start, end, node);
-	node->args[count] = NULL;
+	//node->args[count] = NULL;
 	node->next = NULL;
 	return (node);
 }
 
-void print_redirections(t_redirection *redir)
-{
-	while (redir)
-	{
-		printf("  redir type: %d, filename: %s\n", redir->type, redir->filename);
-		redir = redir->next;
-	}
-}
+// void print_redirections(t_redirection *redir)
+// {
+// 	while (redir)
+// 	{
+// 		printf("  redir type: %d, filename: %s\n", redir->type, redir->filename);
+// 		redir = redir->next;
+// 	}
+// }
 
-void print_parser(t_parser *parser)
-{
-	t_parser *current = parser;
-	int i;
+// void print_parser(t_parser *parser)
+// {
+// 	t_parser *current = parser;
+// 	int i;
 
-	while (current)
-	{
-		printf("⎯⎯⎯⎯⎯⎯⎯⎯ New Command ⎯⎯⎯⎯⎯⎯⎯⎯\n");
+// 	while (current)
+// 	{
+// 		printf("⎯⎯⎯⎯⎯⎯⎯⎯ Yeni Komut ⎯⎯⎯⎯⎯⎯⎯⎯\n");
 
-		// Argümanları yazdır
-		if (current->args)
-		{
-			for (i = 0; current->args[i]; i++)
-				printf("  arg[%d]: %s\n", i, current->args[i]);
-		}
-		else
-			printf("  (no arguments)\n");
+// 		// Argümanları SADECE current->args NULL değilse yazdırın
+// 		if (current->args) // <--- print_parser için ANA DÜZELTME
+// 		{
+// 			for (i = 0; current->args[i]; i++)
+// 				printf("  arg[%d]: %s\n", i, current->args[i]);
+// 		}
+// 		else
+// 			printf("  (argüman yok)\n");
 
-		// Redirection varsa yazdır
-		if (current->redirection)
-			print_redirections(current->redirection);
-		else
-			printf("  (no redirections)\n");
+// 		// Yönlendirmeler varsa yazdırın
+// 		if (current->redirection)
+// 			print_redirections(current->redirection);
+// 		else
+// 			printf("  (yönlendirme yok)\n");
 
-		current = current->next;
-	}
-}
+// 		current = current->next;
+// 	}
+// }
 
 
 void add_command_to_parser(t_parser **list, t_parser *new_node)

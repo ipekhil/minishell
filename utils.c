@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:13 by sude              #+#    #+#             */
-/*   Updated: 2025/07/23 18:59:55 by sude             ###   ########.fr       */
+/*   Updated: 2025/07/28 15:35:47 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,35 @@ char	*ft_strdup(const char *s1)
 		ptr[i] = s1[i];
 	ptr[i] = '\0';
 	return (ptr);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	char	*a;
+
+	a = (char *)s;
+	while (n != 0)
+	{
+		n--;
+		a[n] = '\0';
+	}
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*s;
+	size_t	n;
+
+	if (count == 0 || size == 0)
+	{
+		count = 1;
+		size = 1;
+	}
+	n = count * size;
+	s = malloc(n);
+	if (s == NULL)
+		return (NULL);
+	else
+		ft_bzero(s, n);
+	return (s);
 }

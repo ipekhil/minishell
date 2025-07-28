@@ -6,7 +6,7 @@
 /*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/07/25 17:39:54 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/07/28 15:34:48 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	routine_loop(t_data *data)
 		data->line = readline("minishell> ");
 		if (!data->line || strcmp(data->line, "exit") == 0)
 		{
+			if (data->line)
+				free(data->line);
 			free_all(data);
 			break ;
 		}
@@ -26,7 +28,7 @@ void	routine_loop(t_data *data)
 			add_history(data->line);
 		if (tokenization(data) == -1)
 			return ;
-		print_parser(data->parser);
+		//print_parser(data->parser);
 		free_token(data->tokens);
 		data->tokens = NULL;
 		free_expander(data->expander);

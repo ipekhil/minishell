@@ -6,7 +6,7 @@
 /*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/07/26 18:51:14 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/07/28 15:35:39 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,6 @@ void	free_parser(t_parser *head);
 void	free_expander(t_expander *head);
 void	routine_loop(t_data *data);
 int		tokenization(t_data *data);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-int		ft_strcmp(char *s1, char *s2);
-int		ft_strlen(const char *s);
 char	*get_quoted_token(char *line, int *i);
 char	*get_token(char *line, int *i);
 void	add_token(t_token **tokens, char *token, int type);
@@ -92,6 +89,13 @@ char	*ft_strdup(const char *s1);
 void parser(t_data *data);
 void print_parser(t_parser *parser);
 void print_parser(t_parser *parser);
+
+//libft
+int		ft_strlen(const char *s);
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+int		ft_strcmp(char *s1, char *s2);
+void	*ft_calloc(size_t count, size_t size);
+void	ft_bzero(void *s, size_t n);
 
 
 

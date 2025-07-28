@@ -6,7 +6,7 @@
 /*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 02:35:29 by sude              #+#    #+#             */
-/*   Updated: 2025/07/27 14:28:01 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/07/28 15:35:01 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	free_env(t_env *head)
 		next = current->next;
 		if (current->value)
 			free(current->value);
-		if(current->key)
+		if (current->key)
 			free(current->key);
 		if (current)
 			free(current);
@@ -57,10 +57,26 @@ void	free_expander(t_expander *head)
 	while (current != NULL)
 	{
 		next = current->next;
-		if(current->exp_value)
+		if (current->exp_value)
 			free(current->exp_value);
 		if (current)
 			free(current);
+		current = next;
+	}
+}
+
+void	free_redirection(t_redirection *head)
+{
+	t_redirection	*current;
+	t_redirection	*next;
+
+	current = head;
+	while (current != NULL)
+	{
+		next = current->next;
+		if (current->filename)
+			free(current->filename);
+		free(current);
 		current = next;
 	}
 }
@@ -82,8 +98,9 @@ void	free_parser(t_parser *head)
 				free(current->args[i]);
 			free(current->args);
 		}
-		if (current)
-			free(current);
+		if (current->redirection)
+			free_redirection(current->redirection);
+		free(current);
 		current = next;
 	}
 }
