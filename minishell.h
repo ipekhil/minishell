@@ -6,7 +6,7 @@
 /*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/07/28 15:35:39 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/07/29 20:35:42 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_parser
 {
 	char 			**args;
 	t_redirection	*redirection;
+	int				is_error;
 	struct s_parser	*next;
 }		t_parser;
 
@@ -87,8 +88,11 @@ char	*ft_strdup(const char *s1);
 
 //parser
 void parser(t_data *data);
-void print_parser(t_parser *parser);
-void print_parser(t_parser *parser);
+//parse_syntax
+int syntax_control(t_expander *tokens);
+//redirection
+int	parse_command(t_expander *start, t_expander *end, t_parser *node);
+
 
 //libft
 int		ft_strlen(const char *s);
@@ -99,5 +103,7 @@ void	ft_bzero(void *s, size_t n);
 
 
 
-
+//print
+void print_parser(t_parser *parser);
+void print_redirections(t_redirection *redir);
 #endif
