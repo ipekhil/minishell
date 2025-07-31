@@ -21,7 +21,7 @@ char	*extract_key(char *token_val)
 	l = 0;
 	i = -1;
 	while (token_val[l] != '\'' && token_val[l]
-		&& token_val[l] != '"' && !ft_isspace(token_val[l]))
+		&& token_val[l] != '"' && !ft_isspace(token_val[l]) && token_val[l] != '$')
 		l++;
 	key_to_search = malloc(sizeof(char) * (l + 1));
 	if (!key_to_search)
@@ -65,8 +65,11 @@ int	get_quote_len(t_data *data, t_token *token, int i)
 				len += ft_strlen(value);
 			free(key);
 		}
-		i++;
-		len++;
+		if (token->value[i] != '$')
+		{
+			i++;
+			len++;
+		}
 	}
 	return (len);
 }
@@ -105,9 +108,8 @@ void	double_quote_expand(t_data *data, t_token *token, t_expander *node, int i)
 			append_value(node->exp_value, value, &a_index);
 			free(key);
 		}
-		if (data->tokens->value[i] != '"')
-			node->exp_value[a_index++] = token->value[i];
-		i++;
+		if (token->value[i] != '"' && token->value[i] != '$')
+			node->exp_value[a_index++] = token->value[i++];
 	}
 	node->exp_value[a_index] = '\0';
 }
@@ -189,10 +191,10 @@ void    expander(t_data *data)
 		new_node->type = tmp->type;
         tmp = tmp->next;
     }
-	/*while(data->expander)
+	while(data->expander)
 	{
 		printf("Expanded Value: %s\n", data->expander->exp_value);
 		data->expander = data->expander->next;
-	}*/
-	parser(data);
+	}
+	//parser(data);
 }
