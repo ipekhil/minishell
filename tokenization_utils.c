@@ -71,8 +71,7 @@ char	*get_token(char *line, int *i)
 
 	len = 0;
 	start = *i;
-	while ((!ft_isspace(line[*i]) && line[*i] != '"'
-			&& line[*i] != '\'') && line[*i] != '\0')
+	while ((!ft_isspace(line[*i]) && line[*i] != '\0'))
 	{
 		if (ft_isoperator(line[*i]))
 			break ;

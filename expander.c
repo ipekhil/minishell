@@ -59,13 +59,15 @@ int	get_quote_len(t_data *data, t_token *token, int i)
 		{
 			i++;
 			key = extract_key(&(token->value[i]));
+			if(key[0] == '\0')
+				len += 1;
 			i += ft_strlen(key);
 			value = get_value_of_key(data->env, key);
 			if (value)
 				len += ft_strlen(value);
 			free(key);
 		}
-		if (token->value[i] != '$')
+		while(token->value[i] != '"' && token->value[i] != '$' && token->value[i] != '\0')
 		{
 			i++;
 			len++;
@@ -103,12 +105,14 @@ void	double_quote_expand(t_data *data, t_token *token, t_expander *node, int i)
 		{
 			i++;
 			key = extract_key(&token->value[i]);
+			if (key[0] == '\0')
+				node->exp_value[a_index++] = '$';		
 			i += ft_strlen(key);
 			value = get_value_of_key(data->env, key);
 			append_value(node->exp_value, value, &a_index);
 			free(key);
 		}
-		if (token->value[i] != '"' && token->value[i] != '$')
+		while(token->value[i] != '"' && token->value[i] != '$' && token->value[i] != '\0')
 			node->exp_value[a_index++] = token->value[i++];
 	}
 	node->exp_value[a_index] = '\0';
@@ -131,7 +135,7 @@ void	single_quote_expand(t_token *token, t_expander *node, int i)
 	node->exp_value[k] = '\0';
 }
 
-void	expand_unquoted(t_data *data, t_token *token, t_expander *node)
+/*void	expand_unquoted(t_data *data, t_token *token, t_expander *node)
 {
 	char	*key;
 	char	*value;
@@ -139,11 +143,21 @@ void	expand_unquoted(t_data *data, t_token *token, t_expander *node)
 	int		k;
 
 	k = -1;
+	len = 0;
 	key = extract_key(&(token->value[1]));
+	if(key[0] == '\0')
+	{
+		len = 1;
+		node->exp_value = malloc(sizeof(char) * (len + 1));
+		node->exp_value[0] = '$';
+		node->exp_value[1] = '\0';
+		free(key);
+		return ;		
+	}
 	value = get_value_of_key(data->env, key);
 	if (!value)
 		value = "";
-	len = ft_strlen(value);
+	len += ft_strlen(value);
 	node->exp_value = malloc(sizeof(char) * (len + 1));
 	if (!node->exp_value)
 	{
@@ -154,7 +168,7 @@ void	expand_unquoted(t_data *data, t_token *token, t_expander *node)
 		node->exp_value[k] = value[k];
 	node->exp_value[k] = '\0';
 	free(key);
-}
+}*/
 
 void    expander(t_data *data)
 {
@@ -176,7 +190,7 @@ void    expander(t_data *data)
         else if (tmp->value[0] == '\'')
             single_quote_expand(tmp, new_node, 1);
         else if (tmp->value[0] == '$')
-            expand_unquoted(data, tmp, new_node);
+            double_quote_expand(data, tmp, new_node, 0);
         else
             new_node->exp_value = strdup(tmp->value);
         if (!data->expander)
