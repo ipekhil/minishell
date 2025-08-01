@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/07/26 00:03:35 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/01 20:44:53 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,15 +169,74 @@ void	single_quote_expand(t_token *token, t_expander *node, int i)
 	node->exp_value[k] = '\0';
 	free(key);
 }*/
+#include "minishell.h"
 
-void    expander(t_data *data)
+
+void expand_with_variables(t_data *data, t_token *token, t_expander *node)
+{
+    char *key;
+    char *value;
+    int len = 0;
+    int i = 0;
+    int a_index = 0;
+    
+    // Önce uzunluk hesapla
+    while (token->value[i] != '\0')
+    {
+        if (token->value[i] == '$')
+        {
+            i++;
+            key = extract_key(&(token->value[i]));
+            if(key[0] == '\0')
+                len += 1;
+            i += ft_strlen(key);
+            value = get_value_of_key(data->env, key);
+            if (value)
+                len += ft_strlen(value);
+            free(key);
+        }
+        else
+        {
+            len++;
+            i++;
+        }
+    }
+    
+    node->exp_value = malloc(sizeof(char) * (len + 1));
+    if (!node->exp_value)
+        return ;
+    
+    i = 0;
+    while (token->value[i] != '\0')
+    {
+        if (token->value[i] == '$')
+        {
+            i++;
+            key = extract_key(&token->value[i]);
+            if (key[0] == '\0')
+                node->exp_value[a_index++] = '$';
+            i += ft_strlen(key);
+            value = get_value_of_key(data->env, key);
+            append_value(node->exp_value, value, &a_index);
+            free(key);
+        }
+        else
+        {
+            node->exp_value[a_index++] = token->value[i++];
+        }
+    }
+    node->exp_value[a_index] = '\0';
+}
+
+void expander(t_data *data)
 {
     t_expander *new_node;
     t_expander *last;
     t_token *tmp;
-
-	tmp = data->tokens;
+    
+    tmp = data->tokens;
     data->expander = NULL;
+    
     while (tmp)
     {
         new_node = malloc(sizeof(t_expander));
@@ -185,14 +244,28 @@ void    expander(t_data *data)
             return ;
         new_node->exp_value = NULL;
         new_node->next = NULL;
-        if (tmp->value[0] == '"')
-            double_quote_expand(data, tmp, new_node, 1);
-        else if (tmp->value[0] == '\'')
-            single_quote_expand(tmp, new_node, 1);
-        else if (tmp->value[0] == '$')
-            double_quote_expand(data, tmp, new_node, 0);
+        
+        if (tmp->type == DOUBLE_QUOTED_EXPANDABLE)
+        {
+            expand_with_variables(data, tmp, new_node);
+        }
+        else if (tmp->type == DOUBLE_QUOTED)
+        {
+            new_node->exp_value = ft_strdup(tmp->value);
+        }
+        else if (tmp->type == SINGLE_QUOTED)
+        {
+            new_node->exp_value = ft_strdup(tmp->value);
+        }
+        else if (tmp->type == EXPANDABLE_WORD)
+        {
+            expand_with_variables(data, tmp, new_node);
+        }
         else
-            new_node->exp_value = strdup(tmp->value);
+        {
+            new_node->exp_value = ft_strdup(tmp->value);
+        }
+        
         if (!data->expander)
             data->expander = new_node;
         else
@@ -202,13 +275,13 @@ void    expander(t_data *data)
                 last = last->next;
             last->next = new_node;
         }
-		new_node->type = tmp->type;
+        new_node->type = tmp->type;
         tmp = tmp->next;
     }
-	while(data->expander)
-	{
-		printf("Expanded Value: %s\n", data->expander->exp_value);
-		data->expander = data->expander->next;
-	}
-	//parser(data);
+    t_expander *debug = data->expander;
+    while(debug)
+    {
+        printf("Expanded Value: %s %d\n", debug->exp_value, debug->type);
+        debug = debug->next;
+    }
 }

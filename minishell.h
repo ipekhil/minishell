@@ -3,22 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/07/29 20:35:42 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/01 20:12:10 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+/*
 # define HEREDOC      0 // <<
 # define RDR_APPEND   1 // >>
 # define RDR_IN       2 // <
 # define RDR_OUT      3 // >
 # define PIPE         4 // |
 # define WORD  		  5
+*/
+
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -26,12 +29,34 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+typedef enum e_token_type
+{
+    WORD = 5,
+    DOUBLE_QUOTED = 6,
+    SINGLE_QUOTED = 7,
+    EXPANDABLE_WORD = 8,
+    DOUBLE_QUOTED_EXPANDABLE = 9,
+    // Operator türleri
+    HEREDOC = 0,        // <<
+    APPEND = 1,         // >>
+    INPUT = 2,          // <
+    OUTPUT = 3,         // >
+    PIPE = 4            // |
+} t_token_type;
+
 typedef struct s_token
 {
 	char			*value;
 	int				type;
 	struct s_token	*next;
 }					t_token;
+
+typedef struct s_var
+{
+    int has_quotes;
+    int has_single_quotes;
+    int has_dollar;
+}					t_var;
 
 typedef struct s_env
 {
@@ -69,6 +94,7 @@ typedef struct s_data
 	t_env		*env;
 	t_expander	*expander;
 	t_parser	*parser;
+	t_var		var;		
 }				t_data;
 
 void	free_parser(t_parser *head);

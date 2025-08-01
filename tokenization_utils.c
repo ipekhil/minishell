@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:09 by sude              #+#    #+#             */
-/*   Updated: 2025/07/23 02:33:57 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/01 16:29:13 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ char	*get_token(char *line, int *i)
 
 	len = 0;
 	start = *i;
-	while ((!ft_isspace(line[*i]) && line[*i] != '\0'))
+	while ((!ft_isspace(line[*i]) && line[*i] != '\0' && line[*i] != '"'
+			&& line[*i] != '\'') && line[*i + 1] != '\0')
 	{
 		if (ft_isoperator(line[*i]))
 			break ;
