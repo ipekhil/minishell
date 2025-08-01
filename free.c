@@ -114,4 +114,5 @@ void	free_all(t_data *data)
 	data->expander = NULL;
 	free_parser(data->parser);
 	data->parser = NULL;
+	free_array(data->char_env);
 }
