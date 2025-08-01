@@ -30,7 +30,6 @@ static int	heredoc_syntax_control(t_expander *token)
 	}
 	if (token->next->type != 5)
 	{
-		printf("aaa\n");
 		print_syntax_error(token->next);
 		return (0);
 	}
@@ -78,7 +77,6 @@ static int redirection_syntax_control(t_expander *current)
 	}
 	if (current->next->type != 5)
 	{
-		printf("bbb\n");
 		print_syntax_error(current->next);
 		return (0);
 	}

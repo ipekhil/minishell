@@ -79,6 +79,7 @@ int	parse_command(t_expander *start, t_expander *end, t_parser *node)
 			if (new_node)
 			{
 				add_redirection_to_parser(&node->redirection, new_node);
+				printf("%d", node->redirection->type);
 				current = current->next;
 			}
 		}

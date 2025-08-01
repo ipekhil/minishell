@@ -10,7 +10,51 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "minishell.h"
+
+void	apply_redirections(t_redirection *redir)
+{
+	int	fd;
+
+	while (redir)
+	{
+		if (redir->type == INPUT) // <
+		{
+			fd = open(redir->filename, O_RDONLY);
+			if (fd < 0)
+			{
+				perror("open");
+				exit(1);
+			}
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		else if (redir->type == OUTPUT) // >
+		{
+			fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (fd < 0)
+			{
+				perror("open");
+				exit(1);
+			}
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
+		else if (redir->type == APPEND) // >>
+		{
+			fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (fd < 0)
+			{
+				perror("open");
+				exit(1);
+			}
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
+		redir = redir->next;
+	}
+}
 
 char	*ft_strcpy(char *dest, const char *src)
 {
@@ -35,7 +79,6 @@ char	*ft_strcat(char *dest, const char *src)
 
 	if (!dest || !src)
 		return (dest);
-
 	dest_len = ft_strlen(dest);
 	i = 0;
 	while (src[i])
@@ -89,10 +132,9 @@ void	execute_builtin(t_data *data, char **args)
 	else if (ft_strcmp(args[0], "unset") == 0)
 		unset_builtin(data, args);
 	else if (ft_strcmp(args[0], "env") == 0)
-		env_builtin(data->env);
+		env_builtin(data, args);
 	else if (ft_strcmp(args[0], "exit") == 0)
 		exit_builtin(data, args);
-	printf("last_exit_status: %d\n", data->last_exit_status);	
 	return ;
 }
 
@@ -160,38 +202,40 @@ void	execute_command_in_child(t_data *data, char **args)
 	if (!path)
 	{
 		printf("minishell: %s: command not found\n", args[0]);
+		free_all(data);
 		exit(127);
 	}
 	if (execve(path, args, data->char_env) == -1)
 	{
 		perror("execve");
 		free(path);
+		free_all(data);
 		exit(127);
 	}
 }
 
-void    executor(t_data *data)
+void	executor(t_data *data)
 {
-    t_parser    *cmds;
-    int         pipe_fds[2];
-    int         prev_pipe_read_fd;
-    pid_t       last_pid = -1;
-    int         status;
+	t_parser	*cmds;
+	int			pipe_fds[2];
+	int			prev_pipe_read_fd;
+	pid_t		last_pid = -1;
+	int			status;
 
 	prev_pipe_read_fd = STDIN_FILENO;
 	cmds = data->parser;
 	if (!cmds)
 		return ;
-	if (!cmds->next && is_builtin(cmds->args[0]))
+	if (!cmds->next && is_builtin(cmds->args[0]) && !cmds->redirection)
 	{
 		execute_builtin(data, cmds->args);
-		// builtin dönüş değer data->last_exit_status'a kaydet
 		return ;
 	}
 	while (cmds)
 	{
+		printf("reddddddddddddddddddddddddddddddddddd");
 		if (cmds->next)
-		{
+		{	
 			if (pipe(pipe_fds) == -1)
 			{
 				perror("minishell: pipe error");
@@ -215,6 +259,7 @@ void    executor(t_data *data)
 		}
 		else if (last_pid == 0)
 		{
+			printf("-------------------------------------------CHİLD PROCESSS---------------------------------------------");
 			if (prev_pipe_read_fd != STDIN_FILENO)
 			{
 				dup2(prev_pipe_read_fd, STDIN_FILENO);
@@ -226,7 +271,11 @@ void    executor(t_data *data)
 				close(pipe_fds[0]);
 				close(pipe_fds[1]);
 			}
-			// apply_redirections(cmds->redirections);
+			if (cmds->redirection->type)
+			{
+				printf("aaaaa");
+				apply_redirections(cmds->redirection);
+			}
 			if (is_builtin(cmds->args[0]))
 			{
 				execute_builtin(data, cmds->args);
@@ -258,5 +307,6 @@ void    executor(t_data *data)
 		else if (WIFSIGNALED(status))
 			data->last_exit_status = 128 + WTERMSIG(status);
 	}
-	while (wait(NULL) > 0);
+	while (wait(NULL) > 0)
+		;
 }
