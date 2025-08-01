@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/01 20:44:53 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/01 20:47:02 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,4 +284,5 @@ void expander(t_data *data)
         printf("Expanded Value: %s %d\n", debug->exp_value, debug->type);
         debug = debug->next;
     }
+	parser(data);
 }
