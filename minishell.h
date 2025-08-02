@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/01 20:12:10 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/02 12:50:05 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,15 @@
 # define WORD  		  5
 */
 
-
+# include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+extern	int	g_signal_exit;
 
 typedef enum e_token_type
 {
@@ -127,7 +130,8 @@ int		ft_strcmp(char *s1, char *s2);
 void	*ft_calloc(size_t count, size_t size);
 void	ft_bzero(void *s, size_t n);
 
-
+//signals
+void	signal_handlers_main(void);
 
 //print
 void print_parser(t_parser *parser);

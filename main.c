@@ -6,7 +6,7 @@
 /*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/07/28 23:53:10 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/02 12:49:34 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	routine_loop(t_data *data)
 {
 	while (1)
 	{
+		signal_handlers_main();
 		data->line = readline("minishell> ");
 		if (!data->line || strcmp(data->line, "exit") == 0)
 		{

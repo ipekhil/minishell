@@ -7,7 +7,9 @@ SRCS	=	main.c \
 			expander.c \
 			parser.c \
 			redirection.c \
-			parse_syntax_control.c
+			parse_syntax_control.c \
+			signals.c \
+			heredoc.c
 
 OBJS	= $(SRCS:.c=.o)
 
