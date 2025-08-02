@@ -6,38 +6,36 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:09 by sude              #+#    #+#             */
-/*   Updated: 2025/08/01 16:29:13 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/02 15:13:50 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_quoted_token(char *line, int *i)
+int	check_unmatched_quotes(char *line)
 {
+	int		i;
 	char	quote;
-	char	*token;
-	int		len;
-	int		start;
 
-	len = 0;
-	quote = line[*i];
-	start = (*i)++;
-	while (++len > 0 && line[*i] != quote && line[*i] != '\0')
-		(*i)++;
-	if (line[*i] == quote)
-		len++;
-	else
+	i = 0;
+	while (line[i])
 	{
-		printf("ERROR, unmatched quote\n");
-		return (NULL);
+		if (line[i] == '"' || line[i] == '\'')
+		{
+			quote = line[i++];
+			while (line[i] && line[i] != quote)
+				i++;
+			if (!line[i])
+			{
+				printf("minishell: syntax error: unmatched quote\n");
+				return (0);
+			}
+			i++;
+		}
+		else
+			i++;
 	}
-	token = malloc(sizeof(char) * (len + 1));
-	if (!token)
-		return (NULL);
-	token[len] = '\0';
-	ft_strlcpy(token, &line[start], len + 1);
-	(*i)++;
-	return (token);
+	return (1);
 }
 
 void	add_token(t_token **tokens, char *token, int type)

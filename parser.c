@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:20 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/07/29 20:39:21 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/02 18:07:24 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,4 +122,5 @@ void	parser(t_data *data)
 	if (!syntax_control(data->expander))
 		return ;
 	all_tokens_parse(data, data->expander);
+	//executer(data);
 }

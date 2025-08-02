@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/01 20:12:10 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/02 18:25:55 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ typedef struct s_redirection
 {
 	int						type;
 	char					*filename;
+	char					*heredoc_content;//kullanmıyoruz henüz
+	char					*delimiter;//kullanmıyoruz henüz
 	struct s_redirection	*next;
 }		t_redirection;
 
@@ -101,7 +103,7 @@ void	free_parser(t_parser *head);
 void	free_expander(t_expander *head);
 void	routine_loop(t_data *data);
 int		tokenization(t_data *data);
-char	*get_quoted_token(char *line, int *i);
+int		check_unmatched_quotes(char *line);
 char	*get_token(char *line, int *i);
 void	add_token(t_token **tokens, char *token, int type);
 int		ft_isspace(char c);

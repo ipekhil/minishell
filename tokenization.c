@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/08/01 20:16:29 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/02 14:54:21 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,8 @@ void	get_combined_token(t_data *data, int *i)
 
 	temp_i = *i;
 	result_i = 0;
+	token = NULL;
+	len = 0;
 	get_combined_len(data->line, temp_i, &len);
 	token = malloc(sizeof(char) * (len + 1));
 	if (!token)
@@ -189,7 +191,8 @@ int tokenization(t_data *data)
 {
 	int i = 0;
 
-
+    if (!check_unmatched_quotes(data->line))
+        return (-1); 
 	while (data->line[i])
 	{
 		if (ft_isspace(data->line[i]))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:01 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/07/29 20:39:02 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/02 14:44:11 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static t_redirection	*new_redirection_node(t_expander *current)
 {
 	t_redirection	*node;
 
-	if (current->next && current->next->type == 5)
+	if (current->next && (current->next->type >= 5 && current->next->type <= 9))
 	{
 		node = malloc(sizeof(t_redirection));
 		if (!node)
@@ -53,7 +53,7 @@ int	parse_command(t_expander *start, t_expander *end, t_parser *node)
 
 	count = 0;
 	current = start;
-	while (current != end)
+	while (current != end && current)
 	{
 		if (current->type == 5)
 		{
@@ -66,10 +66,12 @@ int	parse_command(t_expander *start, t_expander *end, t_parser *node)
 		{
 			printf("REDİRECTION\n");
 			new_node = new_redirection_node(current);
+			current = current->next;
 			if (new_node)
 			{
+				printf("Yönlendirme Eklendi: %s\n", new_node->filename);
 				add_redirection_to_parser(&node->redirection, new_node);
-				current = current->next->next;
+				current = current->next;
 			}
 		}
 	}
@@ -115,3 +117,27 @@ void print_parser(t_parser *parser)
 		current = current->next;
 	}
 }
+/*
+// 5. ❌ QUOTE HANDLING EKSİK
+// "ls 'file name'" veya 'ls "file name"' durumları
+
+// ✅ ÇÖZÜM: Expander'da halledilmeli ama parser'da da kontrol:
+static char *handle_quotes(char *str)
+{
+    int len;
+    char *result;
+    
+    if (!str)
+        return (NULL);
+    
+    len = ft_strlen(str);
+    if (len >= 2 && 
+       ((str[0] == '"' && str[len-1] == '"') ||
+        (str[0] == '\'' && str[len-1] == '\'')))
+    {
+        result = ft_substr(str, 1, len - 2);
+        return (result);
+    }
+    return (ft_strdup(str));
+}
+*/

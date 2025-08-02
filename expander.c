@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/01 20:47:02 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/02 14:43:58 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,6 @@ void	single_quote_expand(t_token *token, t_expander *node, int i)
 	node->exp_value[k] = '\0';
 	free(key);
 }*/
-#include "minishell.h"
 
 
 void expand_with_variables(t_data *data, t_token *token, t_expander *node)
@@ -275,7 +274,10 @@ void expander(t_data *data)
                 last = last->next;
             last->next = new_node;
         }
-        new_node->type = tmp->type;
+		if(tmp->type <= 9 && tmp->type >= 6)
+	        new_node->type = 5;
+		else
+        	new_node->type = tmp->type;
         tmp = tmp->next;
     }
     t_expander *debug = data->expander;

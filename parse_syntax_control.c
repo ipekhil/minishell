@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_syntax_control.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:13 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/07/29 20:39:14 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/02 14:44:32 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static int	heredoc_syntax_control(t_expander *token)
 	}
 	if (token->next->type != 5)
 	{
+		printf("aaa\n");
 		print_syntax_error(token->next);
 		return (0);
 	}
@@ -77,6 +78,7 @@ static int redirection_syntax_control(t_expander *current)
 	}
 	if (current->next->type != 5)
 	{
+		printf("bbb\n");
 		print_syntax_error(current->next);
 		return (0);
 	}
