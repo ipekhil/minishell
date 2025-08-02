@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/08/02 14:54:21 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/02 18:32:20 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,6 @@ void	get_combined_token(t_data *data, int *i)
 
 	temp_i = *i;
 	result_i = 0;
-	token = NULL;
 	len = 0;
 	get_combined_len(data->line, temp_i, &len);
 	token = malloc(sizeof(char) * (len + 1));
