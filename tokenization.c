@@ -170,6 +170,7 @@ void	get_combined_token(t_data *data, int *i)
 
 	temp_i = *i;
 	result_i = 0;
+	len = 0;
 	get_combined_len(data->line, temp_i, &len);
 	token = malloc(sizeof(char) * (len + 1));
 	if (!token)
