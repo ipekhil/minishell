@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/02 18:25:55 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/03 15:23:27 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ typedef struct s_redirection
 {
 	int						type;
 	char					*filename;
-	char					*heredoc_content;//kullanmıyoruz henüz
-	char					*delimiter;//kullanmıyoruz henüz
+	char					*heredoc_content;
+	char					*delimiter;
 	struct s_redirection	*next;
 }		t_redirection;
 

@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:01 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/02 14:44:11 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/03 15:20:15 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,25 @@ static t_redirection	*new_redirection_node(t_expander *current)
 {
 	t_redirection	*node;
 
-	if (current->next && (current->next->type >= 5 && current->next->type <= 9))
+	if (current->next && current->next->type == 5)
 	{
 		node = malloc(sizeof(t_redirection));
 		if (!node)
 			return (NULL);
 		node->type = current->type;
-		node->filename = ft_strdup(current->next->exp_value);
+		if (current->type == 0)
+		{
+			node->delimiter = ft_strdup(current->next->exp_value);
+			printf("delimiter: %s\n", node->delimiter);
+			node->heredoc_content = NULL;
+			node->filename = NULL;
+		}
+		else
+		{
+			node->filename = ft_strdup(current->next->exp_value);
+			node->delimiter = NULL;
+			node->heredoc_content = NULL;
+		}
 		node->next = NULL;
 		return (node);
 	}
@@ -45,6 +57,7 @@ static void	add_redirection_to_parser(t_redirection **list, t_redirection *new_n
 		current = current->next;
 	current->next = new_node;
 }
+
 int	parse_command(t_expander *start, t_expander *end, t_parser *node)
 {
 	t_expander *current;
@@ -53,7 +66,7 @@ int	parse_command(t_expander *start, t_expander *end, t_parser *node)
 
 	count = 0;
 	current = start;
-	while (current != end && current)
+	while (current != end)
 	{
 		if (current->type == 5)
 		{
@@ -85,7 +98,10 @@ void print_redirections(t_redirection *redir)
 {
 	while (redir)
 	{
-		printf("  redir type: %d, filename: %s\n", redir->type, redir->filename);
+		if(redir->type == 0)
+			printf("  redir type: %d, delimiter: %s\n", redir->type, redir->delimiter);
+		else
+			printf("  redir type: %d, filename: %s\n", redir->type, redir->filename);
 		redir = redir->next;
 	}
 }
