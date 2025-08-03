@@ -6,71 +6,64 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/03 15:23:27 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/03 19:51:18 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-/*
-# define HEREDOC      0 // <<
-# define RDR_APPEND   1 // >>
-# define RDR_IN       2 // <
-# define RDR_OUT      3 // >
-# define PIPE         4 // |
-# define WORD  		  5
-*/
-
-
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <unistd.h>
+# include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "libft/libft.h"
 
 typedef enum e_token_type
 {
-    WORD = 5,
-    DOUBLE_QUOTED = 6,
-    SINGLE_QUOTED = 7,
-    EXPANDABLE_WORD = 8,
-    DOUBLE_QUOTED_EXPANDABLE = 9,
-    // Operator türleri
-    HEREDOC = 0,        // <<
-    APPEND = 1,         // >>
-    INPUT = 2,          // <
-    OUTPUT = 3,         // >
-    PIPE = 4            // |
-} t_token_type;
+	WORD = 5,
+	DOUBLE_QUOTED = 6,
+	SINGLE_QUOTED = 7,
+	EXPANDABLE_WORD = 8,
+	DOUBLE_QUOTED_EXPANDABLE = 9,
+
+	HEREDOC = 0, // <<
+	APPEND = 1, // >>
+	INPUT = 2, // <
+	OUTPUT = 3, // >
+	PIPE = 4 // |
+}		t_token_type;
 
 typedef struct s_token
 {
 	char			*value;
 	int				type;
 	struct s_token	*next;
-}					t_token;
+}	t_token;
 
 typedef struct s_var
 {
-    int has_quotes;
-    int has_single_quotes;
-    int has_dollar;
-}					t_var;
+	int	has_quotes;
+	int	has_single_quotes;
+	int	has_dollar;
+}			t_var;
 
 typedef struct s_env
 {
 	char			*key;
 	char			*value;
 	struct s_env	*next;
-}					t_env;
+}				t_env;
 
 typedef struct s_expander
 {
 	char				*exp_value;
 	int					type;
 	struct s_expander	*next;
-}						t_expander;
+}				t_expander;
 
 typedef struct s_redirection
 {
@@ -83,7 +76,7 @@ typedef struct s_redirection
 
 typedef struct s_parser
 {
-	char 			**args;
+	char			**args;
 	t_redirection	*redirection;
 	int				is_error;
 	struct s_parser	*next;
@@ -91,16 +84,17 @@ typedef struct s_parser
 
 typedef struct s_data
 {
+	char		**char_env;
 	char		*line;
 	t_token		*tokens;
 	t_env		*env;
 	t_expander	*expander;
 	t_parser	*parser;
-	t_var		var;		
-}				t_data;
+	t_var		var;
+}		t_data;
 
-void	free_parser(t_parser *head);
-void	free_expander(t_expander *head);
+int		ft_strcmp(char *s1, char *s2);
+char	*ft_strcpy(char *dest, const char *src);
 void	routine_loop(t_data *data);
 int		tokenization(t_data *data);
 int		check_unmatched_quotes(char *line);
@@ -108,30 +102,40 @@ char	*get_token(char *line, int *i);
 void	add_token(t_token **tokens, char *token, int type);
 int		ft_isspace(char c);
 int		ft_isoperator(char c);
-void	free_token(t_token *head);
 void	get_env(t_env **env, char **envp);
 void	expander(t_data *data);
+
+// Parser
+void	parser(t_data *data);
+int		syntax_control(t_expander *tokens);
+int		parse_command(t_expander *start, t_expander *end, t_parser *node);
+
+// Builtins
+void	cd_builtin(char **argv, char ***envp);
+int		echo_builtin(char **input);
+void	pwd_builtin(void);
+void	update_env_var(char ***envp, const char *name, const char *value);
+int		is_builtin(char *cmd);
+void	execute_builtin(t_data *data, char **args);
+
+// Executor functions
+void	executor(t_data *data);
+void	execute_external(t_data *data, char **args);
+char	*find_command_path(char *cmd, char **env);
+char	*create_full_path(char *dir, char *cmd);
+
+// Environment
+char	**copy_env(char **envp);
+
+// Print functions
+void	print_parser(t_parser *parser);
+void	print_redirections(t_redirection *redir);
+
+//free
+void	free_array(char **arr);
+void	free_parser(t_parser *head);
+void	free_expander(t_expander *head);
 void	free_all(t_data *data);
-char	*ft_strdup(const char *s1);
+void	free_token(t_token *head);
 
-//parser
-void parser(t_data *data);
-//parse_syntax
-int syntax_control(t_expander *tokens);
-//redirection
-int	parse_command(t_expander *start, t_expander *end, t_parser *node);
-
-
-//libft
-int		ft_strlen(const char *s);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-int		ft_strcmp(char *s1, char *s2);
-void	*ft_calloc(size_t count, size_t size);
-void	ft_bzero(void *s, size_t n);
-
-
-
-//print
-void print_parser(t_parser *parser);
-void print_redirections(t_redirection *redir);
 #endif

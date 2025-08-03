@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:20 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/02 18:07:24 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/03 17:17:38 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ void all_tokens_parse(t_data *data, t_expander *tokens)
 	start = current;
 	while (current)
 	{
-		printf("Current Token: %s, Type: %d\n", current->exp_value, current->type);
 		if (current->type == 4)
 		{
 			new_node = new_parser_node(start, current);
@@ -122,5 +121,5 @@ void	parser(t_data *data)
 	if (!syntax_control(data->expander))
 		return ;
 	all_tokens_parse(data, data->expander);
-	//executer(data);
+	executor(data);
 }

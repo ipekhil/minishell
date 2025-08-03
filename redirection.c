@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:01 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/03 15:20:15 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/03 16:23:43 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static t_redirection	*new_redirection_node(t_expander *current)
 		if (current->type == 0)
 		{
 			node->delimiter = ft_strdup(current->next->exp_value);
-			printf("delimiter: %s\n", node->delimiter);
 			node->heredoc_content = NULL;
 			node->filename = NULL;
 		}
@@ -60,9 +59,9 @@ static void	add_redirection_to_parser(t_redirection **list, t_redirection *new_n
 
 int	parse_command(t_expander *start, t_expander *end, t_parser *node)
 {
-	t_expander *current;
-	t_redirection *new_node;
-	int	count;
+	t_expander		*current;
+	t_redirection	*new_node;
+	int				count;
 
 	count = 0;
 	current = start;
@@ -70,19 +69,15 @@ int	parse_command(t_expander *start, t_expander *end, t_parser *node)
 	{
 		if (current->type == 5)
 		{
-			node->args[count] = ft_strdup(current->exp_value);
-			printf("node->args[%d]: %s\n", count, node->args[count]);
-			count++;
+			node->args[count++] = ft_strdup(current->exp_value);
 			current = current->next;
 		}
 		else if (current->type >= 0 && current->type <= 3)
 		{
-			printf("REDİRECTION\n");
 			new_node = new_redirection_node(current);
 			current = current->next;
 			if (new_node)
 			{
-				printf("Yönlendirme Eklendi: %s\n", new_node->filename);
 				add_redirection_to_parser(&node->redirection, new_node);
 				current = current->next;
 			}

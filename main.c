@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/07/28 23:53:10 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/03 17:15:10 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	(void)env;
 	init_data(&data);
+	data.char_env = copy_env(env);
 	get_env(&data.env, env);
 	routine_loop(&data);
 }

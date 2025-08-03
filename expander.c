@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/02 14:43:58 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/03 19:33:24 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,11 +280,13 @@ void expander(t_data *data)
         	new_node->type = tmp->type;
         tmp = tmp->next;
     }
+	/*
     t_expander *debug = data->expander;
     while(debug)
     {
         printf("Expanded Value: %s %d\n", debug->exp_value, debug->type);
         debug = debug->next;
     }
+	*/
 	parser(data);
 }
