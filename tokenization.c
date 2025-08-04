@@ -191,9 +191,7 @@ int tokenization(t_data *data)
 	int i = 0;
 
     if (!check_unmatched_quotes(data->line))
-	{
         return (-1); 
-	}
 	while (data->line[i])
 	{
 		if (ft_isspace(data->line[i]))

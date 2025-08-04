@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/03 19:49:12 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/04 02:03:54 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,13 @@ void	execute_builtin(t_data *data, char **args)
 		cd_builtin(args, &data->char_env);
 	else if (ft_strcmp(args[0], "echo") == 0)
 		echo_builtin(args);
+	else if (ft_strcmp(args[0], "export") == 0)
+		export_builtin(data, args);
+	else if (strcmp(args[0], "env") == 0)
+		env_builtin(data->env);
 	/*
 	else if (strcmp(data->tokens[0], "exit") == 0)
 		builtin_exit();
-	else if (strcmp(data->tokens[0], "env") == 0)
-		builtin_env(data->env);
  	*/
 	return ;
 }

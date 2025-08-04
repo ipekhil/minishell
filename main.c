@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/08/03 17:15:10 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/04 15:12:55 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	routine_loop(t_data *data)
 {
 	while (1)
 	{
+		signal_handlers_main();
 		data->line = readline("minishell> ");
 		if (!data->line || strcmp(data->line, "exit") == 0)
 		{
@@ -28,7 +29,7 @@ void	routine_loop(t_data *data)
 			add_history(data->line);
 		if (tokenization(data) == -1)
 			return ;
-		print_parser(data->parser);
+		//print_parser(data->parser);
 		free_token(data->tokens);
 		data->tokens = NULL;
 		free_expander(data->expander);

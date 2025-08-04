@@ -12,7 +12,11 @@ SRCS = main.c \
 	echo_builtin.c \
 	pwd_builtin.c \
 	env_utils.c \
-	executor.c
+	executor.c \
+	export_builtin.c \
+	env_builtin.c \
+	heredoc.c \
+	signals.c
 
 OBJS = $(SRCS:.c=.o)
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:01 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/03 16:23:43 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/04 02:05:07 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,45 +89,47 @@ int	parse_command(t_expander *start, t_expander *end, t_parser *node)
 
 
 
-void print_redirections(t_redirection *redir)
-{
-	while (redir)
-	{
-		if(redir->type == 0)
-			printf("  redir type: %d, delimiter: %s\n", redir->type, redir->delimiter);
-		else
-			printf("  redir type: %d, filename: %s\n", redir->type, redir->filename);
-		redir = redir->next;
-	}
-}
+// void print_redirections(t_redirection *redir)
+// {
+// 	while (redir)
+// 	{
+// 		if(redir->type == 0)
+// 			printf("  redir type: %d, delimiter: %s\n", redir->type, redir->delimiter);
+// 		else
+// 			printf("  redir type: %d, filename: %s\n", redir->type, redir->filename);
+// 		redir = redir->next;
+// 	}
+// }
 
-void print_parser(t_parser *parser)
-{
-	t_parser *current = parser;
-	int i;
+// void print_parser(t_parser *parser)
+// {
+// 	t_parser *current = parser;
+// 	int i;
 
-	while (current)
-	{
-		printf("⎯⎯⎯⎯⎯⎯⎯⎯ Yeni Komut ⎯⎯⎯⎯⎯⎯⎯⎯\n");
+// 	while (current)
+// 	{
+// 		printf("⎯⎯⎯⎯⎯⎯⎯⎯ Yeni Komut ⎯⎯⎯⎯⎯⎯⎯⎯\n");
 
-		// Argümanları SADECE current->args NULL değilse yazdırın
-		if (current->args) // <--- print_parser için ANA DÜZELTME
-		{
-			for (i = 0; current->args[i]; i++)
-				printf("  arg[%d]: %s\n", i, current->args[i]);
-		}
-		else
-			printf("  (argüman yok)\n");
+// 		// Argümanları SADECE current->args NULL değilse yazdırın
+// 		if (current->args) // <--- print_parser için ANA DÜZELTME
+// 		{
+// 			for (i = 0; current->args[i]; i++)
+// 				printf("  arg[%d]: %s\n", i, current->args[i]);
+// 		}
+// 		else
+// 			printf("  (argüman yok)\n");
 
-		// Yönlendirmeler varsa yazdırın
-		if (current->redirection)
-			print_redirections(current->redirection);
-		else
-			printf("  (yönlendirme yok)\n");
+// 		// Yönlendirmeler varsa yazdırın
+// 		if (current->redirection)
+// 			print_redirections(current->redirection);
+// 		else
+// 			printf("  (yönlendirme yok)\n");
 
-		current = current->next;
-	}
-}
+// 		current = current->next;
+// 	}
+// }
+
+
 /*
 // 5. ❌ QUOTE HANDLING EKSİK
 // "ls 'file name'" veya 'ls "file name"' durumları

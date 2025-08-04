@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/03 19:51:18 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/04 15:12:27 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <unistd.h>
+# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -21,6 +23,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
+
+extern	int	g_signal_exit;
 
 typedef enum e_token_type
 {
@@ -117,6 +121,11 @@ void	pwd_builtin(void);
 void	update_env_var(char ***envp, const char *name, const char *value);
 int		is_builtin(char *cmd);
 void	execute_builtin(t_data *data, char **args);
+void	export_builtin(t_data *data, char **args);
+void	env_builtin(t_env *env);
+
+//signals
+void	signal_handlers_main(void);
 
 // Executor functions
 void	executor(t_data *data);
@@ -126,9 +135,11 @@ char	*create_full_path(char *dir, char *cmd);
 
 // Environment
 char	**copy_env(char **envp);
+void	ft_lstadd_back(t_env **head, t_env *new_node);
+
 
 // Print functions
-void	print_parser(t_parser *parser);
+void	ser(t_parser *parser);
 void	print_redirections(t_redirection *redir);
 
 //free
