@@ -6,7 +6,7 @@
 /*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/04 02:03:54 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/04 16:18:50 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,10 @@ void	execute_builtin(t_data *data, char **args)
 		export_builtin(data, args);
 	else if (strcmp(args[0], "env") == 0)
 		env_builtin(data->env);
-	/*
+	else if (strcmp(args[0], "unset") == 0)
+		unset_builtin(data, args);
 	else if (strcmp(data->tokens[0], "exit") == 0)
-		builtin_exit();
- 	*/
+		builtin_exit(data, args);
 	return ;
 }
 

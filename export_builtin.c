@@ -67,8 +67,7 @@ int	is_valid_key(char *key)
 	while (key[i])
 	{
 		if (!((key[i] >= 'a' && key[i] <= 'z') || \
-		(key[i] >= 'A' && key[i] <= 'Z') || \
-		(key[i] >= '0' && key[i] <= '9') || key[i] == '_'))
+		(key[i] >= 'A' && key[i] <= 'Z') || key[i] == '_'))
 			return (0);
 		i++;
 	}
@@ -107,14 +106,18 @@ void	export_builtin(t_data *data, char **args)
 				perror("export_builtin");
 				return ;
 			}
-			if (!is_valid_key(key))
+			if (is_valid_key(key))
+			{
+				add_or_update_env(&data->env, key, value);
+				free(key);
+				free(value);
+			}
+			else
 			{
 				printf("export: `%s': not a valid identifier\n", *current_arg);
-				return ;
+				free(key);
+				free(value);
 			}
-			add_or_update_env(&data->env, key, value);
-			free(key);
-			free(value);
 		}
 		else
 		{
@@ -124,13 +127,16 @@ void	export_builtin(t_data *data, char **args)
 				perror("export_builtin");
 				return ;
 			}
-			if (!is_valid_key(key))
+			if (is_valid_key(key))
+			{
+				add_or_update_env(&data->env, key, NULL);
+				free(key);
+			}
+			else
 			{
 				printf("export: `%s': not a valid identifier\n", *current_arg);
-				return ;
+				free(key);
 			}
-			add_or_update_env(&data->env, key, NULL);
-			free(key);
 		}
 		current_arg++;
 	}

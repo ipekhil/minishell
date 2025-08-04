@@ -6,7 +6,7 @@
 /*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/04 15:12:27 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/04 15:30:22 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ int		is_builtin(char *cmd);
 void	execute_builtin(t_data *data, char **args);
 void	export_builtin(t_data *data, char **args);
 void	env_builtin(t_env *env);
+void	unset_builtin(t_data *data, char **args);
 
 //signals
 void	signal_handlers_main(void);

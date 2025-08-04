@@ -15,6 +15,7 @@ SRCS = main.c \
 	executor.c \
 	export_builtin.c \
 	env_builtin.c \
+	unset_builtin.c \
 	heredoc.c \
 	signals.c
 
