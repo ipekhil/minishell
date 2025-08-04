@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/04 16:18:50 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/04 16:54:19 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -89,10 +88,10 @@ void	execute_builtin(t_data *data, char **args)
 		export_builtin(data, args);
 	else if (strcmp(args[0], "env") == 0)
 		env_builtin(data->env);
-	else if (strcmp(args[0], "unset") == 0)
-		unset_builtin(data, args);
+	/*
 	else if (strcmp(data->tokens[0], "exit") == 0)
-		builtin_exit(data, args);
+		builtin_exit();
+ 	*/
 	return ;
 }
 
@@ -152,52 +151,111 @@ char	*find_command_path(char *cmd, char **env)
 	return (NULL);
 }
 
-void	execute_external(t_data *data, char **args)
+void	execute_command_in_child(t_data *data, char **args)
 {
-	pid_t	pid;
-	int		status;
 	char	*path;
 
 	path = find_command_path(args[0], data->char_env);
 	if (!path)
 	{
 		printf("minishell: %s: command not found\n", args[0]);
-		return ;
+		exit(127);
 	}
-	pid = fork();
-	if (pid < 0)
+	if (execve(path, args, data->char_env) == -1)
 	{
-		perror("fork");
-		return ;
+		perror("execve");
+		free(path);
+		exit(127);
 	}
-	else if (pid == 0)
-	{
-		if (execve(path, args, data->char_env) == -1)
-		{
-			perror("execve");
-			exit(127);
-		}
-	}
-	else
-	{
-		wait(&status);
-	}
-	free(path);
 }
 
-void	executor(t_data *data)
+void    executor(t_data *data)
 {
-	t_parser	*cmds;
+    t_parser    *cmds;
+    int         pipe_fds[2];
+    int         prev_pipe_read_fd;
+    pid_t       last_pid = -1;
+    int         status;
 
+	prev_pipe_read_fd = STDIN_FILENO;
 	cmds = data->parser;
+	if (!cmds)
+		return ;
+	if (!cmds->next && is_builtin(cmds->args[0]))
+	{
+		execute_builtin(data, cmds->args);
+		// builtin dönüş değer data->last_exit_status'a kaydet
+		return ;
+	}
 	while (cmds)
 	{
-		if (is_builtin(cmds->args[0]))
+		if (cmds->next)
 		{
-			execute_builtin(data, cmds->args);
+			if (pipe(pipe_fds) == -1)
+			{
+				perror("minishell: pipe error");
+				if (prev_pipe_read_fd != STDIN_FILENO)
+					close(prev_pipe_read_fd);
+				return ;
+			}
+		}
+		last_pid = fork();
+		if (last_pid < 0)
+		{
+			perror("minishell: fork error");
+			if (prev_pipe_read_fd != STDIN_FILENO)
+				close(prev_pipe_read_fd);
+			if (cmds->next)
+			{
+				close(pipe_fds[0]);
+				close(pipe_fds[1]);
+			}
+			return ;
+		}
+		else if (last_pid == 0)
+		{
+			if (prev_pipe_read_fd != STDIN_FILENO)
+			{
+				dup2(prev_pipe_read_fd, STDIN_FILENO);
+				close(prev_pipe_read_fd);
+			}
+			if (cmds->next)
+			{
+				dup2(pipe_fds[1], STDOUT_FILENO);
+				close(pipe_fds[0]);
+				close(pipe_fds[1]);
+			}
+			// apply_redirections(cmds->redirections);
+			if (is_builtin(cmds->args[0]))
+			{
+				execute_builtin(data, cmds->args);
+				exit(0);
+			}
+			else
+			{
+				execute_command_in_child(data, cmds->args);
+			}
+			exit(1);
 		}
 		else
-			execute_external(data, cmds->args);
+		{
+			if (prev_pipe_read_fd != STDIN_FILENO)
+				close(prev_pipe_read_fd);
+			if (cmds->next)
+			{
+				close(pipe_fds[1]);
+				prev_pipe_read_fd = pipe_fds[0];
+			}
+		}
 		cmds = cmds->next;
 	}
+	if (last_pid != -1)
+	{
+		waitpid(last_pid, &status, 0);
+		if (WIFEXITED(status))
+			data->last_exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			data->last_exit_status = 128 + WTERMSIG(status);
+	}
+	while (wait(NULL) > 0);
 }
