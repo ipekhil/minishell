@@ -56,13 +56,14 @@ static int	change_directory(char *target, char ***envp)
 	return (0);
 }
 
-void	cd_builtin(char **argv, char ***envp)
+int	cd_builtin(char **argv, char ***envp)
 {
 	char	*target;
 
 	target = get_cd_target(argv);
 	if (!target)
-		return ;
+		return (1);
 	if (change_directory(target, envp))
-		return ;
+		return (1);
+	return (0);
 }

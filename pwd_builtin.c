@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	pwd_builtin(void)
+int	pwd_builtin(void)
 {
 	char *cwd;//current working directory
 
@@ -8,8 +8,9 @@ void	pwd_builtin(void)
 	if (!cwd)
 	{
 		perror("getcwd");
-		return;
+		return (1);
 	}
 	printf("%s\n", cwd);
 	free(cwd);
+	return (0);
 }

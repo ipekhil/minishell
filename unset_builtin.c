@@ -26,14 +26,22 @@ void	remove_env(t_env **env, char *key)
 	}
 }
 
-void	unset_builtin(t_data *data, char **args)
+int	unset_builtin(t_data *data, char **args)
 {
 	char	**current_arg;
 
+	data->last_exit_status = 0;
 	current_arg = &args[1];
 	while (*current_arg)
 	{
-		remove_env(&data->env, *current_arg);
+		if (!is_valid_key(*current_arg))
+		{
+			printf("unset: `%s': not a valid identifier\n", *current_arg);
+			data->last_exit_status = 1;
+		}
+		else
+			remove_env(&data->env, *current_arg);
 		current_arg++;
 	}
+	return (data->last_exit_status);
 }

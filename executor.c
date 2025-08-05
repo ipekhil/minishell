@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/04 16:54:19 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/05 05:18:53 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,19 +79,20 @@ void	execute_builtin(t_data *data, char **args)
 	if (!args)
 		return ;
 	if (ft_strcmp(args[0], "pwd") == 0)
-		pwd_builtin();
+		data->last_exit_status = pwd_builtin();
 	else if (ft_strcmp(args[0], "cd") == 0)
-		cd_builtin(args, &data->char_env);
+		data->last_exit_status = cd_builtin(args, &data->char_env);
 	else if (ft_strcmp(args[0], "echo") == 0)
-		echo_builtin(args);
+		data->last_exit_status = echo_builtin(args);
 	else if (ft_strcmp(args[0], "export") == 0)
 		export_builtin(data, args);
-	else if (strcmp(args[0], "env") == 0)
+	else if (ft_strcmp(args[0], "unset") == 0)
+		unset_builtin(data, args);
+	else if (ft_strcmp(args[0], "env") == 0)
 		env_builtin(data->env);
-	/*
-	else if (strcmp(data->tokens[0], "exit") == 0)
-		builtin_exit();
- 	*/
+	else if (ft_strcmp(args[0], "exit") == 0)
+		exit_builtin(data, args);
+	printf("last_exit_status: %d\n", data->last_exit_status);	
 	return ;
 }
 

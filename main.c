@@ -6,7 +6,7 @@
 /*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/08/04 15:12:55 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/05 04:18:41 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@ void	routine_loop(t_data *data)
 	{
 		signal_handlers_main();
 		data->line = readline("minishell> ");
-		if (!data->line || strcmp(data->line, "exit") == 0)
+		if (!data->line)
 		{
-			if (data->line)
-				free(data->line);
 			free_all(data);
 			break ;
 		}
@@ -29,6 +27,16 @@ void	routine_loop(t_data *data)
 			add_history(data->line);
 		if (tokenization(data) == -1)
 			return ;
+		if (data->should_exit)
+		{
+			if (data->line)
+			{
+				free(data->line);
+				data->line = NULL;
+			}
+			free_all(data);
+			break ;
+		}
 		//print_parser(data->parser);
 		free_token(data->tokens);
 		data->tokens = NULL;
@@ -38,6 +46,7 @@ void	routine_loop(t_data *data)
 		data->parser = NULL;
 		free(data->line);
 	}
+	exit(data->last_exit_status);
 }
 
 void	init_data(t_data *data)
@@ -47,6 +56,8 @@ void	init_data(t_data *data)
 	data->env = NULL;
 	data->expander = NULL;
 	data->parser = NULL;
+	data->last_exit_status = 0;
+	data->should_exit = 0;
 }
 
 int	main(int argc, char **argv, char **env)

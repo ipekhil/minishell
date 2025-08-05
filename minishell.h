@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/04 16:54:32 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/05 05:23:07 by hilalipek        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_data
 	t_parser	*parser;
 	t_var		var;
 	int			last_exit_status;
+	int			should_exit;
 }		t_data;
 
 int		ft_strcmp(char *s1, char *s2);
@@ -116,15 +117,17 @@ int		syntax_control(t_expander *tokens);
 int		parse_command(t_expander *start, t_expander *end, t_parser *node);
 
 // Builtins
-void	cd_builtin(char **argv, char ***envp);
+int		cd_builtin(char **argv, char ***envp);
 int		echo_builtin(char **input);
-void	pwd_builtin(void);
+int		pwd_builtin(void);
 void	update_env_var(char ***envp, const char *name, const char *value);
 int		is_builtin(char *cmd);
 void	execute_builtin(t_data *data, char **args);
-void	export_builtin(t_data *data, char **args);
-void	env_builtin(t_env *env);
-void	unset_builtin(t_data *data, char **args);
+int		export_builtin(t_data *data, char **args);
+int		is_valid_key(char *key);
+int		env_builtin(t_data *data, char **args);
+int		unset_builtin(t_data *data, char **args);
+void	exit_builtin(t_data *data, char **args);
 
 //signals
 void	signal_handlers_main(void);

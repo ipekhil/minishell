@@ -10,11 +10,11 @@ void	add_or_update_env(t_env **env, char *key, char *value)
 	{
 		if (ft_strcmp(tmp->key, key) == 0)
 		{
-			if (value && !tmp->value)
-			{
+			free(tmp->value);
+			if (value)
 				tmp->value = ft_strdup(value);
-				free(tmp->value);
-			}
+			else
+				tmp->value = NULL;
 			return ;
 		}
 		tmp = tmp->next;
@@ -61,31 +61,33 @@ int	is_valid_key(char *key)
 {
 	int	i;
 
-	if (!*key)
+	if (!key)
 		return (0);
-	i = 0;
+	if (!ft_isalpha(key[0]) && key[0] != '_')
+		return (0);
+	i = 1;
 	while (key[i])
 	{
-		if (!((key[i] >= 'a' && key[i] <= 'z') || \
-		(key[i] >= 'A' && key[i] <= 'Z') || key[i] == '_'))
+		if (!ft_isalnum(key[i]) && key[i] == '_')
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-void	export_builtin(t_data *data, char **args)
+int	export_builtin(t_data *data, char **args)
 {
 	char	**current_arg;
 	char	*equal_sign;
 	char	*key;
 	char	*value;
 
+	data->last_exit_status = 0;
 	current_arg = &args[1];
 	if (!*current_arg)
 	{
 		print_export_env(data);
-		return ;
+		return (0);
 	}
 	key = NULL;
 	value = NULL;
@@ -98,13 +100,13 @@ void	export_builtin(t_data *data, char **args)
 			if (!key)
 			{
 				perror("export_builtin");
-				return ;
+				return (1);
 			}
 			value = ft_substr(equal_sign + 1, 0, ft_strlen(equal_sign + 1));
 			if (!value)
 			{
 				perror("export_builtin");
-				return ;
+				return (1);
 			}
 			if (is_valid_key(key))
 			{
@@ -117,6 +119,7 @@ void	export_builtin(t_data *data, char **args)
 				printf("export: `%s': not a valid identifier\n", *current_arg);
 				free(key);
 				free(value);
+				data->last_exit_status = 1;
 			}
 		}
 		else
@@ -125,7 +128,7 @@ void	export_builtin(t_data *data, char **args)
 			if (!key)
 			{
 				perror("export_builtin");
-				return ;
+				return (1);
 			}
 			if (is_valid_key(key))
 			{
@@ -136,8 +139,10 @@ void	export_builtin(t_data *data, char **args)
 			{
 				printf("export: `%s': not a valid identifier\n", *current_arg);
 				free(key);
+				data->last_exit_status = 1;
 			}
 		}
 		current_arg++;
 	}
+	return (data->last_exit_status);
 }
