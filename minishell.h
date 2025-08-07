@@ -154,5 +154,7 @@ void	free_parser(t_parser *head);
 void	free_expander(t_expander *head);
 void	free_all(t_data *data);
 void	free_token(t_token *head);
+void	free_env(t_env *head);
+void	free_redirection(t_redirection *head);
 
 #endif

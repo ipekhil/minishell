@@ -122,4 +122,6 @@ void	parser(t_data *data)
 		return ;
 	all_tokens_parse(data, data->expander);
 	executor(data);
+	free_parser(data->parser);
+	data->parser = NULL;
 }

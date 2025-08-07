@@ -233,7 +233,6 @@ void	executor(t_data *data)
 	}
 	while (cmds)
 	{
-		printf("reddddddddddddddddddddddddddddddddddd");
 		if (cmds->next)
 		{	
 			if (pipe(pipe_fds) == -1)
@@ -259,7 +258,6 @@ void	executor(t_data *data)
 		}
 		else if (last_pid == 0)
 		{
-			printf("-------------------------------------------CHİLD PROCESSS---------------------------------------------");
 			if (prev_pipe_read_fd != STDIN_FILENO)
 			{
 				dup2(prev_pipe_read_fd, STDIN_FILENO);
@@ -271,14 +269,14 @@ void	executor(t_data *data)
 				close(pipe_fds[0]);
 				close(pipe_fds[1]);
 			}
-			if (cmds->redirection->type)
+			if (cmds->redirection)
 			{
-				printf("aaaaa");
 				apply_redirections(cmds->redirection);
 			}
 			if (is_builtin(cmds->args[0]))
 			{
 				execute_builtin(data, cmds->args);
+				free_all(data);
 				exit(0);
 			}
 			else
@@ -298,6 +296,11 @@ void	executor(t_data *data)
 			}
 		}
 		cmds = cmds->next;
+	}
+    if (prev_pipe_read_fd != STDIN_FILENO)
+	{
+        close(prev_pipe_read_fd);
+
 	}
 	if (last_pid != -1)
 	{
