@@ -8,6 +8,8 @@ static int	is_n_flag(char *input)
 	if (!input || input[i] != '-')
 		return (0);
 	i++;
+	if (input[i] != 'n')
+		return (0);
 	while (input[i] == 'n')
 		i++;
 	if (input[i] != '\0')
@@ -22,7 +24,7 @@ int	echo_builtin(char **input)
 
 	i = 1;
 	n_flag = 0;
-	while (input[i] && is_n_flag(input[i]))
+	if (input[i] && is_n_flag(input[i]))
 	{
 		n_flag = 1;
 		i++;

@@ -26,7 +26,10 @@ void	routine_loop(t_data *data)
 		if (data->line && data->line[0] != '\0')
 			add_history(data->line);
 		if (tokenization(data) == -1)
+		{
+			free_all(data);
 			return ;
+		}
 		if (data->should_exit)
 		{
 			if (data->line)

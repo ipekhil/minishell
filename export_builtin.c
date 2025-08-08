@@ -10,11 +10,14 @@ void	add_or_update_env(t_env **env, char *key, char *value)
 	{
 		if (ft_strcmp(tmp->key, key) == 0)
 		{
-			free(tmp->value);
 			if (value)
-				tmp->value = ft_strdup(value);
-			else
-				tmp->value = NULL;
+			{
+				free(tmp->value);
+				if (value)
+					tmp->value = ft_strdup(value);
+				else
+					tmp->value = NULL;				
+			}
 			return ;
 		}
 		tmp = tmp->next;
@@ -63,12 +66,12 @@ int	is_valid_key(char *key)
 
 	if (!key)
 		return (0);
-	if (!ft_isalpha(key[0]) && key[0] != '_')
+	if (!(ft_isalpha(key[0]) || key[0] == '_'))
 		return (0);
 	i = 1;
 	while (key[i])
 	{
-		if (!ft_isalnum(key[i]) && key[i] == '_')
+		if (!(ft_isalnum(key[i]) || key[i] == '_'))
 			return (0);
 		i++;
 	}

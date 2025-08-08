@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/05 05:18:53 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/08 17:22:12 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,7 @@ void	executor(t_data *data)
 	}
 	while (cmds)
 	{
+		//printf("reddddddddddddddddddddddddddddddddddd");
 		if (cmds->next)
 		{	
 			if (pipe(pipe_fds) == -1)
@@ -258,6 +259,7 @@ void	executor(t_data *data)
 		}
 		else if (last_pid == 0)
 		{
+			//printf("-------------------------------------------CHİLD PROCESSS---------------------------------------------");
 			if (prev_pipe_read_fd != STDIN_FILENO)
 			{
 				dup2(prev_pipe_read_fd, STDIN_FILENO);
@@ -271,6 +273,7 @@ void	executor(t_data *data)
 			}
 			if (cmds->redirection)
 			{
+				//printf("aaaaa");
 				apply_redirections(cmds->redirection);
 			}
 			if (is_builtin(cmds->args[0]))
