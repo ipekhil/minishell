@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/08 17:22:12 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/08 18:23:03 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,14 +194,81 @@ char	*find_command_path(char *cmd, char **env)
 	return (NULL);
 }
 
+int	lstsize(t_env *env)
+{
+	int i;
+
+	i = 0;
+	while (env)
+	{
+		env = env->next;
+		i++;
+	}
+	return (i);
+}
+
+char	*ft_strjoin_three(char const *s1, char const *s2, char const *s3)
+{
+	char	*new_str;
+	size_t	i;
+
+	if (!s1 || !s2 || !s3)
+		return (NULL);
+	i = ft_strlen(s1) + ft_strlen(s2) + ft_strlen(s3);
+	new_str = malloc(sizeof(char) * (i + 1));
+	if (!new_str)
+		return (NULL);
+	ft_strlcpy(new_str, s1, i);
+	ft_strlcat(new_str, s2, i);
+	ft_strlcat(new_str, s3, i);
+	return (new_str);
+}
+
+char	**convert_env_to_array(t_env *env)
+{
+	char 	**env_array;
+	t_env	*current;
+	int 	i;
+
+	env_array = malloc(sizeof(char *) * (lstsize(env) + 1));
+	if (!env_array)
+		return (NULL);
+	current = env;
+	i = 0;
+	while (current)
+	{
+		if (current->value)
+		{
+			env_array[i] = ft_strjoin_three(current->key, "=", current->value);
+			if (!env_array[i])
+			{
+				free_array(env_array);
+				return (NULL);
+			}	
+			i++;
+		}
+		current = current->next;
+	}
+	env_array[i] = NULL;
+	return (env_array);
+}
+
 void	execute_command_in_child(t_data *data, char **args)
 {
 	char	*path;
+	char	**temp_env;
 
-	path = find_command_path(args[0], data->char_env);
+	temp_env = convert_env_to_array(data->env);
+	if (!temp_env)
+	{
+		free_all(data);
+		exit(1);
+	}
+	path = find_command_path(args[0], temp_env);
 	if (!path)
 	{
 		printf("minishell: %s: command not found\n", args[0]);
+		free_array(temp_env);
 		free_all(data);
 		exit(127);
 	}
@@ -209,6 +276,7 @@ void	execute_command_in_child(t_data *data, char **args)
 	{
 		perror("execve");
 		free(path);
+		free_array(temp_env);
 		free_all(data);
 		exit(127);
 	}
