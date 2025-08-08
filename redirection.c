@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:01 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/04 02:05:07 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/08 21:01:04 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_redirection	*new_redirection_node(t_expander *current)
+static t_redirection	*new_redirection_node(t_exp *current)
 {
 	t_redirection	*node;
 
@@ -57,9 +57,9 @@ static void	add_redirection_to_parser(t_redirection **list, t_redirection *new_n
 	current->next = new_node;
 }
 
-int	parse_command(t_expander *start, t_expander *end, t_parser *node)
+int	parse_command(t_exp *start, t_exp *end, t_parser *node)
 {
-	t_expander		*current;
+	t_exp		*current;
 	t_redirection	*new_node;
 	int				count;
 
@@ -79,7 +79,7 @@ int	parse_command(t_expander *start, t_expander *end, t_parser *node)
 			if (new_node)
 			{
 				add_redirection_to_parser(&node->redirection, new_node);
-				//printf("%d", node->redirection->type);
+				printf("%d", node->redirection->type);
 				current = current->next;
 			}
 		}

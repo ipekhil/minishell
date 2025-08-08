@@ -6,13 +6,13 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:13 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/02 14:44:32 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/08 21:01:04 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	print_syntax_error(t_expander *tokens)
+static void	print_syntax_error(t_exp *tokens)
 {
 	if (tokens)
 		printf("-minishell: syntax error near unexpected token `%s'\n"\
@@ -21,7 +21,7 @@ static void	print_syntax_error(t_expander *tokens)
 		printf("-minishell: syntax error near unexpected token `newline'\n");
 }
 
-static int	heredoc_syntax_control(t_expander *token)
+static int	heredoc_syntax_control(t_exp *token)
 {
 	if (!token->next)
 	{
@@ -37,7 +37,7 @@ static int	heredoc_syntax_control(t_expander *token)
 	return (1);
 }
 
-static int pipe_syntax_control(t_expander *tokens, t_expander *current)
+static int pipe_syntax_control(t_exp *tokens, t_exp *current)
 {
 	// başta | olması durumu
 	if (tokens == current && current && current->type == 4)
@@ -68,7 +68,7 @@ static int pipe_syntax_control(t_expander *tokens, t_expander *current)
 	return (1);
 }
 
-static int redirection_syntax_control(t_expander *current)
+static int redirection_syntax_control(t_exp *current)
 {
 	if (!current->next)
 	{
@@ -83,9 +83,9 @@ static int redirection_syntax_control(t_expander *current)
 	return (1);
 }
 
-int syntax_control(t_expander *tokens)
+int syntax_control(t_exp *tokens)
 {
-	t_expander *current;
+	t_exp *current;
 
 	current = tokens;
 	if (!current)

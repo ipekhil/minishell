@@ -18,7 +18,8 @@ SRCS = main.c \
 	unset_builtin.c \
 	heredoc.c \
 	signals.c \
-	exit_builtin.c
+	exit_builtin.c \
+	concatenator.c
 
 OBJS = $(SRCS:.c=.o)
 

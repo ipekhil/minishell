@@ -6,15 +6,15 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:20 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/03 17:17:38 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/08 21:01:04 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_args(t_expander *start, t_expander *end)
+int	count_args(t_exp *start, t_exp *end)
 {
-	t_expander *current;
+	t_exp *current;
 	int	count;
 
 	count = 0;
@@ -28,7 +28,7 @@ int	count_args(t_expander *start, t_expander *end)
 	return (count);
 }
 
-static t_parser *new_parser_node(t_expander *start, t_expander *end)
+static t_parser *new_parser_node(t_exp *start, t_exp *end)
 {
 	t_parser	*node;
 	int			count;
@@ -81,10 +81,10 @@ static void	free_parser_on_error(t_data *data)
 	}
 }
 
-void all_tokens_parse(t_data *data, t_expander *tokens)
+void all_tokens_parse(t_data *data, t_exp *tokens)
 {
-	t_expander *current;
-	t_expander *start;
+	t_exp *current;
+	t_exp *start;
 	t_parser *new_node;
 
 	data->parser = NULL;

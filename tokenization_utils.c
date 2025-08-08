@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:09 by sude              #+#    #+#             */
-/*   Updated: 2025/08/02 15:13:50 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/08 15:28:52 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	check_unmatched_quotes(char *line)
 	return (1);
 }
 
-void	add_token(t_token **tokens, char *token, int type)
+void	add_token(t_token **tokens, char *token, int type, int concat_flag)
 {
 	t_token	*new_token;
 	t_token	*tmp;
@@ -49,6 +49,7 @@ void	add_token(t_token **tokens, char *token, int type)
 		return ;
 	new_token->value = ft_strdup(token);
 	new_token->type = type;
+	new_token->concat_w_next = concat_flag;
 	new_token->next = NULL;
 	if (!*tokens)
 		*tokens = new_token;

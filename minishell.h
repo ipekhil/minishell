@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/05 05:23:07 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/08 21:01:16 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_token
 {
 	char			*value;
 	int				type;
+	int				concat_w_next;
 	struct s_token	*next;
 }	t_token;
 
@@ -63,12 +64,13 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
-typedef struct s_expander
+typedef struct s_exp
 {
 	char				*exp_value;
 	int					type;
-	struct s_expander	*next;
-}				t_expander;
+	int 				concat_w_next;
+	struct s_exp	*next;
+}				t_exp;
 
 typedef struct s_redirection
 {
@@ -93,7 +95,7 @@ typedef struct s_data
 	char		*line;
 	t_token		*tokens;
 	t_env		*env;
-	t_expander	*expander;
+	t_exp	*expander;
 	t_parser	*parser;
 	t_var		var;
 	int			last_exit_status;
@@ -106,16 +108,17 @@ void	routine_loop(t_data *data);
 int		tokenization(t_data *data);
 int		check_unmatched_quotes(char *line);
 char	*get_token(char *line, int *i);
-void	add_token(t_token **tokens, char *token, int type);
+void	add_token(t_token **tokens, char *token, int type, int concat_flag);
 int		ft_isspace(char c);
 int		ft_isoperator(char c);
 void	get_env(t_env **env, char **envp);
 void	expander(t_data *data);
+void concatenator(t_data *data);
 
 // Parser
 void	parser(t_data *data);
-int		syntax_control(t_expander *tokens);
-int		parse_command(t_expander *start, t_expander *end, t_parser *node);
+int		syntax_control(t_exp *tokens);
+int		parse_command(t_exp *start, t_exp *end, t_parser *node);
 
 // Builtins
 int		cd_builtin(char **argv, char ***envp);
@@ -151,7 +154,7 @@ void	print_redirections(t_redirection *redir);
 //free
 void	free_array(char **arr);
 void	free_parser(t_parser *head);
-void	free_expander(t_expander *head);
+void	free_expander(t_exp *head);
 void	free_all(t_data *data);
 void	free_token(t_token *head);
 void	free_env(t_env *head);

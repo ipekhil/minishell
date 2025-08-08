@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hilalipek <hilalipek@student.42.fr>        +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 02:35:29 by sude              #+#    #+#             */
-/*   Updated: 2025/07/28 15:35:01 by hilalipek        ###   ########.fr       */
+/*   Updated: 2025/08/08 21:01:04 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ void	free_env(t_env *head)
 	}
 }
 
-void	free_expander(t_expander *head)
+void	free_expander(t_exp *head)
 {
-	t_expander	*current;
-	t_expander	*next;
+	t_exp	*current;
+	t_exp	*next;
 
 	current = head;
 	while (current != NULL)
