@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/08 18:23:03 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/10 02:36:43 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,9 +226,9 @@ char	*ft_strjoin_three(char const *s1, char const *s2, char const *s3)
 
 char	**convert_env_to_array(t_env *env)
 {
-	char 	**env_array;
+	char	**env_array;
 	t_env	*current;
-	int 	i;
+	int		i;
 
 	env_array = malloc(sizeof(char *) * (lstsize(env) + 1));
 	if (!env_array)
@@ -244,7 +244,7 @@ char	**convert_env_to_array(t_env *env)
 			{
 				free_array(env_array);
 				return (NULL);
-			}	
+			}
 			i++;
 		}
 		current = current->next;
@@ -282,13 +282,84 @@ void	execute_command_in_child(t_data *data, char **args)
 	}
 }
 
+void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
+{
+	if (prev_pipe != STDIN_FILENO)
+	{
+		dup2(prev_pipe, STDIN_FILENO);//ilk komut değilse stdini prev_pipe_read_fd ye yönlendir
+		close(prev_pipe);
+	}
+	if (cmd->next)
+	{
+		dup2(pipe_fds[1], STDOUT_FILENO);//sonraki komut varsa stdoutu yazma ucuna yönlendri
+		close(pipe_fds[0]);
+		close(pipe_fds[1]);
+	}
+	if (cmd->redirection)
+		apply_redirections(cmd->redirection);
+	if (is_builtin(cmd->args[0]))
+	{
+		execute_builtin(data, cmd->args);
+		free_all(data);
+		exit(0);
+	}
+	else
+		execute_command_in_child(data, cmd->args);
+}
+
+void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
+{
+	if (*prev_pipe != STDIN_FILENO)
+		close(*prev_pipe);//önceki pipe okuma ucu kapatılır (artık kullanılmayacak)
+	if (cmd->next)
+	{
+		close(pipe_fds[1]);//Pipe ın yazma ucu kapatılır çünkü ana processde yazam işlemi yapılmayacak
+		*prev_pipe = pipe_fds[0];// Pipe ın okuma ucu sonraki komut için stdin olarak kullanılacak
+		//prev_fd kullanma sebebim bu değişken olmasa pipe fdlerinin karışabileceği
+	}
+}
+
+void	handle_fork_error(t_parser *cmds, int *pipe_fds, int *prev_read_fd)
+{
+	perror("minishell: fork error");
+	if (*prev_read_fd != STDIN_FILENO)
+		close(*prev_read_fd);
+	if (cmds->next)
+	{
+		close(pipe_fds[0]);
+		close(pipe_fds[1]);
+	}
+}
+/*
+pipe okuma ucu pipeın öncesindeki komutun girdisini almak için kullanılır --->dup2(pipe_fds[0], STDIN_FILENO).
+yazma ucu ise pipein öncesindeki komutun çıktısını pipe a aktarmasını sağlar--->dup2(pipe_fds[1], STDOUT_FILENO).
+pipeta dup2(pipe_fds[1], STDOUT_FILENO). komutun çıktısını pipe a yönlendirirken(artık pipe a yazar) 
+dup2(pipe_fds[0], STDIN_FILENO). 2. komut için stdin i read ucuna yönlendirir(artık pipe dan okur)
+*/
+
+static void	handle_waiting(t_data *data, pid_t last_pid)
+{
+	int	status;
+
+	if (last_pid != -1)
+	{
+		waitpid(last_pid, &status, 0);
+		if (WIFEXITED(status))
+			data->last_exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			data->last_exit_status = 128 + WTERMSIG(status);
+	}
+	while (wait(NULL) > 0)
+		;
+}
+
+
 void	executor(t_data *data)
 {
 	t_parser	*cmds;
 	int			pipe_fds[2];
 	int			prev_pipe_read_fd;
 	pid_t		last_pid = -1;
-	int			status;
 
 	prev_pipe_read_fd = STDIN_FILENO;
 	cmds = data->parser;
@@ -301,9 +372,8 @@ void	executor(t_data *data)
 	}
 	while (cmds)
 	{
-		//printf("reddddddddddddddddddddddddddddddddddd");
 		if (cmds->next)
-		{	
+		{
 			if (pipe(pipe_fds) == -1)
 			{
 				perror("minishell: pipe error");
@@ -315,72 +385,16 @@ void	executor(t_data *data)
 		last_pid = fork();
 		if (last_pid < 0)
 		{
-			perror("minishell: fork error");
-			if (prev_pipe_read_fd != STDIN_FILENO)
-				close(prev_pipe_read_fd);
-			if (cmds->next)
-			{
-				close(pipe_fds[0]);
-				close(pipe_fds[1]);
-			}
+			handle_fork_error(cmds, pipe_fds, &prev_pipe_read_fd);
 			return ;
 		}
 		else if (last_pid == 0)
-		{
-			//printf("-------------------------------------------CHİLD PROCESSS---------------------------------------------");
-			if (prev_pipe_read_fd != STDIN_FILENO)
-			{
-				dup2(prev_pipe_read_fd, STDIN_FILENO);
-				close(prev_pipe_read_fd);
-			}
-			if (cmds->next)
-			{
-				dup2(pipe_fds[1], STDOUT_FILENO);
-				close(pipe_fds[0]);
-				close(pipe_fds[1]);
-			}
-			if (cmds->redirection)
-			{
-				//printf("aaaaa");
-				apply_redirections(cmds->redirection);
-			}
-			if (is_builtin(cmds->args[0]))
-			{
-				execute_builtin(data, cmds->args);
-				free_all(data);
-				exit(0);
-			}
-			else
-			{
-				execute_command_in_child(data, cmds->args);
-			}
-			exit(1);
-		}
+			child_process(data, cmds, pipe_fds, prev_pipe_read_fd);//prev pipe kopyası ile çaşır *prev_pipe_ değil
 		else
-		{
-			if (prev_pipe_read_fd != STDIN_FILENO)
-				close(prev_pipe_read_fd);
-			if (cmds->next)
-			{
-				close(pipe_fds[1]);
-				prev_pipe_read_fd = pipe_fds[0];
-			}
-		}
+			parent_process(pipe_fds, &prev_pipe_read_fd, cmds);
 		cmds = cmds->next;
 	}
-    if (prev_pipe_read_fd != STDIN_FILENO)
-	{
-        close(prev_pipe_read_fd);
-
-	}
-	if (last_pid != -1)
-	{
-		waitpid(last_pid, &status, 0);
-		if (WIFEXITED(status))
-			data->last_exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			data->last_exit_status = 128 + WTERMSIG(status);
-	}
-	while (wait(NULL) > 0)
-		;
+	if (prev_pipe_read_fd != STDIN_FILENO)
+		close(prev_pipe_read_fd);
+	handle_waiting(data, last_pid);
 }
