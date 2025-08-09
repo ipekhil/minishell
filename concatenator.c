@@ -12,7 +12,22 @@
 
 #include "minishell.h"
 
-void	add_concatenated(t_exp **tokens, t_exp **prev, t_exp *end, char *value)
+void free_merged(t_exp *start)
+{
+	t_exp *tmp;
+
+	tmp = NULL;
+	while(start && start->concat_w_next != 2)
+	{
+		if(start->next)
+			tmp = start->next;
+		free(start->exp_value);
+		free(start);
+		start = tmp;
+	}
+}
+
+void	add_concatenated(t_exp **tokens, t_exp *prev, t_exp *end, char *value)
 {
 	t_exp	*new_token;
 
@@ -21,12 +36,13 @@ void	add_concatenated(t_exp **tokens, t_exp **prev, t_exp *end, char *value)
 		return ;
 	new_token->exp_value = ft_strdup(value);
 	new_token->type = 5;
-	new_token->concat_w_next = 0;
+	new_token->concat_w_next = 2;
 	new_token->next = end->next;
-	if (!*prev)
+	end->next = new_token;
+	if (!prev)
 		*tokens = new_token;
 	else
-		(*prev)->next = new_token;
+		prev->next = new_token;
 	free(value);
 }
 
@@ -101,7 +117,7 @@ void	handle_merge(t_exp **nodes, t_exp *start, t_exp *end)
 			current = current->next;
 		prev = current;
 	}
-	add_concatenated(nodes, &prev, end, value);
+	add_concatenated(nodes, prev, end, value);
 }
 
 
@@ -125,16 +141,19 @@ void	concatenator(t_data *data)
 				end = end->next;
 			handle_merge(&(data->expander), start, end);
 			current = end->next;
+			free_merged(start);
 		}
 		else
 			current = current->next;
 	}
-	/*printf("----------------------------------------\n");
+	/*
+	printf("----------------------------------------\n");
 	t_exp *debug = data->expander;
 	while(debug)
 	{
-	printf("CONC Value: %s TYPE: %d FLAG:%d\n", debug->exp_value, debug->type, debug->concat_w_next);
-	debug = debug->next;
-	}*/
+		printf("CONC Value: %s TYPE: %d FLAG:%d\n", debug->exp_value, debug->type, debug->concat_w_next);
+		debug = debug->next;
+	}
+	*/
 	parser(data);
 }

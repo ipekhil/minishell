@@ -11,7 +11,7 @@ int	env_builtin(t_data *data, char **args)
 		return (127);
 	}
 	env = data->env;
-	while (env && env->key)
+	while (env && env->value)
 	{
 		if (env->key)
 			printf("%s=", env->key);
