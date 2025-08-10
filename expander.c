@@ -189,58 +189,53 @@ void expand_with_variables(t_data *data, t_token *token, t_exp *node)
 	node->exp_value[a_index] = '\0';
 }
 
+void	set_exp_var(t_data *data, t_token *token, t_exp *new_node)
+{
+	if(token->type <= 9 && token->type >= 6)
+	    new_node->type = 5;
+	else
+    	new_node->type = token->type;
+    if (token->type == DOUBLE_QUOTED_EXPANDABLE || token->type == EXPANDABLE_WORD)
+        expand_with_variables(data, token, new_node);
+    else
+	{
+
+        new_node->exp_value = ft_strdup(token->value);
+	}
+	new_node->concat_w_next = token->concat_w_next;
+	new_node->next = NULL;
+}
+
+void	add_exp_node(t_data *data, t_token *token)
+{
+	t_exp	*new_node;
+	t_exp	*tmp;
+
+	tmp = NULL;
+	new_node = malloc(sizeof(t_exp));
+	if (!new_node)
+		return ;
+	set_exp_var(data, token, new_node);
+	if (!data->expander)
+		data->expander = new_node;
+	else
+	{
+		tmp = data->expander;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new_node;
+	}
+}
+
 void expander(t_data *data)
 {
-    t_exp *new_node;
-    t_exp *last;
     t_token *tmp;
     
     tmp = data->tokens;
     data->expander = NULL;
-    
     while (tmp)
     {
-        new_node = malloc(sizeof(t_exp));
-        if (!new_node)
-            return ;
-        new_node->exp_value = NULL;
-        new_node->next = NULL;
-        
-        if (tmp->type == DOUBLE_QUOTED_EXPANDABLE)
-        {
-            expand_with_variables(data, tmp, new_node);
-        }
-        else if (tmp->type == DOUBLE_QUOTED)
-        {
-            new_node->exp_value = ft_strdup(tmp->value);
-        }
-        else if (tmp->type == SINGLE_QUOTED)
-        {
-            new_node->exp_value = ft_strdup(tmp->value);
-        }
-        else if (tmp->type == EXPANDABLE_WORD)
-        {
-            expand_with_variables(data, tmp, new_node);
-        }
-        else
-        {
-            new_node->exp_value = ft_strdup(tmp->value);
-        }
-        
-        if (!data->expander)
-            data->expander = new_node;
-        else
-        {
-            last = data->expander;
-            while (last->next)
-                last = last->next;
-            last->next = new_node;
-        }
-		if(tmp->type <= 9 && tmp->type >= 6)
-	        new_node->type = 5;
-		else
-        	new_node->type = tmp->type;
-		new_node->concat_w_next = tmp->concat_w_next;
+        add_exp_node(data, tmp);
         tmp = tmp->next;
     }
     /*t_exp *debug = data->expander;
