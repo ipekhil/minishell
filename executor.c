@@ -253,10 +253,17 @@ char	**convert_env_to_array(t_env *env)
 	return (env_array);
 }
 
-void	execute_command_in_child(t_data *data, char **args)
+void	setup_child_signals()
 {
-	char	*path;
-	char	**temp_env;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
+
+
+void execute_command_in_child(t_data *data, char **args)
+{
+	char *path;
+	char **temp_env;
 
 	temp_env = convert_env_to_array(data->env);
 	if (!temp_env)
@@ -282,8 +289,43 @@ void	execute_command_in_child(t_data *data, char **args)
 	}
 }
 
-void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
+void    handle_error_and_exit(char *cmd, const char *msg, int exit_code)
 {
+	if(cmd != NULL)
+		printf("minishell: %s %s", cmd, msg);
+	else 
+    	printf("minishell: %s", msg);
+    exit(exit_code);
+}
+
+void pre_file_check(char *cmd, int *exit)
+{
+	struct stat st;
+
+	if (cmd && ft_strchr(cmd, '/'))
+	{
+		if (cmd && stat(cmd, &st) == 0)
+		{
+			if (S_ISDIR(st.st_mode))
+				handle_error_and_exit(NULL, ": Is a directory\n", 126);
+			else if (access(cmd, X_OK) == -1)
+				handle_error_and_exit(NULL, ": Permission denied\n", 126);
+		}
+		else
+			handle_error_and_exit(NULL, ": No such file or directory\n", 127);
+	}
+	else if (cmd && access(cmd, F_OK) == 0)
+		handle_error_and_exit(cmd, "command not found\n", 127);
+	else
+		*exit = 0;
+}
+
+void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
+{
+	pre_file_check(cmd->args[0], &data->last_exit_status);
+	if (data->last_exit_status != 0)
+		return ;
+	setup_child_signals();
 	if (prev_pipe != STDIN_FILENO)
 	{
 		dup2(prev_pipe, STDIN_FILENO);//ilk komut değilse stdini prev_pipe_read_fd ye yönlendir
@@ -296,7 +338,7 @@ void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 		close(pipe_fds[1]);
 	}
 	if (cmd->redirection)
-		apply_redirections(cmd->redirection);
+			apply_redirections(cmd->redirection);
 	if (is_builtin(cmd->args[0]))
 	{
 		execute_builtin(data, cmd->args);
@@ -309,6 +351,7 @@ void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 
 void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
 {
+    signal(SIGINT, SIG_IGN);
 	if (*prev_pipe != STDIN_FILENO)
 		close(*prev_pipe);//önceki pipe okuma ucu kapatılır (artık kullanılmayacak)
 	if (cmd->next)
