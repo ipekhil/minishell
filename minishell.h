@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/08 21:01:16 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/11 00:25:03 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ typedef struct s_exp
 {
 	char				*exp_value;
 	int					type;
-	int 				concat_w_next;
-	struct s_exp	*next;
+	int					concat_w_next;
+	struct s_exp		*next;
 }				t_exp;
 
 typedef struct s_redirection
@@ -96,7 +96,7 @@ typedef struct s_data
 	char		*line;
 	t_token		*tokens;
 	t_env		*env;
-	t_exp	*expander;
+	t_exp		*expander;
 	t_parser	*parser;
 	t_var		var;
 	int			last_exit_status;
@@ -113,8 +113,16 @@ void	add_token(t_token **tokens, char *token, int type, int concat_flag);
 int		ft_isspace(char c);
 int		ft_isoperator(char c);
 void	get_env(t_env **env, char **envp);
+
+// Concatenator
+void	handle_merge(t_exp **nodes, t_exp *start, t_exp *end);
+void	concatenator(t_data *data);
+
+//expander
+void	expand_token_value(t_data *data, t_token *token, t_exp *node, int i);
 void	expander(t_data *data);
-void concatenator(t_data *data);
+char	*get_value_of_key(t_env *env, char *key);
+char	*extract_key(char *token_val);
 
 // Parser
 void	parser(t_data *data);
@@ -160,5 +168,6 @@ void	free_all(t_data *data);
 void	free_token(t_token *head);
 void	free_env(t_env *head);
 void	free_redirection(t_redirection *head);
+void	free_merged(t_exp *start);
 
 #endif

@@ -5,6 +5,7 @@ SRCS = main.c \
 	free.c \
 	get_env.c \
 	expander.c \
+	exp_utils.c \
 	parser.c \
 	redirection.c \
 	parse_syntax_control.c \
@@ -19,7 +20,8 @@ SRCS = main.c \
 	heredoc.c \
 	signals.c \
 	exit_builtin.c \
-	concatenator.c
+	concatenator.c \
+	conc_utils.c
 
 OBJS = $(SRCS:.c=.o)
 
