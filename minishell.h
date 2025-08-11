@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 16:54:58 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/11 18:06:10 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,10 +120,11 @@ void	handle_merge(t_exp **nodes, t_exp *start, t_exp *end);
 void	concatenator(t_data *data);
 
 //expander
-void	expand_token_value(t_data *data, t_token *token, t_exp *node, int i);
+void	expand_token_value(t_data *data, char *first_val, char *new_val, int i);
 void	expander(t_data *data);
 char	*get_value_of_key(t_env *env, char *key);
 char	*extract_key(char *token_val);
+void	get_len(t_data *data, char *first_val, int i, int *len);
 
 // Parser
 void	parser(t_data *data);

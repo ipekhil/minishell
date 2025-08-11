@@ -43,7 +43,7 @@ static void	append_value(char *exp_value, char *value, int *a_index)
 		exp_value[(*a_index)++] = value[i++];
 }
 
-void	expand_token_value(t_data *data, t_token *token, t_exp *node, int i)
+void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 {
 	char	*key;
 	char	*value;
@@ -52,21 +52,21 @@ void	expand_token_value(t_data *data, t_token *token, t_exp *node, int i)
 	a_index = 0;
 	key = NULL;
 	value = NULL;
-	while (token->value[i] != '\0')
+	while (first_val[i] != '\0')
 	{
-		if (token->value[i] == '$')
+		if (first_val[i] == '$')
 		{
 			i++;
-			key = extract_key(&token->value[i]);
+			key = extract_key(&first_val[i]);
 			if (key[0] == '\0')
-				node->exp_value[a_index++] = '$';
+				new_val[a_index++] = '$';
 			i += ft_strlen(key);
 			value = get_value_of_key(data->env, key);
-			append_value(node->exp_value, value, &a_index);
+			append_value(new_val, value, &a_index);
 			free(key);
 		}
 		else
-			node->exp_value[a_index++] = token->value[i++];
+			new_val[a_index++] = first_val[i++];
 	}
-	node->exp_value[a_index] = '\0';
+	new_val[a_index] = '\0';
 }

@@ -6,25 +6,25 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 14:45:35 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/11 18:05:59 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	get_len(t_data *data, t_token *token, int i, int *len)
+void	get_len(t_data *data, char *first_val, int i, int *len)
 {
 	char	*key;
 	char	*value;
 
 	key = NULL;
 	value = NULL;
-	while (token->value[i] != '\0')
+	while (first_val[i] != '\0')
 	{
-		if (token->value[i] == '$')
+		if (first_val[i] == '$')
 		{
 			i++;
-			key = extract_key(&(token->value[i]));
+			key = extract_key(&(first_val[i]));
 			if (key[0] == '\0')
 				*len += 1;
 			i += ft_strlen(key);
@@ -46,11 +46,11 @@ static void	expand_with_variables(t_data *data, t_token *token, t_exp *node)
 	int	len;
 
 	len = 0;
-	get_len(data, token, 0, &len);
+	get_len(data, token->value, 0, &len);
 	node->exp_value = malloc(sizeof(char) * (len + 1));
 	if (!node->exp_value)
 		return ;
-	expand_token_value(data, token, node, 0);
+	expand_token_value(data, token->value, node->exp_value, 0);
 }
 
 static void	set_exp_var(t_data *data, t_token *token, t_exp *new_node)
