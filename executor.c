@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 00:37:44 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/11 17:11:35 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,18 @@ void	apply_redirections(t_redirection *redir)
 				exit(1);
 			}
 			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
+		else if (redir->type == HEREDOC) // <<
+		{
+			fd = open(redir->filename, O_RDONLY);
+			if (fd < 0)
+			{
+				printf("minishell: %s: No such file or directory\n", redir->filename);
+				perror("open");
+				exit(1);
+			}
+			dup2(fd, STDIN_FILENO);
 			close(fd);
 		}
 		redir = redir->next;
@@ -406,6 +418,7 @@ void	executor(t_data *data)
 
 	prev_pipe_read_fd = STDIN_FILENO;
 	cmds = data->parser;
+	handle_heredoc(data);
 	if (!cmds)
 		return ;
 	if (!cmds->next && is_builtin(cmds->args[0]) && !cmds->redirection)

@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 15:46:46 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 00:36:31 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/11 14:46:02 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	concatenator(t_data *data)
 		else
 			current = current->next;
 	}
-	/*
 	printf("----------------------------------------\n");
 	t_exp *debug = data->expander;
 	while(debug)
@@ -78,6 +77,5 @@ void	concatenator(t_data *data)
 		printf("CONC Value: %s TYPE: %d FLAG:%d\n", debug->exp_value, debug->type, debug->concat_w_next);
 		debug = debug->next;
 	}
-	*/
 	parser(data);
 }

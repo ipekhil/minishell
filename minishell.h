@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 00:25:03 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/11 16:54:58 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void	add_token(t_token **tokens, char *token, int type, int concat_flag);
 int		ft_isspace(char c);
 int		ft_isoperator(char c);
 void	get_env(t_env **env, char **envp);
+void	handle_heredoc(t_data *data);
 
 // Concatenator
 void	handle_merge(t_exp **nodes, t_exp *start, t_exp *end);
