@@ -76,6 +76,8 @@ void	free_redirection(t_redirection *head)
 		next = current->next;
 		if (current->filename)
 			free(current->filename);
+		if (current->delimiter)
+			free(current->delimiter);
 		free(current);
 		current = next;
 	}

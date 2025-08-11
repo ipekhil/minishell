@@ -50,7 +50,7 @@ static t_parser *new_parser_node(t_exp *start, t_exp *end)
 		printf("HATA\n");
 		return (NULL);
 	}
-	//node->args[count] = NULL;
+	node->args[count] = NULL;
 	node->next = NULL;
 	return (node);
 }
