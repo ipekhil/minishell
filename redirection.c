@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:01 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/08 21:01:04 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/13 16:22:01 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,79 +79,9 @@ int	parse_command(t_exp *start, t_exp *end, t_parser *node)
 			if (new_node)
 			{
 				add_redirection_to_parser(&node->redirection, new_node);
-				printf("%d", node->redirection->type);
 				current = current->next;
 			}
 		}
 	}
 	return (1);
 }
-
-
-
-
-// void print_redirections(t_redirection *redir)
-// {
-// 	while (redir)
-// 	{
-// 		if(redir->type == 0)
-// 			printf("  redir type: %d, delimiter: %s\n", redir->type, redir->delimiter);
-// 		else
-// 			printf("  redir type: %d, filename: %s\n", redir->type, redir->filename);
-// 		redir = redir->next;
-// 	}
-// }
-
-// void print_parser(t_parser *parser)
-// {
-// 	t_parser *current = parser;
-// 	int i;
-
-// 	while (current)
-// 	{
-// 		printf("⎯⎯⎯⎯⎯⎯⎯⎯ Yeni Komut ⎯⎯⎯⎯⎯⎯⎯⎯\n");
-
-// 		// Argümanları SADECE current->args NULL değilse yazdırın
-// 		if (current->args) // <--- print_parser için ANA DÜZELTME
-// 		{
-// 			for (i = 0; current->args[i]; i++)
-// 				printf("  arg[%d]: %s\n", i, current->args[i]);
-// 		}
-// 		else
-// 			printf("  (argüman yok)\n");
-
-// 		// Yönlendirmeler varsa yazdırın
-// 		if (current->redirection)
-// 			print_redirections(current->redirection);
-// 		else
-// 			printf("  (yönlendirme yok)\n");
-
-// 		current = current->next;
-// 	}
-// }
-
-
-/*
-// 5. ❌ QUOTE HANDLING EKSİK
-// "ls 'file name'" veya 'ls "file name"' durumları
-
-// ✅ ÇÖZÜM: Expander'da halledilmeli ama parser'da da kontrol:
-static char *handle_quotes(char *str)
-{
-    int len;
-    char *result;
-    
-    if (!str)
-        return (NULL);
-    
-    len = ft_strlen(str);
-    if (len >= 2 && 
-       ((str[0] == '"' && str[len-1] == '"') ||
-        (str[0] == '\'' && str[len-1] == '\'')))
-    {
-        result = ft_substr(str, 1, len - 2);
-        return (result);
-    }
-    return (ft_strdup(str));
-}
-*/

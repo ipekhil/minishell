@@ -51,7 +51,6 @@ void	handle_heredoc(t_data *data)
 			heredoc(data, red->delimiter, heredoc_fd);
 			close(heredoc_fd);
 			red->filename = ft_strdup("heredoc_tmp");
-			printf("Heredoc content saved to %s\n", red->filename);
 		}
 		red = red->next;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 18:05:59 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/13 16:20:53 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	get_len(t_data *data, char *first_val, int i, int *len)
 			if (key[0] == '\0')
 				*len += 1;
 			i += ft_strlen(key);
-			value = get_value_of_key(data->env, key);
+			value = get_value_of_key(data, key);
 			if (value)
 				*len += ft_strlen(value);
 			free(key);
@@ -101,11 +101,11 @@ void	expander(t_data *data)
 		add_exp_node(data, tmp);
 		tmp = tmp->next;
 	}
-    t_exp *debug = data->expander;
-    while(debug)
-    {
-        printf("Expanded Value: %s TYPE: %d FLAG:%d\n", debug->exp_value, debug->type, debug->concat_w_next);
-        debug = debug->next;
-    }
+    // t_exp *debug = data->expander;
+    // while(debug)
+    // {
+    //     printf("Expanded Value: %s TYPE: %d FLAG:%d\n", debug->exp_value, debug->type, debug->concat_w_next);
+    //     debug = debug->next;
+    // }
 	concatenator(data);
 }
