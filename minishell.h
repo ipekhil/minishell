@@ -78,6 +78,7 @@ typedef struct s_redirection
 	int						type;
 	char					*filename;
 	char					*heredoc_content;
+	int 					hdoc_int;
 	char					*delimiter;
 	struct s_redirection	*next;
 }		t_redirection;
@@ -122,7 +123,7 @@ void	concatenator(t_data *data);
 //expander
 void	expand_token_value(t_data *data, char *first_val, char *new_val, int i);
 void	expander(t_data *data);
-char	*get_value_of_key(t_data *data, char *key);
+char	*get_value_of_key(t_data *data, char *key, int flag);
 char	*extract_key(char *token_val);
 void	get_len(t_data *data, char *first_val, int i, int *len);
 

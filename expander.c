@@ -28,7 +28,7 @@ void	get_len(t_data *data, char *first_val, int i, int *len)
 			if (key[0] == '\0')
 				*len += 1;
 			i += ft_strlen(key);
-			value = get_value_of_key(data, key);
+			value = get_value_of_key(data, key, 0);
 			if (value)
 				*len += ft_strlen(value);
 			free(key);

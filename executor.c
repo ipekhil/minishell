@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/13 12:10:13 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/11 17:11:35 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	apply_redirections(t_redirection *redir)
 		}
 		else if (redir->type == HEREDOC) // <<
 		{
-			fd = open(redir->filename, O_RDONLY);
+			fd = open("heredoc_tmp", O_RDONLY);
 			if (fd < 0)
 			{
 				printf("minishell: %s: No such file or directory\n", redir->filename);
@@ -63,6 +63,8 @@ void	apply_redirections(t_redirection *redir)
 			}
 			dup2(fd, STDIN_FILENO);
 			close(fd);
+			if (!redir->next)
+			 	unlink("heredoc_tmp");
 		}
 		redir = redir->next;
 	}
@@ -301,16 +303,17 @@ void execute_command_in_child(t_data *data, char **args)
 	}
 }
 
-void    handle_error_and_exit(char *cmd, const char *msg, int exit_code)
+void    handle_error_and_exit(t_data *data, char *cmd, const char *msg, int exit_code)
 {
 	if(cmd != NULL)
 		printf("minishell: %s %s", cmd, msg);
 	else 
     	printf("minishell: %s", msg);
+	free_all(data);
     exit(exit_code);
 }
 
-void pre_file_check(char *cmd, int *exit)
+void pre_file_check(t_data *data, char *cmd, int *exit)
 {
 	struct stat st;
 
@@ -319,22 +322,22 @@ void pre_file_check(char *cmd, int *exit)
 		if (cmd && stat(cmd, &st) == 0)
 		{
 			if (S_ISDIR(st.st_mode))
-				handle_error_and_exit(NULL, ": Is a directory\n", 126);
+				handle_error_and_exit(data, NULL, ": Is a directory\n", 126);
 			else if (access(cmd, X_OK) == -1)
-				handle_error_and_exit(NULL, ": Permission denied\n", 126);
+				handle_error_and_exit(data, NULL, ": Permission denied\n", 126);
 		}
 		else
-			handle_error_and_exit(NULL, ": No such file or directory\n", 127);
+			handle_error_and_exit(data, NULL, ": No such file or directory\n", 127);
 	}
 	else if (cmd && access(cmd, F_OK) == 0)
-		handle_error_and_exit(cmd, "command not found\n", 127);
+		handle_error_and_exit(data, cmd, "command not found\n", 127);
 	else
 		*exit = 0;
 }
 
 void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 {
-	pre_file_check(cmd->args[0], &data->last_exit_status);
+	pre_file_check(data, cmd->args[0], &data->last_exit_status);
 	if (data->last_exit_status != 0)
 		return ;
 	setup_child_signals();
@@ -350,7 +353,9 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 		close(pipe_fds[1]);
 	}
 	if (cmd->redirection)
-			apply_redirections(cmd->redirection);
+	{
+		apply_redirections(cmd->redirection);
+	}
 	if (is_builtin(cmd->args[0]))
 	{
 		execute_builtin(data, cmd->args);
@@ -358,7 +363,9 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 		exit(0);
 	}
 	else
-		execute_command_in_child(data, cmd->args);
+	{
+			execute_command_in_child(data, cmd->args);	
+	}
 }
 
 void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
@@ -438,19 +445,22 @@ void	executor(t_data *data)
 				return ;
 			}
 		}
-		last_pid = fork();
-		if (last_pid < 0)
+		if ((cmds->redirection &&  cmds->redirection->hdoc_int == 0) || !cmds->redirection)
 		{
-			handle_fork_error(cmds, pipe_fds, &prev_pipe_read_fd);
-			return ;
+			last_pid = fork();
+			if (last_pid < 0)
+			{
+				handle_fork_error(cmds, pipe_fds, &prev_pipe_read_fd);
+				return ;
+			}
+			else if (last_pid == 0)
+				child_process(data, cmds, pipe_fds, prev_pipe_read_fd);//prev pipe kopyası ile çaşır *prev_pipe_ değil
+			else
+				parent_process(pipe_fds, &prev_pipe_read_fd, cmds);
 		}
-		else if (last_pid == 0)
-			child_process(data, cmds, pipe_fds, prev_pipe_read_fd);//prev pipe kopyası ile çaşır *prev_pipe_ değil
-		else
-			parent_process(pipe_fds, &prev_pipe_read_fd, cmds);
 		cmds = cmds->next;
 	}
-	if (prev_pipe_read_fd != STDIN_FILENO)
+	if (prev_pipe_read_fd != STDIN_FILENO )
 		close(prev_pipe_read_fd);
 	handle_waiting(data, last_pid);
 }
