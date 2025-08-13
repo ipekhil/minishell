@@ -75,8 +75,12 @@ static int	change_directory(char *target, t_env **env)
 int	cd_builtin(t_data *data, char **argv)
 {
 	char	*target;
+	int		argc;
 
-	if (argv[2])
+	argc = 0;
+	while (argv[argc])
+		argc++;
+	if (argc > 2)
 	{
 		printf("minishell: %s: too many arguments\n", argv[0]);
 		return (1);
