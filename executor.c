@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 17:11:35 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/13 12:10:13 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void	execute_builtin(t_data *data, char **args)
 	if (ft_strcmp(args[0], "pwd") == 0)
 		data->last_exit_status = pwd_builtin();
 	else if (ft_strcmp(args[0], "cd") == 0)
-		data->last_exit_status = cd_builtin(args, &data->char_env);
+		data->last_exit_status = cd_builtin(data, args);
 	else if (ft_strcmp(args[0], "echo") == 0)
 		data->last_exit_status = echo_builtin(args);
 	else if (ft_strcmp(args[0], "export") == 0)

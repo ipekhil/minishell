@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 18:06:10 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/13 11:52:43 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ typedef struct s_data
 	int			should_exit;
 }		t_data;
 
-int		ft_strcmp(char *s1, char *s2);
+int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strcpy(char *dest, const char *src);
 void	routine_loop(t_data *data);
 int		tokenization(t_data *data);
@@ -132,7 +132,7 @@ int		syntax_control(t_exp *tokens);
 int		parse_command(t_exp *start, t_exp *end, t_parser *node);
 
 // Builtins
-int		cd_builtin(char **argv, char ***envp);
+int		cd_builtin(t_data *data, char **argv);
 int		echo_builtin(char **input);
 int		pwd_builtin(void);
 void	update_env_var(char ***envp, const char *name, const char *value);
@@ -171,5 +171,8 @@ void	free_token(t_token *head);
 void	free_env(t_env *head);
 void	free_redirection(t_redirection *head);
 void	free_merged(t_exp *start);
+
+//exporttan cd için
+void	add_or_update_env(t_env **env, char *key, char *value);
 
 #endif
