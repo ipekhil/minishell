@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/14 19:52:38 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/14 22:25:37 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	apply_redirections(t_data *data, t_redirection *redir)
 			fd = open(redir->filename, O_RDONLY);
 			if (fd < 0)
 			{
-				handle_error_and_exit(data, redir->filename, "bb", 1);
+				handle_error_and_exit(data, redir->filename, ": No such file or directory\n", 1);
 				exit(1);
 			}
 			dup2(fd, STDIN_FILENO);
@@ -284,11 +284,10 @@ void	setup_child_signals()
 	signal(SIGQUIT, SIG_DFL);
 }
 
-
-void execute_command_in_child(t_data *data, t_parser *cmd)
+char *handle_path(t_data *data, t_parser *cmd)
 {
-	char *path;
 	char **temp_env;
+	char *path;
 	char **args;
 
 	args = cmd->args;
@@ -307,16 +306,24 @@ void execute_command_in_child(t_data *data, t_parser *cmd)
 			free_all(data);
 			exit(0);
 		}
+		printf("minishell: %s: command not found\n", args[0]);
 		free_array(temp_env);
 		free_all(data);
-		printf("minishell: %s: command not found\n", args[0]);
 		exit(127);
 	}
+	return (path);
+}
+
+void execute_command_in_child(t_data *data, t_parser *cmd, char *path)
+{
+	char **args;
+
+	args = cmd->args;
 	if (execve(path, args, data->char_env) == -1)
 	{
 		perror("execve");
 		free(path);
-		free_array(temp_env);
+		//free_array(temp_env);
 		free_all(data);
 		exit(127);
 	}
@@ -340,7 +347,7 @@ void pre_file_check(t_data *data, char *cmd, int *exit)
 			handle_error_and_exit(data, NULL, ": No such file or directory\n", 127);
 	}
 	else if (cmd && access(cmd, F_OK) == 0)
-		handle_error_and_exit(data, cmd, "command not found\n", 127);
+		handle_error_and_exit(data, cmd, ": command not found\n", 127);
 	else
 		*exit = 0;
 }
@@ -356,16 +363,14 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 		dup2(prev_pipe, STDIN_FILENO);//ilk komut değilse stdini prev_pipe_read_fd ye yönlendir
 		close(prev_pipe);
 	}
+	if (cmd->redirection)
+		apply_redirections(data, cmd->redirection);
+	char *path = handle_path(data, cmd);
 	if (cmd->next)
 	{
 		dup2(pipe_fds[1], STDOUT_FILENO);//sonraki komut varsa stdoutu yazma ucuna yönlendri
 		close(pipe_fds[0]);
 		close(pipe_fds[1]);
-	}
-	if (cmd->redirection)
-	{
-		//pre_file_check(data, cmd->redirection->filename, &data->last_exit_status);
-		apply_redirections(data, cmd->redirection);
 	}
 	if (is_builtin(cmd->args[0]))
 	{
@@ -374,7 +379,7 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 		exit(0);
 	}
 	else
-		execute_command_in_child(data, cmd);	
+		execute_command_in_child(data, cmd, path);	
 }
 
 void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
