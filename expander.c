@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/14 14:32:38 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/14 14:34:34 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,11 @@ void	expander(t_data *data)
 			expand_flag = 0;
 		tmp = tmp->next;
 	}
-    t_exp *debug = data->expander;
+    /*t_exp *debug = data->expander;
     while(debug)
     {
         printf("Expanded Value: %s TYPE: %d FLAG:%d\n", debug->exp_value, debug->type, debug->concat_w_next);
         debug = debug->next;
-    }
+    }*/
 	concatenator(data);
 }
