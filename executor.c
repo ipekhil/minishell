@@ -6,10 +6,9 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 17:11:35 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/14 19:52:38 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -23,7 +22,7 @@ void    handle_error_and_exit(t_data *data, char *cmd, const char *msg, int exit
     exit(exit_code);
 }
 
-void	apply_redirections(t_redirection *redir)
+void	apply_redirections(t_data *data, t_redirection *redir)
 {
 	int	fd;
 
@@ -34,7 +33,7 @@ void	apply_redirections(t_redirection *redir)
 			fd = open(redir->filename, O_RDONLY);
 			if (fd < 0)
 			{
-				perror("open");
+				handle_error_and_exit(data, redir->filename, "bb", 1);
 				exit(1);
 			}
 			dup2(fd, STDIN_FILENO);
@@ -365,8 +364,8 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 	}
 	if (cmd->redirection)
 	{
-		pre_file_check(data, cmd->redirection->filename, &data->last_exit_status);
-		apply_redirections(cmd->redirection);
+		//pre_file_check(data, cmd->redirection->filename, &data->last_exit_status);
+		apply_redirections(data, cmd->redirection);
 	}
 	if (is_builtin(cmd->args[0]))
 	{

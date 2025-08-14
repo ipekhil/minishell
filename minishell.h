@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/13 16:15:33 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/14 20:09:05 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void	concatenator(t_data *data);
 //expander
 void	expand_token_value(t_data *data, char *first_val, char *new_val, int i);
 void	expander(t_data *data);
-char	*get_value_of_key(t_data *data, char *key, int flag);
+char	*get_value_of_key(t_data *data, char *key);
 char	*extract_key(char *token_val);
 void	get_len(t_data *data, char *first_val, int i, int *len);
 

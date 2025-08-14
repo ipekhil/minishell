@@ -21,17 +21,22 @@ char	*extract_key(char *token_val)
 	return (key_to_search);
 }
 
-char	*get_value_of_key(t_data *data, char *key, int flag)
+char	*get_value_of_key(t_data *data, char *key)
 {
 	t_env	*env;
+	char	*val;
 
 	env = data->env;
+	val = NULL;
 	while (env)
 	{
 		if (ft_strcmp(env->key, key) == 0)
 			return (env->value);
-		if (ft_strcmp(key, "?") == 0 && flag == 1)
-			return(ft_itoa(data->last_exit_status));
+		if (ft_strcmp(key, "?") == 0)
+		{
+			val = ft_itoa(data->last_exit_status);
+			return (val);
+		}
 		env = env->next;
 	}
 	return (NULL);
@@ -66,9 +71,10 @@ void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 			if (key[0] == '\0')
 				new_val[a_index++] = '$';
 			i += ft_strlen(key);
-			value = get_value_of_key(data, key, 1);
+			value = get_value_of_key(data, key);
 			append_value(new_val, value, &a_index);
 			free(key);
+			free(value);
 		}
 		else
 			new_val[a_index++] = first_val[i++];
