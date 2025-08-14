@@ -31,10 +31,7 @@ char	*get_value_of_key(t_data *data, char *key, int flag)
 		if (ft_strcmp(env->key, key) == 0)
 			return (env->value);
 		if (ft_strcmp(key, "?") == 0 && flag == 1)
-		{
-			printf("%d",data->last_exit_status);
-			break ;
-		}
+			return(ft_itoa(data->last_exit_status));
 		env = env->next;
 	}
 	return (NULL);

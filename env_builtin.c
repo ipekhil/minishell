@@ -6,7 +6,7 @@ int	env_builtin(t_data *data, char **args)
 
 	if (args[1])
 	{
-		printf("minishell: env: %s: No such file or directory", args[1]);
+		printf("minishell: env: %s: No such file or directory\n", args[1]);
 		data->last_exit_status = 127;
 		return (127);
 	}

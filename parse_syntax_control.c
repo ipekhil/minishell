@@ -52,13 +52,13 @@ static int pipe_syntax_control(t_exp *tokens, t_exp *current)
 		print_syntax_error(current->next);
 		return (0);
 	}
-	if (current && current->type == 4 && current->next
-		&& (current->next->type == 0 || current->next->type == 1
-			|| current->next->type == 2 || current->next->type == 3))
-	{
-		print_syntax_error(current->next);
-		return (0);
-	}
+	// if (current && current->type == 4 && current->next
+	// 	&& (current->next->type == 1
+	// 		|| current->next->type == 2 || current->next->type == 3))
+	// {
+	// 	print_syntax_error(current->next);
+	// 	return (0);
+	// }
 	// sonda | olması durumu
 	if (current && current->type == 4 && !current->next)
 	{

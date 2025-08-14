@@ -16,6 +16,7 @@ void	routine_loop(t_data *data)
 {
 	while (1)
 	{
+		g_signal_exit = data->last_exit_status;
 		signal_handlers_main();
 		data->line = readline("minishell> ");
 		if (!data->line)
@@ -25,6 +26,7 @@ void	routine_loop(t_data *data)
 		}
 		if (data->line && data->line[0] != '\0')
 			add_history(data->line);
+		data->last_exit_status = g_signal_exit;
 		if (tokenization(data) == -1)
 		{
 			free_all(data);

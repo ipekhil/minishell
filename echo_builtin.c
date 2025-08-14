@@ -24,7 +24,7 @@ int	echo_builtin(char **input)
 
 	i = 1;
 	n_flag = 0;
-	if (input[i] && is_n_flag(input[i]))
+	while (input[i] && is_n_flag(input[i]))
 	{
 		n_flag = 1;
 		i++;

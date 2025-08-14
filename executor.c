@@ -13,6 +13,16 @@
 
 #include "minishell.h"
 
+void    handle_error_and_exit(t_data *data, char *cmd, const char *msg, int exit_code)
+{
+	if(cmd != NULL)
+		printf("minishell: %s %s", cmd, msg);
+	else 
+    	printf("minishell: %s", msg);
+	free_all(data);
+    exit(exit_code);
+}
+
 void	apply_redirections(t_redirection *redir)
 {
 	int	fd;
@@ -54,7 +64,7 @@ void	apply_redirections(t_redirection *redir)
 		}
 		else if (redir->type == HEREDOC) // <<
 		{
-			fd = open("heredoc_tmp", O_RDONLY);
+			fd = open(redir->filename, O_RDONLY);
 			if (fd < 0)
 			{
 				printf("minishell: %s: No such file or directory\n", redir->filename);
@@ -63,9 +73,9 @@ void	apply_redirections(t_redirection *redir)
 			}
 			dup2(fd, STDIN_FILENO);
 			close(fd);
-			if (!redir->next)
-			 	unlink("heredoc_tmp");
 		}
+		// if (!redir->next && access("heredoc_tmp", F_OK) == 0)
+		//  	unlink("heredoc_tmp");
 		redir = redir->next;
 	}
 }
@@ -157,6 +167,8 @@ char	*create_full_path(char *dir, char *cmd)
 	char	*full_path;
 	int		len;
 
+	if (!dir || !cmd)
+		return (NULL);
 	len = ft_strlen(dir) + ft_strlen(cmd) + 2;
 	full_path = malloc(sizeof(char) * len);
 	if (!full_path)
@@ -274,11 +286,13 @@ void	setup_child_signals()
 }
 
 
-void execute_command_in_child(t_data *data, char **args)
+void execute_command_in_child(t_data *data, t_parser *cmd)
 {
 	char *path;
 	char **temp_env;
+	char **args;
 
+	args = cmd->args;
 	temp_env = convert_env_to_array(data->env);
 	if (!temp_env)
 	{
@@ -288,9 +302,15 @@ void execute_command_in_child(t_data *data, char **args)
 	path = find_command_path(args[0], temp_env);
 	if (!path)
 	{
-		printf("minishell: %s: command not found\n", args[0]);
+		if(cmd->redirection)
+		{
+			free_array(temp_env);
+			free_all(data);
+			exit(0);
+		}
 		free_array(temp_env);
 		free_all(data);
+		printf("minishell: %s: command not found\n", args[0]);
 		exit(127);
 	}
 	if (execve(path, args, data->char_env) == -1)
@@ -303,15 +323,6 @@ void execute_command_in_child(t_data *data, char **args)
 	}
 }
 
-void    handle_error_and_exit(t_data *data, char *cmd, const char *msg, int exit_code)
-{
-	if(cmd != NULL)
-		printf("minishell: %s %s", cmd, msg);
-	else 
-    	printf("minishell: %s", msg);
-	free_all(data);
-    exit(exit_code);
-}
 
 void pre_file_check(t_data *data, char *cmd, int *exit)
 {
@@ -354,6 +365,7 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 	}
 	if (cmd->redirection)
 	{
+		pre_file_check(data, cmd->redirection->filename, &data->last_exit_status);
 		apply_redirections(cmd->redirection);
 	}
 	if (is_builtin(cmd->args[0]))
@@ -363,9 +375,7 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 		exit(0);
 	}
 	else
-	{
-			execute_command_in_child(data, cmd->args);	
-	}
+		execute_command_in_child(data, cmd);	
 }
 
 void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
@@ -463,4 +473,6 @@ void	executor(t_data *data)
 	if (prev_pipe_read_fd != STDIN_FILENO )
 		close(prev_pipe_read_fd);
 	handle_waiting(data, last_pid);
+	if (access("heredoc_tmp", F_OK) == 0)
+	 	unlink("heredoc_tmp");
 }

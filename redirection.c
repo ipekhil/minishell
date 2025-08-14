@@ -25,7 +25,6 @@ static t_redirection	*new_redirection_node(t_exp *current)
 		if (current->type == 0)
 		{
 			node->delimiter = ft_strdup(current->next->exp_value);
-			node->heredoc_content = NULL;
 			node->hdoc_int = 0;
 			node->filename = NULL;
 		}
@@ -34,7 +33,6 @@ static t_redirection	*new_redirection_node(t_exp *current)
 			node->filename = ft_strdup(current->next->exp_value);
 			node->delimiter = NULL;
 			node->hdoc_int = 0;
-			node->heredoc_content = NULL;
 		}
 		node->next = NULL;
 		return (node);

@@ -116,6 +116,7 @@ int		ft_isoperator(char c);
 void	get_env(t_env **env, char **envp);
 void	handle_heredoc(t_data *data);
 
+
 // Concatenator
 void	handle_merge(t_exp **nodes, t_exp *start, t_exp *end);
 void	concatenator(t_data *data);

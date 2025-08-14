@@ -78,7 +78,6 @@ static void	add_exp_node(t_data *data, t_token *token, int expand_flag)
 	new_node = malloc(sizeof(t_exp));
 	if (!new_node)
 		return ;
-	printf("expand: %d\n", expand_flag);
 	set_exp_var(data, token, new_node, expand_flag);
 	if (!data->expander)
 		data->expander = new_node;
