@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/13 16:20:53 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/14 14:32:38 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,13 @@ static void	expand_with_variables(t_data *data, t_token *token, t_exp *node)
 	expand_token_value(data, token->value, node->exp_value, 0);
 }
 
-static void	set_exp_var(t_data *data, t_token *token, t_exp *new_node)
+static void	set_exp_var(t_data *data, t_token *token, t_exp *new_node, int exp_fl)
 {
 	if (token->type <= 9 && token->type >= 6)
 		new_node->type = 5;
 	else
 		new_node->type = token->type;
-	if (token->type == 9 || token->type == 8)
+	if ((token->type == 9 || token->type == 8) && exp_fl)
 		expand_with_variables(data, token, new_node);
 	else
 	{
@@ -69,7 +69,7 @@ static void	set_exp_var(t_data *data, t_token *token, t_exp *new_node)
 	new_node->next = NULL;
 }
 
-static void	add_exp_node(t_data *data, t_token *token)
+static void	add_exp_node(t_data *data, t_token *token, int expand_flag)
 {
 	t_exp	*new_node;
 	t_exp	*tmp;
@@ -78,7 +78,8 @@ static void	add_exp_node(t_data *data, t_token *token)
 	new_node = malloc(sizeof(t_exp));
 	if (!new_node)
 		return ;
-	set_exp_var(data, token, new_node);
+	printf("expand: %d\n", expand_flag);
+	set_exp_var(data, token, new_node, expand_flag);
 	if (!data->expander)
 		data->expander = new_node;
 	else
@@ -93,19 +94,24 @@ static void	add_exp_node(t_data *data, t_token *token)
 void	expander(t_data *data)
 {
 	t_token	*tmp;
+	int		expand_flag;
 
 	tmp = data->tokens;
 	data->expander = NULL;
+	expand_flag = 1;
 	while (tmp)
 	{
-		add_exp_node(data, tmp);
+		add_exp_node(data, tmp, expand_flag);
+		expand_flag = 1;
+		if (tmp->type == 0 && tmp->next)
+			expand_flag = 0;
 		tmp = tmp->next;
 	}
-    // t_exp *debug = data->expander;
-    // while(debug)
-    // {
-    //     printf("Expanded Value: %s TYPE: %d FLAG:%d\n", debug->exp_value, debug->type, debug->concat_w_next);
-    //     debug = debug->next;
-    // }
+    t_exp *debug = data->expander;
+    while(debug)
+    {
+        printf("Expanded Value: %s TYPE: %d FLAG:%d\n", debug->exp_value, debug->type, debug->concat_w_next);
+        debug = debug->next;
+    }
 	concatenator(data);
 }
