@@ -77,6 +77,7 @@ void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 	append_flag = 0;
 	while (first_val[i] != '\0')
 	{
+		append_flag = 0;
 		if (first_val[i] == '$')
 		{
 			i++;

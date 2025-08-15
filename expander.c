@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/16 00:52:43 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/16 00:57:51 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	get_len(t_data *data, char *first_val, int i, int *len)
 	app_flag = 0;
 	while (first_val[i] != '\0')
 	{
+		app_flag = 0;
 		if (first_val[i] == '$')
 		{
 			i++;
