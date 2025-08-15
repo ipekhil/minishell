@@ -21,7 +21,7 @@ char	*extract_key(char *token_val)
 	return (key_to_search);
 }
 
-char	*get_value_of_key(t_data *data, char *key)
+char	*get_value_of_key(t_data *data, char *key, int *app_fl)
 {
 	t_env	*env;
 	char	*val;
@@ -30,6 +30,7 @@ char	*get_value_of_key(t_data *data, char *key)
 
 	env = data->env;
 	val = NULL;
+	new_v = NULL;
 	while (env)
 	{
 		if (ft_strcmp(env->key, key) == 0)
@@ -43,6 +44,8 @@ char	*get_value_of_key(t_data *data, char *key)
 			new_v = malloc(len + 1);
 			ft_strcpy(new_v, val);
 			ft_strlcat(new_v, &key[1], len + 1);
+			*app_fl = 1;
+			free(val);
 			return (new_v);
 		}
 		env = env->next;
@@ -66,10 +69,12 @@ void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 	char	*key;
 	char	*value;
 	int		a_index;
+	int		append_flag;
 
 	a_index = 0;
 	key = NULL;
 	value = NULL;
+	append_flag = 0;
 	while (first_val[i] != '\0')
 	{
 		if (first_val[i] == '$')
@@ -79,10 +84,11 @@ void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 			if (key[0] == '\0')
 				new_val[a_index++] = '$';
 			i += ft_strlen(key);
-			value = get_value_of_key(data, key);
+			value = get_value_of_key(data, key, &append_flag);
 			append_value(new_val, value, &a_index);
 			free(key);
-			//free(value);
+			if(append_flag)
+				free(value);
 		}
 		else
 			new_val[a_index++] = first_val[i++];

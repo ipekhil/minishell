@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/15 20:40:24 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/16 00:48:03 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,12 @@ void	get_len(t_data *data, char *first_val, int i, int *len)
 {
 	char	*key;
 	char	*value;
+	int		app_flag;
+	
 
 	key = NULL;
 	value = NULL;
+	app_flag = 0;
 	while (first_val[i] != '\0')
 	{
 		if (first_val[i] == '$')
@@ -28,11 +31,12 @@ void	get_len(t_data *data, char *first_val, int i, int *len)
 			if (key[0] == '\0')
 				*len += 1;
 			i += ft_strlen(key);
-			value = get_value_of_key(data, key);
+			value = get_value_of_key(data, key, &app_flag);
 			if (value)
-				*len += ft_strlen(value);
+				*len += ft_strlen(value);	
 			free(key);
-			//free(value);
+			if(app_flag)
+				free(value);
 		}
 		else
 		{
