@@ -6,13 +6,14 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/14 20:09:05 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/15 21:15:15 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <errno.h>
 # include <unistd.h>
 # include <signal.h>
 # include <stdio.h>

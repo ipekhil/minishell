@@ -3,22 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/15 20:34:03 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/15 21:51:02 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    handle_error_and_exit(t_data *data, char *cmd, const char *msg, int exit_code)
+void handle_error_and_exit(t_data *data, char *cmd, const char *msg, int exit_code)
 {
-	if(cmd != NULL)
-		printf("minishell: %s %s", cmd, msg);
-	else 
-    	printf("minishell: %s", msg);
-	free_all(data);
+    write(2, "minishell: ", 11);
+    if (cmd != NULL)
+    {
+        write(2, cmd, ft_strlen(cmd));
+        write(2, ": ", 2);
+    }
+    write(2, msg, ft_strlen(msg));
+    free_all(data);
     exit(exit_code);
 }
 
@@ -32,7 +35,11 @@ void	apply_redirections(t_data *data, t_redirection *redir)
 		{
 			fd = open(redir->filename, O_RDONLY);
 			if (fd < 0)
-				handle_error_and_exit(data, redir->filename, ": No such file or directory\n", 1);
+			{
+				perror(redir->filename);
+				free_all(data);
+				exit(1);
+			}
 			dup2(fd, STDIN_FILENO);
 			close(fd);
 		}
@@ -40,7 +47,11 @@ void	apply_redirections(t_data *data, t_redirection *redir)
 		{
 			fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (fd < 0)
-				handle_error_and_exit(data, redir->filename, ": No such file or directory\n", 1);
+			{
+				perror(redir->filename);
+				free_all(data);
+				exit(1);
+			}
 			dup2(fd, STDOUT_FILENO);
 			close(fd);
 		}
@@ -48,7 +59,11 @@ void	apply_redirections(t_data *data, t_redirection *redir)
 		{
 			fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (fd < 0)
-				handle_error_and_exit(data, redir->filename, ": No such file or directory\n", 1);
+			{
+				perror(redir->filename);
+				free_all(data);
+				exit(1);
+			}
 			dup2(fd, STDOUT_FILENO);
 			close(fd);
 		}
@@ -56,7 +71,11 @@ void	apply_redirections(t_data *data, t_redirection *redir)
 		{
 			fd = open(redir->filename, O_RDONLY);
 			if (fd < 0)
-				handle_error_and_exit(data, redir->filename, ":No such file or directory\n", 1);
+			{
+				perror(redir->filename);
+				free_all(data);
+				exit(1);
+			}
 			dup2(fd, STDIN_FILENO);
 			close(fd);
 		}
@@ -267,6 +286,7 @@ void	setup_child_signals()
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+    signal(SIGPIPE, SIG_DFL);
 }
 
 void execute_command_in_child(t_data *data, char **args)
@@ -283,10 +303,8 @@ void execute_command_in_child(t_data *data, char **args)
 	path = find_command_path(args[0], temp_env);
 	if (!path)
 	{
-		printf("minishell: %s: command not found\n", args[0]);
 		free_array(temp_env);
-		free_all(data);
-		exit(127);
+		handle_error_and_exit(data, args[0],"command not found\n" ,127);
 	}
 	if (execve(path, args, data->char_env) == -1)
 	{
@@ -323,10 +341,10 @@ void pre_file_check(t_data *data, char *cmd, int *exit)
 
 void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 {
+	setup_child_signals();
 	pre_file_check(data,cmd->args[0], &data->last_exit_status);
 	if (data->last_exit_status != 0)
 		return ;
-	setup_child_signals();
 	if (prev_pipe != STDIN_FILENO)
 	{
 		dup2(prev_pipe, STDIN_FILENO);//ilk komut değilse stdini prev_pipe_read_fd ye yönlendir
@@ -385,6 +403,7 @@ dup2(pipe_fds[0], STDIN_FILENO). 2. komut için stdin i read ucuna yönlendirir(
 static void	handle_waiting(t_data *data, pid_t last_pid)
 {
 	int	status;
+	int	sig;
 
 	if (last_pid != -1)
 	{
@@ -392,7 +411,12 @@ static void	handle_waiting(t_data *data, pid_t last_pid)
 		if (WIFEXITED(status))
 			data->last_exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			data->last_exit_status = 128 + WTERMSIG(status);
+		{
+			sig = WTERMSIG(status);
+            if (sig == SIGPIPE)
+                write(2, "Broken pipe\n", 12);
+			data->last_exit_status = 128 + sig;
+		}
 	}
 	while (wait(NULL) > 0)
 		;

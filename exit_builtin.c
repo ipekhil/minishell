@@ -19,7 +19,7 @@ void	exit_builtin(t_data *data, char **args)
 		if (!ft_isdigit(args[1][i]))
 		{
 			printf("minishell: exit: %s: numeric argument required\n", args[1]);
-			data->last_exit_status = 255;
+			data->last_exit_status = 2;
 			data->should_exit = 1;
 			return ;
 		}
@@ -28,6 +28,7 @@ void	exit_builtin(t_data *data, char **args)
 	if (args[2])
 	{
 		printf("minishell: exit: too many arguments\n");
+			data->last_exit_status = 1;
 		return ;
 	}
 	exit_code = ft_atoi(args[1]);
