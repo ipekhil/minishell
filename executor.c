@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/14 22:37:02 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/15 20:34:03 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,13 +269,11 @@ void	setup_child_signals()
 	signal(SIGQUIT, SIG_DFL);
 }
 
-char *handle_path(t_data *data, t_parser *cmd)
+void execute_command_in_child(t_data *data, char **args)
 {
-	char **temp_env;
 	char *path;
-	char **args;
+	char **temp_env;
 
-	args = cmd->args;
 	temp_env = convert_env_to_array(data->env);
 	if (!temp_env)
 	{
@@ -285,30 +283,16 @@ char *handle_path(t_data *data, t_parser *cmd)
 	path = find_command_path(args[0], temp_env);
 	if (!path)
 	{
-		if(cmd->redirection)
-		{
-			free_array(temp_env);
-			free_all(data);
-			exit(0);
-		}
 		printf("minishell: %s: command not found\n", args[0]);
 		free_array(temp_env);
 		free_all(data);
 		exit(127);
 	}
-	return (path);
-}
-
-void execute_command_in_child(t_data *data, t_parser *cmd, char *path)
-{
-	char **args;
-
-	args = cmd->args;
 	if (execve(path, args, data->char_env) == -1)
 	{
 		perror("execve");
 		free(path);
-		//free_array(temp_env);
+		free_array(temp_env);
 		free_all(data);
 		exit(127);
 	}
@@ -339,7 +323,7 @@ void pre_file_check(t_data *data, char *cmd, int *exit)
 
 void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 {
-	pre_file_check(data, cmd->args[0], &data->last_exit_status);
+	pre_file_check(data,cmd->args[0], &data->last_exit_status);
 	if (data->last_exit_status != 0)
 		return ;
 	setup_child_signals();
@@ -348,15 +332,14 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 		dup2(prev_pipe, STDIN_FILENO);//ilk komut değilse stdini prev_pipe_read_fd ye yönlendir
 		close(prev_pipe);
 	}
-	if (cmd->redirection)
-		apply_redirections(data, cmd->redirection);
-	char *path = handle_path(data, cmd);
 	if (cmd->next)
 	{
 		dup2(pipe_fds[1], STDOUT_FILENO);//sonraki komut varsa stdoutu yazma ucuna yönlendri
 		close(pipe_fds[0]);
 		close(pipe_fds[1]);
 	}
+	if (cmd->redirection)
+			apply_redirections(data, cmd->redirection);
 	if (is_builtin(cmd->args[0]))
 	{
 		execute_builtin(data, cmd->args);
@@ -364,8 +347,9 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 		exit(0);
 	}
 	else
-		execute_command_in_child(data, cmd, path);	
+		execute_command_in_child(data, cmd->args);
 }
+
 
 void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
 {

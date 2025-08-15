@@ -25,6 +25,8 @@ char	*get_value_of_key(t_data *data, char *key)
 {
 	t_env	*env;
 	char	*val;
+	int 	len;
+	char	*new_v;
 
 	env = data->env;
 	val = NULL;
@@ -32,10 +34,16 @@ char	*get_value_of_key(t_data *data, char *key)
 	{
 		if (ft_strcmp(env->key, key) == 0)
 			return (env->value);
-		if (ft_strcmp(key, "?") == 0)
+		if (key[0] == '?')
 		{
 			val = ft_itoa(data->last_exit_status);
-			return (val);
+			len = ft_strlen(val);
+			if (key[1] != '\0')
+				len += ft_strlen(&key[1]);
+			new_v = malloc(len + 1);
+			ft_strcpy(new_v, val);
+			ft_strlcat(new_v, &key[1], len + 1);
+			return (new_v);
 		}
 		env = env->next;
 	}
@@ -74,7 +82,7 @@ void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 			value = get_value_of_key(data, key);
 			append_value(new_val, value, &a_index);
 			free(key);
-			free(value);
+			//free(value);
 		}
 		else
 			new_val[a_index++] = first_val[i++];

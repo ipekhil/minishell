@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/14 20:11:33 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/15 20:40:24 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	get_len(t_data *data, char *first_val, int i, int *len)
 			if (value)
 				*len += ft_strlen(value);
 			free(key);
-			free(value);
+			//free(value);
 		}
 		else
 		{
@@ -101,10 +101,15 @@ void	expander(t_data *data)
 	expand_flag = 1;
 	while (tmp)
 	{
-		add_exp_node(data, tmp, expand_flag);
-		expand_flag = 1;
-		if (tmp->type == 0 && tmp->next)
-			expand_flag = 0;
+		int len = 0;
+		get_len(data, tmp->value, 0, &len);
+		if (len != 0)
+		{
+			add_exp_node(data, tmp, expand_flag);
+			expand_flag = 1;
+			if (tmp->type == 0 && tmp->next)
+				expand_flag = 0;	
+		}
 		tmp = tmp->next;
 	}
     /*t_exp *debug = data->expander;
