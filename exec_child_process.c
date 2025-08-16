@@ -25,6 +25,8 @@ char	*find_command_path(char *cmd, char **env)
 	int		i;
 
 	path_env = NULL;
+	if(!cmd)
+		return(NULL);
 	if (access(cmd, F_OK) == 0)
 		return (ft_strdup(cmd));
 	i = 0;
@@ -74,16 +76,19 @@ void	execute_command_in_child(t_data *data, t_parser *cmd)
 	path = find_command_path(args[0], temp_env);
 	if (!path)
 	{
-		if (cmd->redirection)
+		if(cmd->redirection && !args[0])
 		{
 			free_array(temp_env);
 			free_all(data);
 			exit(0);
 		}
-		free_array(temp_env);
-		handle_err_and_exit(data, args[0], "command not found\n" ,127);
+		else
+		{
+			free_array(temp_env);
+			handle_err_and_exit(data, args[0], "command not found\n" ,127);
+		}
 	}
-	if (execve(path, args, data->char_env) == -1)
+	else if (execve(path, args, data->char_env) == -1)
 	{
 		perror("execve");
 		free(path);
