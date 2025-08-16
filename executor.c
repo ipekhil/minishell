@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/15 21:51:02 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/16 02:35:31 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	apply_redirections(t_data *data, t_redirection *redir)
 			fd = open(redir->filename, O_RDONLY);
 			if (fd < 0)
 			{
+				write(2, "a", 1);
 				perror(redir->filename);
 				free_all(data);
 				exit(1);
@@ -372,6 +373,7 @@ void child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
 {
     signal(SIGINT, SIG_IGN);
+	signal(SIGPIPE, SIG_IGN);
 	if (*prev_pipe != STDIN_FILENO)
 		close(*prev_pipe);//önceki pipe okuma ucu kapatılır (artık kullanılmayacak)
 	if (cmd->next)
@@ -471,5 +473,8 @@ void	executor(t_data *data)
 		close(prev_pipe_read_fd);
 	handle_waiting(data, last_pid);
 	if (access("heredoc_tmp", F_OK) == 0)
+	{
+		write(2, "noluyor", 10);
 	 	unlink("heredoc_tmp");
+	}
 }

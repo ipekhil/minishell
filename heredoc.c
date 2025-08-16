@@ -84,9 +84,15 @@ void	handle_heredoc(t_data *data)
 				close(heredoc_fd);
 				if (g_heredoc_interrupted)
 				{
-					redir->hdoc_int = 1;
-					unlink("heredoc_tmp");
-					break;
+					redir = red->redirection;
+					while(redir)
+					{
+						redir->hdoc_int = 1;
+						redir = redir->next;	
+					}
+					if (access("heredoc_tmp", F_OK) == 0)
+						unlink("heredoc_tmp");
+					return ;
 				}
 				redir->filename = ft_strdup("heredoc_tmp");
 			}
