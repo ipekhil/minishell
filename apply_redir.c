@@ -52,7 +52,6 @@ void	handle_heredoc(t_data *data, t_redirection *redir)
 	fd = open(redir->filename, O_RDONLY);
 	if (fd < 0)
 	{
-		write(2, "a", 1);
 		perror(redir->filename);
 		free_all(data);
 		exit(1);

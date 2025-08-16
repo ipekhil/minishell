@@ -58,11 +58,13 @@ char	*find_command_path(char *cmd, char **env)
 	return (NULL);
 }
 
-void	execute_command_in_child(t_data *data, char **args)
+void	execute_command_in_child(t_data *data, t_parser *cmd)
 {
 	char	*path;
 	char	**temp_env;
+	char	**args;
 
+	args = cmd->args;
 	temp_env = convert_env_to_array(data->env);
 	if (!temp_env)
 	{
@@ -72,8 +74,14 @@ void	execute_command_in_child(t_data *data, char **args)
 	path = find_command_path(args[0], temp_env);
 	if (!path)
 	{
+		if (cmd->redirection)
+		{
+			free_array(temp_env);
+			free_all(data);
+			exit(0);
+		}
 		free_array(temp_env);
-		handle_err_and_exit(data, args[0],"command not found\n" ,127);
+		handle_err_and_exit(data, args[0], "command not found\n" ,127);
 	}
 	if (execve(path, args, data->char_env) == -1)
 	{
@@ -87,10 +95,10 @@ void	execute_command_in_child(t_data *data, char **args)
 
 void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 {
-	setup_child_signals();
 	pre_file_check(data, cmd->args[0], &data->last_exit_status);
 	if (data->last_exit_status != 0)
 		return ;
+	setup_child_signals();
 	if (prev_pipe != STDIN_FILENO)
 	{
 		dup2(prev_pipe, STDIN_FILENO);
@@ -111,5 +119,5 @@ void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 		exit(0);
 	}
 	else
-		execute_command_in_child(data, cmd->args);
+		execute_command_in_child(data, cmd);
 }

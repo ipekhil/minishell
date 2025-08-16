@@ -2,15 +2,15 @@
 
 int g_heredoc_interrupted = 0;
 
-void    heredoc_sigint_handler(int signum)
+void	heredoc_sigint_handler(int signum)
 {
-    (void)signum;
-    write(1, "\n", 1);
-    //rl_replace_line("", 0);
+	(void)signum;
+	write(1, "\n", 1);
+	//rl_replace_line("", 0);
 	close(STDIN_FILENO);
-    rl_on_new_line();
-    rl_redisplay();
-    g_heredoc_interrupted = 1;
+	rl_on_new_line();
+	rl_redisplay();
+	g_heredoc_interrupted = 1;
 }
 
 void	heredoc(t_data *data, char *delimiter, int fd)
@@ -23,17 +23,17 @@ void	heredoc(t_data *data, char *delimiter, int fd)
 	exp_line = NULL;
 	len = 0;
 	g_heredoc_interrupted = 0;
-    signal(SIGINT, heredoc_sigint_handler);
-    signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, heredoc_sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		len = 0;
 		line = readline("> ");
 		if (!line)
 		{
-            if (!g_heredoc_interrupted)
-              printf("minishell: warning: here-document delimited by end-of-file (wanted '%s')\n", delimiter);
-            break ;
+			if (!g_heredoc_interrupted)
+				printf("minishell: warning: here-document delimited by end-of-file (wanted '%s')\n", delimiter);
+			break ;
 		}
 		if (!ft_strcmp(line, delimiter))
 		{
@@ -50,8 +50,8 @@ void	heredoc(t_data *data, char *delimiter, int fd)
 		write(fd, "\n", 1);
 		free(exp_line);
 	}
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }
 
 void	apply_heredoc(t_data *data)
@@ -70,6 +70,7 @@ void	apply_heredoc(t_data *data)
 	{
 		if (red->redirection)
 			redir = red->redirection;
+		g_heredoc_interrupted = 0;
 		while (redir)
 		{
 			if (redir->delimiter)
@@ -85,10 +86,10 @@ void	apply_heredoc(t_data *data)
 				if (g_heredoc_interrupted)
 				{
 					redir = red->redirection;
-					while(redir)
+					while (redir)
 					{
 						redir->hdoc_int = 1;
-						redir = redir->next;	
+						redir = redir->next;
 					}
 					if (access("heredoc_tmp", F_OK) == 0)
 						unlink("heredoc_tmp");

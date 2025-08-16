@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/16 18:34:20 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/16 23:21:04 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,47 @@ static void	handle_waiting(t_data *data, pid_t last_pid)
 		;
 }
 
+static int handle_fork(t_data *data, t_parser *cmds, pid_t *last_pid, int *prev_fd)
+{
+	int			pipe_fds[2];
+
+	while (cmds)
+	{
+		if (cmds->next)
+		{
+			if (pipe(pipe_fds) == -1)
+			{
+				perror("minishell: pipe error");
+				if (*prev_fd != STDIN_FILENO)
+					close(*prev_fd);
+				return (-1);
+			}
+		}
+		if ((cmds->redirection && cmds->redirection->hdoc_int == 0)
+			|| !cmds->redirection)
+		{
+			*last_pid = fork();
+			if (*last_pid < 0)
+			{
+				handle_fork_error(cmds, pipe_fds, prev_fd);
+				return (-1);
+			}
+			else if (*last_pid == 0)
+				child_process(data, cmds, pipe_fds, *prev_fd);
+			else
+				parent_process(pipe_fds, prev_fd, cmds);
+		}
+		cmds = cmds->next;
+	}
+	return (0);
+}
+
 void	executor(t_data *data)
 {
 	t_parser	*cmds;
-	int			pipe_fds[2];
 	int			prev_pipe_read_fd;
 	pid_t		last_pid;
+	//int			pipe_fds[2];
 
 	last_pid = -1;
 	prev_pipe_read_fd = STDIN_FILENO;
@@ -98,34 +133,36 @@ void	executor(t_data *data)
 		execute_builtin(data, cmds->args);
 		return ;
 	}
-	while (cmds)
-	{
-		if (cmds->next)
-		{
-			if (pipe(pipe_fds) == -1)
-			{
-				perror("minishell: pipe error");
-				if (prev_pipe_read_fd != STDIN_FILENO)
-					close(prev_pipe_read_fd);
-				return ;
-			}
-		}
-		if ((cmds->redirection && cmds->redirection->hdoc_int == 0)
-			|| !cmds->redirection)
-		{
-			last_pid = fork();
-			if (last_pid < 0)
-			{
-				handle_fork_error(cmds, pipe_fds, &prev_pipe_read_fd);
-				return ;
-			}
-			else if (last_pid == 0)
-				child_process(data, cmds, pipe_fds, prev_pipe_read_fd);
-			else
-				parent_process(pipe_fds, &prev_pipe_read_fd, cmds);
-		}
-		cmds = cmds->next;
-	}
+	if (handle_fork(data, cmds, &last_pid, &prev_pipe_read_fd) == -1)
+		return ;
+	// while (cmds)
+	// {
+	// 	if (cmds->next)
+	// 	{
+	// 		if (pipe(pipe_fds) == -1)
+	// 		{
+	// 			perror("minishell: pipe error");
+	// 			if (prev_pipe_read_fd != STDIN_FILENO)
+	// 				close(prev_pipe_read_fd);
+	// 			return ;
+	// 		}
+	// 	}
+	// 	if ((cmds->redirection && cmds->redirection->hdoc_int == 0)
+	// 		|| !cmds->redirection)
+	// 	{
+	// 		last_pid = fork();
+	// 		if (last_pid < 0)
+	// 		{
+	// 			handle_fork_error(cmds, pipe_fds, &prev_pipe_read_fd);
+	// 			return ;
+	// 		}
+	// 		else if (last_pid == 0)
+	// 			child_process(data, cmds, pipe_fds, prev_pipe_read_fd);
+	// 		else
+	// 			parent_process(pipe_fds, &prev_pipe_read_fd, cmds);
+	// 	}
+	// 	cmds = cmds->next;
+	// }
 	if (prev_pipe_read_fd != STDIN_FILENO)
 		close(prev_pipe_read_fd);
 	handle_waiting(data, last_pid);
