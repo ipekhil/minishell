@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/16 02:35:31 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/16 03:15:01 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -473,8 +473,5 @@ void	executor(t_data *data)
 		close(prev_pipe_read_fd);
 	handle_waiting(data, last_pid);
 	if (access("heredoc_tmp", F_OK) == 0)
-	{
-		write(2, "noluyor", 10);
 	 	unlink("heredoc_tmp");
-	}
 }
