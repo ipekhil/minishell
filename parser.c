@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:20 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/16 23:33:05 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/17 00:29:59 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 int	count_args(t_exp *start, t_exp *end)
 {
-	t_exp *current;
-	int	count;
+	t_exp	*current;
+	int		count;
 
 	count = 0;
 	current = start;
 	while (current != end)
 	{
-		if (current->type == 5)
-			count++;
+		if (current->type != 5)
+			break ;
+		count++;
 		current = current->next;
 	}
 	return (count);
