@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   concatenator.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 15:46:46 by sude              #+#    #+#             */
-/*   Updated: 2025/08/13 16:20:14 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/16 17:29:56 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,5 @@ void	concatenator(t_data *data)
 		else
 			current = current->next;
 	}
-	// printf("----------------------------------------\n");
-	// t_exp *debug = data->expander;
-	// while(debug)
-	// {
-	// 	printf("CONC Value: %s TYPE: %d FLAG:%d\n", debug->exp_value, debug->type, debug->concat_w_next);
-	// 	debug = debug->next;
-	// }
 	parser(data);
 }

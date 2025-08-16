@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/16 00:42:50 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/16 18:31:00 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,17 +105,25 @@ typedef struct s_data
 	int			should_exit;
 }		t_data;
 
-int		ft_strcmp(const char *s1, const char *s2);
-char	*ft_strcpy(char *dest, const char *src);
 void	routine_loop(t_data *data);
+
+//tokenization
 int		tokenization(t_data *data);
 int		check_unmatched_quotes(char *line);
 char	*get_token(char *line, int *i);
 void	add_token(t_token **tokens, char *token, int type, int concat_flag);
+void	handle_operator_token(t_token **tokens, char *line, int *i);
+int		ret_token_type(t_var *var, char *line, int i);
+
+//utils.c
 int		ft_isspace(char c);
 int		ft_isoperator(char c);
+int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strcpy(char *dest, const char *src);
+char	*ft_strcat(char *dest, const char *src);
+
 void	get_env(t_env **env, char **envp);
-void	handle_heredoc(t_data *data);
+void	apply_heredoc(t_data *data);
 
 
 // Concatenator
@@ -152,9 +160,21 @@ void	signal_handlers_main(void);
 
 // Executor functions
 void	executor(t_data *data);
-void	execute_external(t_data *data, char **args);
 char	*find_command_path(char *cmd, char **env);
 char	*create_full_path(char *dir, char *cmd);
+//apply_redir
+void	apply_redirections(t_data *data, t_redirection *redir);
+// exec_control
+void	handle_err_and_exit(t_data *data, char *cmd, const char *msg, int code);
+void	handle_fork_error(t_parser *cmds, int *pipe_fds, int *prev_read_fd);
+void	pre_file_check(t_data *data, char *cmd, int *exit);
+//exec_child_process
+void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe);
+//update_char_env
+char	**convert_env_to_array(t_env *env);
+//exec_utils
+void	setup_child_signals(void);
+int		lstsize(t_env *env);
 
 // Environment
 char	**copy_env(char **envp);

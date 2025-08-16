@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 02:35:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/11 00:24:09 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/16 18:09:10 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,21 @@ void	free_parser(t_parser *head)
 		free(current);
 		current = next;
 	}
+}
+
+void	free_array(char **arr)
+{
+	int	i;
+
+	i = 0;
+	if (!arr)
+		return ;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
 }
 
 void	free_all(t_data *data)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:13 by sude              #+#    #+#             */
-/*   Updated: 2025/08/13 11:43:14 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/16 18:08:25 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,73 +39,36 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (s1[i] - s2[i]);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+char	*ft_strcpy(char *dest, const char *src)
 {
-	size_t	i;
-	size_t	srcsize;
+	int	i;
 
 	i = 0;
-	srcsize = ft_strlen(src);
-	if (!src)
-		return (0);
-	if (!dst)
-		return (srcsize);
-	if (dstsize > 0)
-	{
-		while (i < dstsize - 1 && src[i] != '\0')
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = '\0';
-	}
-	return (srcsize);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	int		size;
-	int		i;
-	char	*ptr;
-
-	i = -1;
-	size = ft_strlen(s1);
-	ptr = (char *) malloc(size + 1);
-	if (ptr == NULL)
+	if (!dest || !src)
 		return (NULL);
-	while (++i < size)
-		ptr[i] = s1[i];
-	ptr[i] = '\0';
-	return (ptr);
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }
 
-void	ft_bzero(void *s, size_t n)
+char	*ft_strcat(char *dest, const char *src)
 {
-	char	*a;
+	int	dest_len;
+	int	i;
 
-	a = (char *)s;
-	while (n != 0)
+	if (!dest || !src)
+		return (dest);
+	dest_len = ft_strlen(dest);
+	i = 0;
+	while (src[i])
 	{
-		n--;
-		a[n] = '\0';
+		dest[dest_len + i] = src[i];
+		i++;
 	}
-}
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	void	*s;
-	size_t	n;
-
-	if (count == 0 || size == 0)
-	{
-		count = 1;
-		size = 1;
-	}
-	n = count * size;
-	s = malloc(n);
-	if (s == NULL)
-		return (NULL);
-	else
-		ft_bzero(s, n);
-	return (s);
+	dest[dest_len + i] = '\0';
+	return (dest);
 }

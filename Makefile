@@ -2,6 +2,7 @@ SRCS = main.c \
 	tokenization.c \
 	utils.c \
 	tokenization_utils.c\
+	token_operator.c\
 	free.c \
 	get_env.c \
 	expander.c \
@@ -14,6 +15,11 @@ SRCS = main.c \
 	pwd_builtin.c \
 	env_utils.c \
 	executor.c \
+	apply_redir.c \
+	exec_control.c \
+	exec_child_process.c \
+	exec_utils.c \
+	update_char_env.c \
 	export_builtin.c \
 	env_builtin.c \
 	unset_builtin.c \

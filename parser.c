@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:20 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/14 22:30:23 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/16 17:32:58 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void all_tokens_parse(t_data *data, t_exp *tokens)
 	}
 	add_command_to_parser(&data->parser, new_node);
 }
+
 void print_parser(t_parser *parser)
 {
     int cmd_count = 0;

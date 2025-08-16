@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:09 by sude              #+#    #+#             */
-/*   Updated: 2025/08/08 15:28:52 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/16 17:26:43 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,30 +38,6 @@ int	check_unmatched_quotes(char *line)
 	return (1);
 }
 
-void	add_token(t_token **tokens, char *token, int type, int concat_flag)
-{
-	t_token	*new_token;
-	t_token	*tmp;
-
-	tmp = NULL;
-	new_token = malloc(sizeof(t_token));
-	if (!new_token)
-		return ;
-	new_token->value = ft_strdup(token);
-	new_token->type = type;
-	new_token->concat_w_next = concat_flag;
-	new_token->next = NULL;
-	if (!*tokens)
-		*tokens = new_token;
-	else
-	{
-		tmp = *tokens;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new_token;
-	}
-}
-
 char	*get_token(char *line, int *i)
 {
 	char	*token;
@@ -84,4 +60,55 @@ char	*get_token(char *line, int *i)
 	token[len] = '\0';
 	ft_strlcpy(token, &line[start], len + 1);
 	return (token);
+}
+
+void	init_tvar(t_var *var)
+{
+	var->has_quotes = 0;
+	var->has_single_quotes = 0;
+	var->has_dollar = 0;
+}
+
+void	determine_token_type(t_var *var, char *line, int i)
+{
+	if (line[i] == '"')
+	{
+		var->has_quotes = 1;
+		while (line[++i] && line[i] != '"')
+		{
+			if (line[i] == '$')
+				var->has_dollar = 1;
+		}
+		i++;
+	}
+	else if (line[i] == '\'')
+	{
+		var->has_single_quotes = 1;
+		while (line[++i] && line[i] != '\'')
+			;
+		i++;
+	}
+	else
+	{
+		while (line[i] && !ft_isspace(line[i]) && !ft_isoperator(line[i])
+			&& line[i] != '"' && line[i] != '\'')
+			if (line[i++] == '$')
+				var->has_dollar = 1;
+	}
+}
+
+int	ret_token_type(t_var *var, char *line, int i)
+{
+	init_tvar(var);
+	determine_token_type(var, line, i);
+	if (var->has_quotes && var->has_dollar)
+		return (DOUBLE_QUOTED_EXPANDABLE);
+	else if (var->has_quotes)
+		return (DOUBLE_QUOTED);
+	else if (var->has_single_quotes)
+		return (SINGLE_QUOTED);
+	else if (var->has_dollar)
+		return (EXPANDABLE_WORD);
+	else
+		return (WORD);
 }

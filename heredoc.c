@@ -6,7 +6,7 @@ void    heredoc_sigint_handler(int signum)
 {
     (void)signum;
     write(1, "\n", 1);
-    rl_replace_line("", 0);
+    //rl_replace_line("", 0);
 	close(STDIN_FILENO);
     rl_on_new_line();
     rl_redisplay();
@@ -54,7 +54,7 @@ void	heredoc(t_data *data, char *delimiter, int fd)
     signal(SIGQUIT, SIG_DFL);
 }
 
-void	handle_heredoc(t_data *data)
+void	apply_heredoc(t_data *data)
 {
 	int				heredoc_fd;
 	t_parser		*red;

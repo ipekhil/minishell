@@ -1,0 +1,49 @@
+#include "minishell.h"
+
+void	pre_file_check(t_data *data, char *cmd, int *exit)
+{
+	struct stat	st;
+
+	if (cmd && ft_strchr(cmd, '/'))
+	{
+		if (cmd && stat(cmd, &st) == 0)
+		{
+			if (S_ISDIR(st.st_mode))
+				handle_err_and_exit(data, NULL, ": Is a directory\n", 126);
+			else if (access(cmd, X_OK) == -1)
+				handle_err_and_exit(data, NULL, ": Permission denied\n", 126);
+		}
+		else
+			handle_err_and_exit(data, NULL,
+				": No such file or directory\n", 127);
+	}
+	else if (cmd && access(cmd, F_OK) == 0)
+		handle_err_and_exit(data, cmd, ": command not found\n", 127);
+	else
+		*exit = 0;
+}
+
+void	handle_fork_error(t_parser *cmds, int *pipe_fds, int *prev_read_fd)
+{
+	perror("minishell: fork error");
+	if (*prev_read_fd != STDIN_FILENO)
+		close(*prev_read_fd);
+	if (cmds->next)
+	{
+		close(pipe_fds[0]);
+		close(pipe_fds[1]);
+	}
+}
+
+void	handle_err_and_exit(t_data *data, char *cmd, const char *msg, int code)
+{
+	write(2, "minishell: ", 11);
+	if (cmd != NULL)
+	{
+		write(2, cmd, ft_strlen(cmd));
+		write(2, ": ", 2);
+	}
+	write(2, msg, ft_strlen(msg));
+	free_all(data);
+	exit(code);
+}
