@@ -50,8 +50,6 @@ void	heredoc(t_data *data, char *delimiter, int fd)
 		write(fd, "\n", 1);
 		free(exp_line);
 	}
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
 }
 
 void	apply_heredoc(t_data *data)
@@ -86,14 +84,10 @@ void	apply_heredoc(t_data *data)
 				if (g_heredoc_interrupted)
 				{
 					redir = red->redirection;
-					while (redir)
-					{
-						redir->hdoc_int = 1;
-						redir = redir->next;
-					}
+					redir->hdoc_int = 1;
 					if (access("heredoc_tmp", F_OK) == 0)
 						unlink("heredoc_tmp");
-					return ;
+					break ;
 				}
 				redir->filename = ft_strdup("heredoc_tmp");
 			}
