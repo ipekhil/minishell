@@ -8,7 +8,7 @@ void	handle_input(t_data *data, t_redirection *redir)
 	if (fd < 0)
 	{
 		perror(redir->filename);
-		free_all(data);
+		free_all(data, 1);
 		exit(1);
 	}
 	dup2(fd, STDIN_FILENO);
@@ -23,7 +23,7 @@ void	handle_output(t_data *data, t_redirection *redir)
 	if (fd < 0)
 	{
 		perror(redir->filename);
-		free_all(data);
+		free_all(data, 1);
 		exit(1);
 	}
 	dup2(fd, STDOUT_FILENO);
@@ -38,7 +38,7 @@ void	handle_append(t_data *data, t_redirection *redir)
 	if (fd < 0)
 	{
 		perror(redir->filename);
-		free_all(data);
+		free_all(data, 1);
 		exit(1);
 	}
 	dup2(fd, STDOUT_FILENO);
@@ -53,7 +53,7 @@ void	handle_heredoc(t_data *data, t_redirection *redir)
 	if (fd < 0)
 	{
 		perror(redir->filename);
-		free_all(data);
+		free_all(data, 1);
 		exit(1);
 	}
 	dup2(fd, STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/17 22:37:29 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/18 01:08:40 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ void	print_redirections(t_redirection *redir);
 void	free_array(char **arr);
 void	free_parser(t_parser *head);
 void	free_expander(t_exp *head);
-void	free_all(t_data *data);
+void	free_all(t_data *data, int free_env_flag);
 void	free_token(t_token *head);
 void	free_env(t_env *head);
 void	free_redirection(t_redirection *head);

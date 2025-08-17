@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/08/16 17:26:11 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/18 01:07:59 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	get_combined_token(t_data *data, int *i)
 	extract_quoted_text(token, data->line, i, 0);
 	if (!token)
 	{
-		free_all(data);
+		free_all(data, 1);
 		return ;
 	}
 	token_type = ret_token_type(&data->var, data->line, temp_i);

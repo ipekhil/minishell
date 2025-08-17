@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/18 00:35:26 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/18 01:01:01 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static void	handle_waiting(t_data *data, pid_t last_pid)
 		;
 }
 
-static int create_pipe(t_parser *cmd, int *pipe_fds, int *prev_fd)
+static int	create_pipe(t_parser *cmd, int *pipe_fds, int *prev_fd)
 {
 	if (cmd->next)
 	{

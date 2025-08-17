@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 02:35:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/16 18:09:10 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/18 01:09:17 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,14 +122,17 @@ void	free_array(char **arr)
 	free(arr);
 }
 
-void	free_all(t_data *data)
+void	free_all(t_data *data, int free_env_flag)
 {
 	free_token(data->tokens);
 	data->tokens = NULL;
-	free_env(data->env);
 	free_expander(data->expander);
 	data->expander = NULL;
 	free_parser(data->parser);
 	data->parser = NULL;
-	free_array(data->char_env);
+	if (free_env_flag)
+	{
+		free_env(data->env);
+		free_array(data->char_env);
+	}
 }

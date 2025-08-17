@@ -25,7 +25,7 @@ char	*find_command_path(char *cmd, char **env)
 	int		i;
 
 	path_env = NULL;
-	if(!cmd)
+	if (!cmd)
 		return(NULL);
 	if (access(cmd, F_OK) == 0)
 		return (ft_strdup(cmd));
@@ -70,16 +70,16 @@ void	execute_command_in_child(t_data *data, t_parser *cmd)
 	temp_env = convert_env_to_array(data->env);
 	if (!temp_env)
 	{
-		free_all(data);
+		free_all(data, 1);
 		exit(1);
 	}
 	path = find_command_path(args[0], temp_env);
 	if (!path)
 	{
-		if(cmd->redirection && !args[0])
+		if (cmd->redirection && !args[0])
 		{
 			free_array(temp_env);
-			free_all(data);
+			free_all(data, 1);
 			exit(0);
 		}
 		else
@@ -93,7 +93,7 @@ void	execute_command_in_child(t_data *data, t_parser *cmd)
 		perror("execve");
 		free(path);
 		free_array(temp_env);
-		free_all(data);
+		free_all(data, 1);
 		exit(127);
 	}
 }
@@ -120,7 +120,7 @@ void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 	if (is_builtin(cmd->args[0]))
 	{
 		execute_builtin(data, cmd->args);
-		free_all(data);
+		free_all(data, 1);
 		exit(0);
 	}
 	else

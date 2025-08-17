@@ -44,6 +44,6 @@ void	handle_err_and_exit(t_data *data, char *cmd, const char *msg, int code)
 		write(2, ": ", 2);
 	}
 	write(2, msg, ft_strlen(msg));
-	free_all(data);
+	free_all(data, 1);
 	exit(code);
 }

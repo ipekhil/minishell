@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/08/17 23:48:20 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/18 01:08:23 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	routine_loop(t_data *data)
 		data->line = readline("minishell> ");
 		if (!data->line)
 		{
-			free_all(data);
-			write(1,"\n", 1);
+			free_all(data, 1);
+			write(1, "\n", 1);
 			break ;
 		}
 		if (data->line && data->line[0] != '\0')
@@ -30,7 +30,7 @@ void	routine_loop(t_data *data)
 		data->last_exit_status = g_signal_exit;
 		if (tokenization(data) == -1)
 		{
-			free_all(data);
+			free_all(data, 1);
 			return ;
 		}
 		if (data->should_exit)
@@ -40,15 +40,10 @@ void	routine_loop(t_data *data)
 				free(data->line);
 				data->line = NULL;
 			}
-			free_all(data);
+			free_all(data, 1);
 			break ;
 		}
-		free_token(data->tokens);
-		data->tokens = NULL;
-		free_expander(data->expander);
-		data->expander = NULL;
-		free_parser(data->parser);
-		data->parser = NULL;
+		free_all(data, 0);
 		free(data->line);
 	}
 	exit(data->last_exit_status);
