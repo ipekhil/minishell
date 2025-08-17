@@ -6,11 +6,37 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 16:47:56 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/17 17:13:13 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/17 21:03:39 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	add_or_update_env(t_env **env, char *key, char *value)
+{
+	t_env	*new_node;
+
+	env = is_there_var_in_env(env, key, value);
+	if (!env)
+		return ;
+	new_node = malloc(sizeof(t_env));
+	if (!new_node)
+		return ;
+	new_node->key = ft_strdup(key);
+	if (value)
+		new_node->value = ft_strdup(value);
+	else
+		new_node->value = NULL;
+	new_node->next = NULL;
+	if (!new_node->key || (value && !new_node->value))
+	{
+		free(new_node->key);
+		free(new_node->value);
+		free(new_node);
+		return ;
+	}
+	ft_lstadd_back(env, new_node);
+}
 
 char	*get_env_value(t_env *env, char *key)
 {

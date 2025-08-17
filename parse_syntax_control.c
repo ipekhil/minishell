@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_syntax_control.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:13 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/14 14:14:22 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/17 21:35:03 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,14 @@ static int	heredoc_syntax_control(t_exp *token)
 	return (1);
 }
 
-static int pipe_syntax_control(t_exp *tokens, t_exp *current)
+static int	pipe_syntax_control(t_exp *tokens, t_exp *current)
 {
-	// başta | olması durumu
 	if (tokens == current && current && current->type == 4)
 	{
 		print_syntax_error(current);
 		return (0);
 	}
-	// || olması durumu
-	if (current && current->type == 4 &&
+	if (current && current->type == 4 && \
 		current->next && current->next->type == 4)
 	{
 		print_syntax_error(current->next);
@@ -59,7 +57,6 @@ static int pipe_syntax_control(t_exp *tokens, t_exp *current)
 	// 	print_syntax_error(current->next);
 	// 	return (0);
 	// }
-	// sonda | olması durumu
 	if (current && current->type == 4 && !current->next)
 	{
 		print_syntax_error(NULL);
@@ -68,7 +65,7 @@ static int pipe_syntax_control(t_exp *tokens, t_exp *current)
 	return (1);
 }
 
-static int redirection_syntax_control(t_exp *current)
+static int	redirection_syntax_control(t_exp *current)
 {
 	if (!current->next)
 	{
@@ -83,15 +80,13 @@ static int redirection_syntax_control(t_exp *current)
 	return (1);
 }
 
-int syntax_control(t_exp *tokens)
+int	syntax_control(t_exp *tokens)
 {
-	t_exp *current;
+	t_exp	*current;
 
 	current = tokens;
 	if (!current)
 		return (1);
-	if (!pipe_syntax_control(tokens, current))
-		return (0);
 	while (current)
 	{
 		if (current->type == 1 || current->type == 2 || current->type == 3)

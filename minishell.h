@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/17 17:14:50 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/17 21:38:20 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,11 @@ void	get_len(t_data *data, char *first_val, int i, int *len);
 // Parser
 void	parser(t_data *data);
 int		syntax_control(t_exp *tokens);
-int		parse_command(t_exp *start, t_exp *end, t_parser *node);
+
+//parser_utils
+int	count_args(t_exp *start, t_exp *end);
+int	parse_command(t_exp *start, t_exp *end, t_parser *node);
+
 
 // Builtins
 int		cd_builtin(t_data *data, char **argv);
@@ -197,6 +201,7 @@ void	free_merged(t_exp *start);
 
 //exporttan cd için
 void	add_or_update_env(t_env **env, char *key, char *value);
+t_env	**is_there_var_in_env(t_env **env, char *key, char *value);
 
 //redirection
 void	add_redir_to_parser(t_redirection **list, t_redirection *new_node);

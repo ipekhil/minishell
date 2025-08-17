@@ -8,6 +8,7 @@ SRCS = main.c \
 	expander.c \
 	exp_utils.c \
 	parser.c \
+	parser_utils.c \
 	redirection.c \
 	parse_syntax_control.c \
 	cd_builtin.c \
