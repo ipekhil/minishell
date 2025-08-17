@@ -12,21 +12,34 @@ void	heredoc_sigint_handler(int signum)
 	g_heredoc_interrupted = 1;
 }
 
-void	heredoc(t_data *data, char *delimiter, int fd)
+static void expand_and_write(t_data *data, char *line, int fd)
 {
-	char	*line;
 	int		len;
 	char	*exp_line;
 
-	line = NULL;
-	exp_line = NULL;
 	len = 0;
+	exp_line = NULL;
+	get_len(data, line, 0, &len);
+	exp_line = malloc(sizeof(char) * (len + 1));
+	if (!exp_line)
+		return ;
+	expand_token_value(data, line, exp_line, 0);
+	free(line);
+	write(fd, exp_line, ft_strlen(exp_line));
+	write(fd, "\n", 1);
+	free(exp_line);
+}
+
+void	read_heredoc_lines(t_data *data, char *delimiter, int fd)
+{
+	char	*line;
+
+	line = NULL;
 	g_heredoc_interrupted = 0;
 	signal(SIGINT, heredoc_sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		len = 0;
 		line = readline("> ");
 		if (!line)
 		{
@@ -39,62 +52,76 @@ void	heredoc(t_data *data, char *delimiter, int fd)
 			free(line);
 			break ;
 		}
-		get_len(data, line, 0, &len);
-		exp_line = malloc(sizeof(char) * (len + 1));
-		if (!exp_line)
-			return ;
-		expand_token_value(data, line, exp_line, 0);
-		free(line);
-		write(fd, exp_line, ft_strlen(exp_line));
-		write(fd, "\n", 1);
-		free(exp_line);
+		expand_and_write(data, line, fd);
 	}
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 }
 
-void	apply_heredoc(t_data *data)
-{
-	int				heredoc_fd;
-	t_parser		*red;
-	int				std_in;
-	int				std_out;
-	t_redirection	*redir;
 
-	std_in = dup(STDIN_FILENO);
-	std_out = dup(STDOUT_FILENO);
-	red = data->parser;
-	redir = NULL;
-	while (red)
-	{
-		if (red->redirection)
-			redir = red->redirection;
-		g_heredoc_interrupted = 0;
-		while (redir)
-		{
-			if (redir->delimiter)
-			{
-				heredoc_fd = open("heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-				if (heredoc_fd < 0)
-				{
-					perror("minishell: heredoc error");
-					return ;
-				}
-				heredoc(data, redir->delimiter, heredoc_fd);
-				close(heredoc_fd);
-				if (g_heredoc_interrupted)
-				{
-					red->redirection->hdoc_int = 1;
-					if (access("heredoc_tmp", F_OK) == 0)
-						unlink("heredoc_tmp");
-					break ;
-				}
-				redir->filename = ft_strdup("heredoc_tmp");
-			}
-			redir = redir->next;
-		}
-		red = red->next;
-	}
-	dup2(std_in, STDIN_FILENO);
-	dup2(std_out, STDOUT_FILENO);
+static int process_single_heredoc(t_data *data, t_redirection *redir)
+{
+    int heredoc_fd;
+    
+    heredoc_fd = open("heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    if (heredoc_fd < 0)
+    {
+        perror("minishell: heredoc error");
+        return (-1);
+    }
+    read_heredoc_lines(data, redir->delimiter, heredoc_fd);
+    close(heredoc_fd);
+    if (g_heredoc_interrupted)
+    {
+        if (access("heredoc_tmp", F_OK) == 0)
+            unlink("heredoc_tmp");
+        return (1);
+    }
+    redir->filename = ft_strdup("heredoc_tmp");
+    return (0);
+}
+
+static int heredoc_process(t_data *data, t_redirection *redir)
+{
+    int is_interrupted;
+    
+    g_heredoc_interrupted = 0;
+    while (redir)
+    {
+        if (redir->delimiter)
+        {
+            is_interrupted = process_single_heredoc(data, redir);
+            if (is_interrupted != 0)
+                return (is_interrupted);
+        }
+        redir = redir->next;
+    }
+    return (0);
+}
+
+void apply_heredoc(t_data *data)
+{
+    t_parser *red;
+    int std_in;
+    int is_interrupted;
+    
+    std_in = dup(STDIN_FILENO);
+    red = data->parser;
+    while (red)
+    {
+        if (red->redirection)
+        {
+            is_interrupted = heredoc_process(data, red->redirection);
+            if (is_interrupted == 1)
+            {
+                red->redirection->hdoc_int = 1;
+                break;
+            }
+            else if (is_interrupted == -1)
+                break;
+        }
+        red = red->next;
+    }
+    dup2(std_in, STDIN_FILENO);
+    close(std_in);
 }

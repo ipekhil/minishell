@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/17 22:56:45 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/18 00:35:26 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	execute_builtin(t_data *data, char **args)
 	return ;
 }
 
-void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
+static void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
 {
 	signal(SIGINT, SIG_IGN);
 	signal(SIGPIPE, SIG_IGN);
@@ -80,22 +80,29 @@ static void	handle_waiting(t_data *data, pid_t last_pid)
 		;
 }
 
-static int	handle_fork(t_data *data, t_parser *cmds, pid_t *last_pid, int *prev_fd)
+static int create_pipe(t_parser *cmd, int *pipe_fds, int *prev_fd)
+{
+	if (cmd->next)
+	{
+		if (pipe(pipe_fds) == -1)
+		{
+			perror("minishell: pipe error");
+			if (*prev_fd != STDIN_FILENO)
+				close(*prev_fd);
+			return (-1);
+		}
+	}
+	return (0);
+}
+
+static int	execute_pipeline(t_data *data, t_parser *cmds, pid_t *last_pid, int *prev_fd)
 {
 	int			pipe_fds[2];
 
 	while (cmds)
 	{
-		if (cmds->next)
-		{
-			if (pipe(pipe_fds) == -1)
-			{
-				perror("minishell: pipe error");
-				if (*prev_fd != STDIN_FILENO)
-					close(*prev_fd);
-				return (-1);
-			}
-		}
+		if (create_pipe(cmds, pipe_fds, prev_fd) == -1)
+			return (-1);
 		if ((cmds->redirection && cmds->redirection->hdoc_int == 0)
 			|| !cmds->redirection)
 		{
@@ -132,7 +139,7 @@ void	executor(t_data *data)
 		execute_builtin(data, cmds->args);
 		return ;
 	}
-	if (handle_fork(data, cmds, &last_pid, &prev_pipe_read_fd) == -1)
+	if (execute_pipeline(data, cmds, &last_pid, &prev_pipe_read_fd) == -1)
 		return ;
 	if (prev_pipe_read_fd != STDIN_FILENO)
 		close(prev_pipe_read_fd);
