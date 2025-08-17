@@ -101,16 +101,10 @@ int	export_builtin(t_data *data, char **args)
 		{
 			key = ft_substr(*current_arg, 0, equal_sign - *current_arg);
 			if (!key)
-			{
-				perror("export_builtin");
 				return (1);
-			}
 			value = ft_substr(equal_sign + 1, 0, ft_strlen(equal_sign + 1));
 			if (!value)
-			{
-				perror("export_builtin");
 				return (1);
-			}
 			if (is_valid_key(key))
 			{
 				add_or_update_env(&data->env, key, value);
@@ -128,11 +122,6 @@ int	export_builtin(t_data *data, char **args)
 		else
 		{
 			key = ft_strdup(*current_arg);
-			if (!key)
-			{
-				perror("export_builtin");
-				return (1);
-			}
 			if (is_valid_key(key))
 			{
 				add_or_update_env(&data->env, key, NULL);

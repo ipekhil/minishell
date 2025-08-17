@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd_builtin.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/16 16:47:56 by ubuntu            #+#    #+#             */
+/*   Updated: 2025/08/17 17:13:13 by ubuntu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*get_env_value(t_env *env, char *key)
@@ -35,7 +47,7 @@ static char	*get_cd_target(char **argv, t_env *env)
 		if (!target)
 		{
 			printf("cd: OLDPWD not set\n");
-			return (NULL);			
+			return (NULL);
 		}
 		printf("%s\n", target);
 	}

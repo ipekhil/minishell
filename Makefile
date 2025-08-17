@@ -13,7 +13,6 @@ SRCS = main.c \
 	cd_builtin.c \
 	echo_builtin.c \
 	pwd_builtin.c \
-	env_utils.c \
 	executor.c \
 	apply_redir.c \
 	exec_control.c \

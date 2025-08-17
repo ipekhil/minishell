@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/16 18:31:00 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/17 17:14:50 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,5 +197,9 @@ void	free_merged(t_exp *start);
 
 //exporttan cd için
 void	add_or_update_env(t_env **env, char *key, char *value);
+
+//redirection
+void	add_redir_to_parser(t_redirection **list, t_redirection *new_node);
+t_redirection	*new_redirection_node(t_exp *current);
 
 #endif

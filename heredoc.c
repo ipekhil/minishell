@@ -6,7 +6,7 @@ void	heredoc_sigint_handler(int signum)
 {
 	(void)signum;
 	write(1, "\n", 1);
-	//rl_replace_line("", 0);
+	rl_replace_line("", 0);
 	close(STDIN_FILENO);
 	rl_on_new_line();
 	rl_redisplay();
