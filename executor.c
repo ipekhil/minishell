@@ -6,11 +6,22 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/18 01:01:01 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/19 02:01:35 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	heredoc_was_interrupted(t_parser *cmds)
+{
+	while (cmds)
+	{
+		if (cmds->redirection && cmds->redirection->hdoc_int == 1)
+			return (1);
+		cmds = cmds->next;
+	}
+	return (0);
+}
 
 int	is_builtin(char *cmd)
 {
@@ -97,26 +108,24 @@ static int	create_pipe(t_parser *cmd, int *pipe_fds, int *prev_fd)
 
 static int	execute_pipeline(t_data *data, t_parser *cmds, pid_t *last_pid, int *prev_fd)
 {
-	int			pipe_fds[2];
-
+	int	pipe_fds[2];
+	
+	if (heredoc_was_interrupted(cmds))
+		return (0);
 	while (cmds)
 	{
 		if (create_pipe(cmds, pipe_fds, prev_fd) == -1)
 			return (-1);
-		if ((cmds->redirection && cmds->redirection->hdoc_int == 0)
-			|| !cmds->redirection)
+		*last_pid = fork();
+		if (*last_pid < 0)
 		{
-			*last_pid = fork();
-			if (*last_pid < 0)
-			{
-				handle_fork_error(cmds, pipe_fds, prev_fd);
-				return (-1);
-			}
-			else if (*last_pid == 0)
-				child_process(data, cmds, pipe_fds, *prev_fd);
-			else
-				parent_process(pipe_fds, prev_fd, cmds);
+			handle_fork_error(cmds, pipe_fds, prev_fd);
+			return (-1);
 		}
+		else if (*last_pid == 0)
+			child_process(data, cmds, pipe_fds, *prev_fd);
+		else
+			parent_process(pipe_fds, prev_fd, cmds);
 		cmds = cmds->next;
 	}
 	return (0);

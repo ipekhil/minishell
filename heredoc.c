@@ -1,17 +1,5 @@
 #include "minishell.h"
 
-int	g_heredoc_interrupted = 0;
-
-void	heredoc_sigint_handler(int signum)
-{
-	(void)signum;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	close(STDIN_FILENO);
-	rl_on_new_line();
-	g_heredoc_interrupted = 1;
-}
-
 static void	expand_and_write(t_data *data, char *line, int fd)
 {
 	int		len;
@@ -35,16 +23,17 @@ void	read_heredoc_lines(t_data *data, char *delimiter, int fd)
 	char	*line;
 
 	line = NULL;
-	g_heredoc_interrupted = 0;
-	signal(SIGINT, heredoc_sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	g_signal_flag = 0;
+	signal_handlers_heredoc();
 	while (1)
 	{
 		line = readline("> ");
+		if(g_signal_flag == 2)
+			break;
 		if (!line)
 		{
-			if (!g_heredoc_interrupted)
-				printf("minishell: warning: here-document delimited by end-of-file (wanted '%s')\n", delimiter);
+			if (g_signal_flag != 2)
+				printf("minishell: warning: here-document delimited by end-of-file (wanted '%s')\n", delimiter);			
 			break ;
 		}
 		if (!ft_strcmp(line, delimiter))
@@ -71,10 +60,11 @@ static int	process_single_heredoc(t_data *data, t_redirection *redir)
 	}
 	read_heredoc_lines(data, redir->delimiter, heredoc_fd);
 	close(heredoc_fd);
-	if (g_heredoc_interrupted)
+	if (g_signal_flag == 2)
 	{
 		if (access("heredoc_tmp", F_OK) == 0)
 			unlink("heredoc_tmp");
+		g_signal_flag = 0;
 		return (1);
 	}
 	redir->filename = ft_strdup("heredoc_tmp");
@@ -85,7 +75,6 @@ static int	heredoc_process(t_data *data, t_redirection *redir)
 {
 	int	is_interrupted;
 
-	g_heredoc_interrupted = 0;
 	while (redir)
 	{
 		if (redir->delimiter)
@@ -105,6 +94,7 @@ void	apply_heredoc(t_data *data)
 	int			std_in;
 	int			is_interrupted;
 
+
 	std_in = dup(STDIN_FILENO);
 	red = data->parser;
 	while (red)
@@ -115,6 +105,7 @@ void	apply_heredoc(t_data *data)
 			if (is_interrupted == 1)
 			{
 				red->redirection->hdoc_int = 1;
+				data->last_exit_status = 130;				
 				break ;
 			}
 			else if (is_interrupted == -1)

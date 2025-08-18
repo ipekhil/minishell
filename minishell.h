@@ -6,14 +6,13 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/18 01:08:40 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/19 01:23:31 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <errno.h>
 # include <unistd.h>
 # include <signal.h>
 # include <stdio.h>
@@ -27,7 +26,7 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
-extern	int	g_signal_exit;
+extern volatile sig_atomic_t g_signal_flag;
 
 typedef enum e_token_type
 {
@@ -161,6 +160,8 @@ void	exit_builtin(t_data *data, char **args);
 
 //signals
 void	signal_handlers_main(void);
+void	signal_handlers_heredoc(void);
+
 
 // Executor functions
 void	executor(t_data *data);
