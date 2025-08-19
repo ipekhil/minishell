@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/08/18 01:07:59 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/19 19:23:06 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	tokenization(t_data *data)
 
 	i = 0;
 	if (!check_unmatched_quotes(data->line))
-		return (-1); 
+		return (-1);
 	while (data->line[i])
 	{
 		if (ft_isspace(data->line[i]))

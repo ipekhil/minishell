@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exp_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/19 19:09:00 by ubuntu            #+#    #+#             */
+/*   Updated: 2025/08/19 19:09:39 by ubuntu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*extract_key(char *token_val)
@@ -25,7 +37,7 @@ char	*get_value_of_key(t_data *data, char *key, int *app_fl)
 {
 	t_env	*env;
 	char	*val;
-	int 	len;
+	int		len;
 	char	*new_v;
 
 	env = data->env;
@@ -88,7 +100,7 @@ void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 			value = get_value_of_key(data, key, &append_flag);
 			append_value(new_val, value, &a_index);
 			free(key);
-			if(append_flag)
+			if (append_flag)
 				free(value);
 		}
 		else

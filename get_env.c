@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 01:20:10 by sude              #+#    #+#             */
-/*   Updated: 2025/08/03 17:14:59 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/19 19:15:10 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,4 @@ void	get_env(t_env **env, char **envp)
 		ft_lstadd_back(env, new_node);
 		i++;
 	}
-	/*
-	while (*env)
-	{
-		printf("%s", (*env)->key);
-		printf("%c", '=');
-		printf("%s\n", (*env)->value);
-		(*env )= (*env)->next;
-	}*/
 }

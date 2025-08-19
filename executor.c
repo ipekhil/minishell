@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/19 02:01:35 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/19 19:07:32 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,26 +106,26 @@ static int	create_pipe(t_parser *cmd, int *pipe_fds, int *prev_fd)
 	return (0);
 }
 
-static int	execute_pipeline(t_data *data, t_parser *cmds, pid_t *last_pid, int *prev_fd)
+static int	exec_pipeline(t_data *data, t_parser *cmds, pid_t *l_pid, int *p_fd)
 {
 	int	pipe_fds[2];
-	
+
 	if (heredoc_was_interrupted(cmds))
 		return (0);
 	while (cmds)
 	{
-		if (create_pipe(cmds, pipe_fds, prev_fd) == -1)
+		if (create_pipe(cmds, pipe_fds, p_fd) == -1)
 			return (-1);
-		*last_pid = fork();
-		if (*last_pid < 0)
+		*l_pid = fork();
+		if (*l_pid < 0)
 		{
-			handle_fork_error(cmds, pipe_fds, prev_fd);
+			handle_fork_error(cmds, pipe_fds, p_fd);
 			return (-1);
 		}
-		else if (*last_pid == 0)
-			child_process(data, cmds, pipe_fds, *prev_fd);
+		else if (*l_pid == 0)
+			child_process(data, cmds, pipe_fds, *p_fd);
 		else
-			parent_process(pipe_fds, prev_fd, cmds);
+			parent_process(pipe_fds, p_fd, cmds);
 		cmds = cmds->next;
 	}
 	return (0);
@@ -148,7 +148,7 @@ void	executor(t_data *data)
 		execute_builtin(data, cmds->args);
 		return ;
 	}
-	if (execute_pipeline(data, cmds, &last_pid, &prev_pipe_read_fd) == -1)
+	if (exec_pipeline(data, cmds, &last_pid, &prev_pipe_read_fd) == -1)
 		return ;
 	if (prev_pipe_read_fd != STDIN_FILENO)
 		close(prev_pipe_read_fd);

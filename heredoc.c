@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/19 19:15:27 by ubuntu            #+#    #+#             */
+/*   Updated: 2025/08/19 19:19:13 by ubuntu           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	expand_and_write(t_data *data, char *line, int fd)
@@ -28,12 +40,13 @@ void	read_heredoc_lines(t_data *data, char *delimiter, int fd)
 	while (1)
 	{
 		line = readline("> ");
-		if(g_signal_flag == 2)
-			break;
+		if (g_signal_flag == 2)
+			break ;
 		if (!line)
 		{
 			if (g_signal_flag != 2)
-				printf("minishell: warning: here-document delimited by end-of-file (wanted '%s')\n", delimiter);			
+				printf("minishell: warning: here-document \
+					delimited by end-of-file (wanted '%s')\n", delimiter);
 			break ;
 		}
 		if (!ft_strcmp(line, delimiter))
@@ -43,10 +56,8 @@ void	read_heredoc_lines(t_data *data, char *delimiter, int fd)
 		}
 		expand_and_write(data, line, fd);
 	}
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	signal_dfl();
 }
-
 
 static int	process_single_heredoc(t_data *data, t_redirection *redir)
 {
@@ -94,7 +105,6 @@ void	apply_heredoc(t_data *data)
 	int			std_in;
 	int			is_interrupted;
 
-
 	std_in = dup(STDIN_FILENO);
 	red = data->parser;
 	while (red)
@@ -105,7 +115,7 @@ void	apply_heredoc(t_data *data)
 			if (is_interrupted == 1)
 			{
 				red->redirection->hdoc_int = 1;
-				data->last_exit_status = 130;				
+				data->last_exit_status = 130;
 				break ;
 			}
 			else if (is_interrupted == -1)

@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:13 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/17 21:35:03 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/19 19:20:59 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,6 @@ static int	pipe_syntax_control(t_exp *tokens, t_exp *current)
 		print_syntax_error(current->next);
 		return (0);
 	}
-	// if (current && current->type == 4 && current->next
-	// 	&& (current->next->type == 1
-	// 		|| current->next->type == 2 || current->next->type == 3))
-	// {
-	// 	print_syntax_error(current->next);
-	// 	return (0);
-	// }
 	if (current && current->type == 4 && !current->next)
 	{
 		print_syntax_error(NULL);

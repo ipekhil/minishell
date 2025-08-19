@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/19 03:38:29 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/19 19:18:21 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,8 @@ void	exit_builtin(t_data *data, char **args);
 //signals
 void	signal_handlers_main(void);
 void	signal_handlers_heredoc(void);
+void	signal_dfl(void);
+
 
 
 // Executor functions
@@ -180,6 +182,7 @@ char	**convert_env_to_array(t_env *env);
 //exec_utils
 void	setup_child_signals(void);
 int		lstsize(t_env *env);
+void	not_found_path(t_data *data, t_parser *cmd, char **temp_env);
 
 // Environment
 char	**copy_env(char **envp);
