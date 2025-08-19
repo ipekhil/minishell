@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 16:50:32 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/17 17:13:36 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/19 03:38:10 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	env_builtin(t_data *data, char **args)
 
 	if (args[1])
 	{
-		printf("minishell: env: %s: No such file or directory\n", args[1]);
+		write_err("minishell: env: ", args[1], ": No such file or directory\n");
 		data->last_exit_status = 127;
 		return (127);
 	}

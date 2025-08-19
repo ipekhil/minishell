@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 16:47:56 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/17 21:03:39 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/19 03:38:07 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char	*get_cd_target(char **argv, t_env *env)
 		target = get_env_value(env, "HOME");
 		if (!target)
 		{
-			printf("cd: HOME not set\n");
+			write(2, "cd: HOME not set\n", 18);
 			return (NULL);
 		}
 	}
@@ -72,7 +72,7 @@ static char	*get_cd_target(char **argv, t_env *env)
 		target = get_env_value(env, "OLDPWD");
 		if (!target)
 		{
-			printf("cd: OLDPWD not set\n");
+			write(2, "cd: OLDPWD not set\n", 20);
 			return (NULL);
 		}
 		printf("%s\n", target);
@@ -120,7 +120,7 @@ int	cd_builtin(t_data *data, char **argv)
 		argc++;
 	if (argc > 2)
 	{
-		printf("minishell: %s: too many arguments\n", argv[0]);
+		write_err("minishell: ", argv[0], ": too many arguments\n");
 		return (1);
 	}
 	target = get_cd_target(argv, data->env);

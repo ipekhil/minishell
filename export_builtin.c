@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 19:20:34 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/17 21:20:40 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/19 03:38:49 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	handle_key_value(t_data *data, char *current_arg, char *equal_sign)
 			add_or_update_env(&data->env, key, value);
 		else
 		{
-			printf("AAexport: `%s': not a valid identifier\n", current_arg);
+			write_err("export: `", current_arg, "': not a valid identifier\n");
 			data->last_exit_status = 1;
 			return (free(key), free(value), 1);
 		}
@@ -93,7 +93,7 @@ void	handle_only_key(t_data *data, char *current_arg, char *key)
 	}
 	else
 	{
-		printf("export: `%s': not a valid identifier\n", current_arg);
+		write_err("export: `", current_arg, "': not a valid identifier\n");
 		free(key);
 		data->last_exit_status = 1;
 	}

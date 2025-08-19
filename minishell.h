@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/19 01:23:31 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/19 03:38:29 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,5 +207,8 @@ t_env	**is_there_var_in_env(t_env **env, char *key, char *value);
 //redirection
 void	add_redir_to_parser(t_redirection **list, t_redirection *new_node);
 t_redirection	*new_redirection_node(t_exp *current);
+
+//write error in unset_builitin
+void	write_err(const char *msg, const char *arg, const char *msg2);
 
 #endif

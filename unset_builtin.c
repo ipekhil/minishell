@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:07:41 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/17 19:21:48 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/19 03:34:15 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,6 @@ int	unset_builtin(t_data *data, char **args)
 	while (*current_arg)
 	{
 		if (!is_valid_key(*current_arg))
-		{
-			printf("unset: `%s': not a valid identifier\n", *current_arg);
-			data->last_exit_status = 1;
-		}
-		else
 			remove_env(&data->env, *current_arg);
 		current_arg++;
 	}
