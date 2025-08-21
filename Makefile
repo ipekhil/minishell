@@ -7,6 +7,7 @@ SRCS = main.c \
 	get_env.c \
 	expander.c \
 	exp_utils.c \
+	exp_dollar.c \
 	parser.c \
 	parser_utils.c \
 	redirection.c \
@@ -17,7 +18,8 @@ SRCS = main.c \
 	executor.c \
 	apply_redir.c \
 	exec_control.c \
-	exec_child_process.c \
+	exec_child.c \
+	exec_child2.c \
 	exec_utils.c \
 	update_char_env.c \
 	export_builtin.c \

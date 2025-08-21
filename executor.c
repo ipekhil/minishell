@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/19 19:07:32 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/21 20:17:26 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ static void	handle_waiting(t_data *data, pid_t last_pid)
 	int	status;
 	int	sig;
 
+	status = 0;
+	sig = 0;
 	if (last_pid != -1)
 	{
 		waitpid(last_pid, &status, 0);

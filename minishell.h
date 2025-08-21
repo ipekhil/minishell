@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/19 19:18:21 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/19 03:59:38 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ void	expander(t_data *data);
 char	*get_value_of_key(t_data *data, char *key, int *app_fl);
 char	*extract_key(char *token_val);
 void	get_len(t_data *data, char *first_val, int i, int *len);
+void	append_value(char *exp_value, char *value, int *a_index);
 
 // Parser
 void	parser(t_data *data);
@@ -168,7 +169,7 @@ void	signal_dfl(void);
 // Executor functions
 void	executor(t_data *data);
 char	*find_command_path(char *cmd, char **env);
-char	*create_full_path(char *dir, char *cmd);
+
 //apply_redir
 void	apply_redirections(t_data *data, t_redirection *redir);
 // exec_control
@@ -177,6 +178,7 @@ void	handle_fork_error(t_parser *cmds, int *pipe_fds, int *prev_read_fd);
 void	pre_file_check(t_data *data, char *cmd, int *exit);
 //exec_child_process
 void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe);
+char	*find_command_path(char *cmd, char **env);
 //update_char_env
 char	**convert_env_to_array(t_env *env);
 //exec_utils

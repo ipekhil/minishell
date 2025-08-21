@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset_builtin.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:07:41 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/19 03:34:15 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/19 04:08:16 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ int	unset_builtin(t_data *data, char **args)
 	while (*current_arg)
 	{
 		if (!is_valid_key(*current_arg))
+			data->last_exit_status = 0;
+		else
 			remove_env(&data->env, *current_arg);
 		current_arg++;
 	}

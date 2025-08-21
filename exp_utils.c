@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 19:09:00 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/19 19:09:39 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/19 03:52:37 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,39 +33,53 @@ char	*extract_key(char *token_val)
 	return (key_to_search);
 }
 
+static char	*expand_exit_status(t_data *data, char *key, int *app_fl)
+{
+	char	*val;
+	char	*new_v;
+	int		len;
+	
+	val = ft_itoa(data->last_exit_status);
+	len = ft_strlen(val);
+	new_v = NULL;
+	if (key[1] != '\0')
+		len += ft_strlen(&key[1]);
+	new_v = malloc(len + 1);
+	if (!new_v)
+	{
+		free(val);
+		return (NULL);
+	}
+	ft_strcpy(new_v, val);
+	if (key[1] != '\0')
+		ft_strlcat(new_v, &key[1], len + 1);
+	*app_fl = 1;
+	free(val);
+	return (new_v);
+}
+
 char	*get_value_of_key(t_data *data, char *key, int *app_fl)
 {
 	t_env	*env;
-	char	*val;
-	int		len;
 	char	*new_v;
 
 	env = data->env;
-	val = NULL;
 	new_v = NULL;
+	if (key[0] == '?')
+	{
+		new_v = expand_exit_status(data, key, app_fl);
+		return (new_v);
+	}
 	while (env)
 	{
 		if (ft_strcmp(env->key, key) == 0)
 			return (env->value);
-		if (key[0] == '?')
-		{
-			val = ft_itoa(data->last_exit_status);
-			len = ft_strlen(val);
-			if (key[1] != '\0')
-				len += ft_strlen(&key[1]);
-			new_v = malloc(len + 1);
-			ft_strcpy(new_v, val);
-			ft_strlcat(new_v, &key[1], len + 1);
-			*app_fl = 1;
-			free(val);
-			return (new_v);
-		}
 		env = env->next;
 	}
 	return (NULL);
 }
 
-static void	append_value(char *exp_value, char *value, int *a_index)
+void	append_value(char *exp_value, char *value, int *a_index)
 {
 	int	i;
 
@@ -73,38 +87,6 @@ static void	append_value(char *exp_value, char *value, int *a_index)
 	if (!value)
 		return ;
 	while (value[i] != '\0')
-		exp_value[(*a_index)++] = value[i++];
+		exp_value[(*a_index)++] = value[i++];	
 }
 
-void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
-{
-	char	*key;
-	char	*value;
-	int		a_index;
-	int		append_flag;
-
-	a_index = 0;
-	key = NULL;
-	value = NULL;
-	append_flag = 0;
-	while (first_val[i] != '\0')
-	{
-		append_flag = 0;
-		if (first_val[i] == '$')
-		{
-			i++;
-			key = extract_key(&first_val[i]);
-			if (key[0] == '\0')
-				new_val[a_index++] = '$';
-			i += ft_strlen(key);
-			value = get_value_of_key(data, key, &append_flag);
-			append_value(new_val, value, &a_index);
-			free(key);
-			if (append_flag)
-				free(value);
-		}
-		else
-			new_val[a_index++] = first_val[i++];
-	}
-	new_val[a_index] = '\0';
-}

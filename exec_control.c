@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_control.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 19:00:40 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/19 19:00:41 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/21 20:27:14 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ void	pre_file_check(t_data *data, char *cmd, int *exit)
 
 	if (cmd && ft_strchr(cmd, '/'))
 	{
+		printf("aDBSA\n");
 		if (cmd && stat(cmd, &st) == 0)
 		{
+			printf("1111111aDBSA\n");
 			if (S_ISDIR(st.st_mode))
 				handle_err_and_exit(data, NULL, ": Is a directory\n", 126);
 			else if (access(cmd, X_OK) == -1)
@@ -31,8 +33,7 @@ void	pre_file_check(t_data *data, char *cmd, int *exit)
 	}
 	else if (cmd && access(cmd, F_OK) == 0)
 		handle_err_and_exit(data, cmd, ": command not found\n", 127);
-	else
-		*exit = 0;
+	*exit = 0;
 }
 
 void	handle_fork_error(t_parser *cmds, int *pipe_fds, int *prev_read_fd)
