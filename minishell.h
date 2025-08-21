@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/19 03:59:38 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/21 22:09:19 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ void	signal_dfl(void);
 
 // Executor functions
 void	executor(t_data *data);
-char	*find_command_path(char *cmd, char **env);
+char	*find_command_path(t_data *data, char *cmd, char **env);
 
 //apply_redir
 void	apply_redirections(t_data *data, t_redirection *redir);
@@ -178,7 +178,6 @@ void	handle_fork_error(t_parser *cmds, int *pipe_fds, int *prev_read_fd);
 void	pre_file_check(t_data *data, char *cmd, int *exit);
 //exec_child_process
 void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe);
-char	*find_command_path(char *cmd, char **env);
 //update_char_env
 char	**convert_env_to_array(t_env *env);
 //exec_utils

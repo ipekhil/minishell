@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:30:26 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/21 20:21:19 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/21 23:35:05 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	not_found_path(t_data *data, t_parser *cmd, char **temp_env)
 	else
 	{
 		free_array(temp_env);
-		handle_err_and_exit(data, args[0], ": Acommand not found\n", 127);
+		handle_err_and_exit(data, args[0], ": command not found\n", 127);
 	}
 }
 
@@ -43,12 +43,12 @@ void	execute_command_in_child(t_data *data, t_parser *cmd)
 		free_all(data, 1);
 		exit(1);
 	}
-	path = find_command_path(args[0], temp_env);
-	if (!path)
-		not_found_path(data, cmd, temp_env);
-	else if (execve(path, args, data->char_env) == -1)
+	free_array(data->char_env);
+	data->char_env = temp_env;
+	path = find_command_path(data, args[0], temp_env);
+	if (execve(path, args, data->char_env) == -1)
 	{
-		perror("execve");
+		perror("minishell");
 		free(path);
 		free_array(temp_env);
 		free_all(data, 1);
@@ -58,9 +58,6 @@ void	execute_command_in_child(t_data *data, t_parser *cmd)
 
 void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
 {
-	pre_file_check(data, cmd->args[0], &data->last_exit_status);
-	if (data->last_exit_status != 0)
-		return ;
 	setup_child_signals();
 	if (prev_pipe != STDIN_FILENO)
 	{

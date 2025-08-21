@@ -6,34 +6,26 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 19:00:40 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/21 20:27:14 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 01:31:16 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	pre_file_check(t_data *data, char *cmd, int *exit)
+void pre_file_check(t_data *data, char *cmd, int *exit)
 {
-	struct stat	st;
-
-	if (cmd && ft_strchr(cmd, '/'))
+    struct stat st;
+    
+	if (stat(cmd, &st) == 0) 
 	{
-		printf("aDBSA\n");
-		if (cmd && stat(cmd, &st) == 0)
-		{
-			printf("1111111aDBSA\n");
-			if (S_ISDIR(st.st_mode))
-				handle_err_and_exit(data, NULL, ": Is a directory\n", 126);
-			else if (access(cmd, X_OK) == -1)
-				handle_err_and_exit(data, NULL, ": Permission denied\n", 126);
-		}
-		else
-			handle_err_and_exit(data, NULL,
-				": No such file or directory\n", 127);
+		if (S_ISDIR(st.st_mode))
+			handle_err_and_exit(data, cmd, "Is a directory\n", 126);
+		else if (access(cmd, X_OK) == -1)
+			handle_err_and_exit(data, cmd, "Permission denied\n", 126);
 	}
-	else if (cmd && access(cmd, F_OK) == 0)
-		handle_err_and_exit(data, cmd, ": command not found\n", 127);
-	*exit = 0;
+	else
+		handle_err_and_exit(data, cmd, "No such file or directory\n", 127);
+    *exit = 0;
 }
 
 void	handle_fork_error(t_parser *cmds, int *pipe_fds, int *prev_read_fd)

@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:30:26 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/21 19:57:12 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 01:43:28 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,44 +53,56 @@ static char	**search_in_env(char **env, char **paths)
 	return (paths);
 }
 
-static char	*control_path_access(char **paths, char *cmd, char *full_path)
+static char *control_path_access(char **paths, char *cmd, char *full_path)
 {
-	int		i;
-
-	i = 0;
-	while (paths[i])
-	{
-		full_path = create_full_path(paths[i], cmd);
-		if (access(full_path, F_OK) == 0)
-		{
-			free_array(paths);
-			return (full_path);
-		}
-		free(full_path);
-		i++;
-	}
-	return (NULL);
+    int i;
+    
+    i = 0;
+    while (paths[i]) 
+    {
+        full_path = create_full_path(paths[i], cmd);
+        
+        if (full_path) 
+        {
+            if (access(full_path, F_OK) == 0 && access(full_path, X_OK) == 0)
+            {
+                free_array(paths);
+                return (full_path);
+            }
+            else
+                free(full_path);
+        }
+        i++;
+    }
+    free_array(paths);
+    return (NULL);
 }
 
-char	*find_command_path(char *cmd, char **env)
+char *find_command_path(t_data *data, char *cmd, char **env)
 {
-	char	**paths;
-	char	*full_path;
-
-	if (!cmd)
-		return (NULL);
-	if (access(cmd, F_OK) == 0)
-		return (ft_strdup(cmd));
-	paths = NULL;
-	paths = search_in_env(env, paths);
+    char **paths;
+    char *full_path;
+    struct stat st;
+    
 	full_path = NULL;
-	if (paths)
+	paths = NULL;
+    if (ft_strchr(cmd, '/'))
 	{
-		full_path = control_path_access(paths, cmd, full_path);
+        pre_file_check(data, cmd, &data->last_exit_status);
+        return (ft_strdup(cmd));
+    }
+    paths = search_in_env(env, NULL);
+    if (paths) 
+	{
+        full_path = control_path_access(paths, cmd, NULL);
 		if (full_path)
-			return (full_path);
-	}
-	free(full_path);
-	free_array(paths);
-	return (NULL);
+            return (full_path);
+    }
+    if (stat(cmd, &st) == 0) 
+        pre_file_check(data, cmd, &data->last_exit_status);
+    if (paths)
+        handle_err_and_exit(data, cmd, ": command not found\n", 127);
+    else
+        handle_err_and_exit(data, cmd, ": No such file or directory\n", 127);
+    return (NULL);
 }
