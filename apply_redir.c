@@ -6,13 +6,13 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:29:01 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/22 18:01:21 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:19:03 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_input(t_data *data, t_redirection *redir)
+static void	handle_input(t_data *data, t_redirection *redir)
 {
 	int	fd;
 
@@ -27,7 +27,7 @@ void	handle_input(t_data *data, t_redirection *redir)
 	close(fd);
 }
 
-void	handle_output(t_data *data, t_redirection *redir)
+static void	handle_output(t_data *data, t_redirection *redir)
 {
 	int	fd;
 
@@ -42,7 +42,7 @@ void	handle_output(t_data *data, t_redirection *redir)
 	close(fd);
 }
 
-void	handle_append(t_data *data, t_redirection *redir)
+static void	handle_append(t_data *data, t_redirection *redir)
 {
 	int	fd;
 
@@ -57,7 +57,7 @@ void	handle_append(t_data *data, t_redirection *redir)
 	close(fd);
 }
 
-void	handle_heredoc(t_data *data, t_redirection *redir)
+static void	handle_heredoc(t_data *data, t_redirection *redir)
 {
 	int	fd;
 

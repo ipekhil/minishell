@@ -6,13 +6,13 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:07:41 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/19 04:08:16 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:52:12 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	remove_env(t_env **env, char *key)
+static void	remove_env(t_env **env, char *key)
 {
 	t_env	*tmp;
 	t_env	*prev;

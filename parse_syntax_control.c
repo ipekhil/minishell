@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_syntax_control.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:13 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/19 19:20:59 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/22 19:04:03 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 static void	print_syntax_error(t_exp *tokens)
 {
 	if (tokens)
-		printf("-minishell: syntax error near unexpected token `%s'\n"\
-			, tokens->exp_value);
+		printf("-minishell: syntax error near unexpected token `%s'\n",
+			tokens->exp_value);
 	else
 		printf("-minishell: syntax error near unexpected token `newline'\n");
 }
@@ -44,8 +44,8 @@ static int	pipe_syntax_control(t_exp *tokens, t_exp *current)
 		print_syntax_error(current);
 		return (0);
 	}
-	if (current && current->type == 4 && \
-		current->next && current->next->type == 4)
+	if (current && current->type == 4
+		&& current->next && current->next->type == 4)
 	{
 		print_syntax_error(current->next);
 		return (0);

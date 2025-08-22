@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:20 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/18 17:18:52 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/22 19:41:28 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	add_command_to_parser(t_parser **list, t_parser *new_node)
 	current->next = new_node;
 }
 
-void	create_parser_list(t_data *data, t_exp *start, t_exp *current)
+static void	create_parser_list(t_data *data, t_exp *start, t_exp *current)
 {
 	t_parser	*new_node;
 
@@ -73,7 +73,7 @@ void	create_parser_list(t_data *data, t_exp *start, t_exp *current)
 	add_command_to_parser(&data->parser, new_node);
 }
 
-void	all_tokens_parse(t_data *data, t_exp *tokens)
+static void	all_tokens_parse(t_data *data, t_exp *tokens)
 {
 	t_exp		*current;
 	t_exp		*start;

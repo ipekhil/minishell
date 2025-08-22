@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   update_char_env.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 19:23:29 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/19 19:23:30 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/22 19:52:55 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_strjoin_three(char const *s1, char const *s2, char const *s3)
+static char	*ft_strjoin_three(char const *s1, char const *s2, char const *s3)
 {
 	char	*new_str;
 	size_t	i;

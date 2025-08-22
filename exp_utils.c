@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 19:09:00 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/19 03:52:37 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:10:55 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char	*expand_exit_status(t_data *data, char *key, int *app_fl)
 	char	*val;
 	char	*new_v;
 	int		len;
-	
+
 	val = ft_itoa(data->last_exit_status);
 	len = ft_strlen(val);
 	new_v = NULL;
@@ -87,6 +87,5 @@ void	append_value(char *exp_value, char *value, int *a_index)
 	if (!value)
 		return ;
 	while (value[i] != '\0')
-		exp_value[(*a_index)++] = value[i++];	
+		exp_value[(*a_index)++] = value[i++];
 }
-

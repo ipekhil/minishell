@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/08/19 19:23:06 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/22 19:51:47 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	conc_flag_update(int *conc_flag, int *len, char *line, int temp_i)
+static void	conc_flag_update(int *conc_flag, int *len, char *line, int temp_i)
 {
 	while (line[temp_i] && !ft_isspace(line[temp_i])
 		&& !ft_isoperator(line[temp_i]) && line[temp_i] != '"'
@@ -26,7 +26,7 @@ void	conc_flag_update(int *conc_flag, int *len, char *line, int temp_i)
 		*conc_flag = 1;
 }
 
-void	get_conc_flag(char *line, int temp_i, int *len, int *conc_flag)
+static void	get_conc_flag(char *line, int temp_i, int *len, int *conc_flag)
 {
 	char	quote;
 
@@ -45,7 +45,7 @@ void	get_conc_flag(char *line, int temp_i, int *len, int *conc_flag)
 		conc_flag_update(conc_flag, len, line, temp_i);
 }
 
-char	*extract_quoted_text(char *result, char *line, int *i, int result_i)
+static char	*extract_quoted_text(char *result, char *line, int *i, int result_i)
 {
 	if (line[*i] == '"')
 	{
@@ -73,7 +73,7 @@ char	*extract_quoted_text(char *result, char *line, int *i, int result_i)
 	return (result);
 }
 
-void	get_combined_token(t_data *data, int *i)
+static void	get_combined_token(t_data *data, int *i)
 {
 	int		len;
 	int		temp_i;

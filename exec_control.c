@@ -6,17 +6,17 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 19:00:40 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/22 01:31:16 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:09:50 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void pre_file_check(t_data *data, char *cmd, int *exit)
+void	pre_file_check(t_data *data, char *cmd, int *exit)
 {
-    struct stat st;
-    
-	if (stat(cmd, &st) == 0) 
+	struct stat	st;
+
+	if (stat(cmd, &st) == 0)
 	{
 		if (S_ISDIR(st.st_mode))
 			handle_err_and_exit(data, cmd, "Is a directory\n", 126);
@@ -25,7 +25,7 @@ void pre_file_check(t_data *data, char *cmd, int *exit)
 	}
 	else
 		handle_err_and_exit(data, cmd, "No such file or directory\n", 127);
-    *exit = 0;
+	*exit = 0;
 }
 
 void	handle_fork_error(t_parser *cmds, int *pipe_fds, int *prev_read_fd)

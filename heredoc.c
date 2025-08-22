@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 19:15:27 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/19 19:19:13 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/22 19:49:05 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ static void	expand_and_write(t_data *data, char *line, int fd)
 	free(exp_line);
 }
 
-void	read_heredoc_lines(t_data *data, char *delimiter, int fd)
+static void	read_heredoc_lines(t_data *data, char *delimiter, int fd)
 {
 	char	*line;
 
 	line = NULL;
 	g_signal_flag = 0;
-	signal_handlers_heredoc();
+	setup_signal_heredoc();
 	while (1)
 	{
 		line = readline("> ");

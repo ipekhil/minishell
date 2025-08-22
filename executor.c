@@ -6,55 +6,11 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 19:40:29 by sude              #+#    #+#             */
-/*   Updated: 2025/08/21 20:17:26 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:02:03 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	heredoc_was_interrupted(t_parser *cmds)
-{
-	while (cmds)
-	{
-		if (cmds->redirection && cmds->redirection->hdoc_int == 1)
-			return (1);
-		cmds = cmds->next;
-	}
-	return (0);
-}
-
-int	is_builtin(char *cmd)
-{
-	if (!cmd)
-		return (0);
-	if (ft_strcmp(cmd, "echo") == 0 || ft_strcmp(cmd, "cd") == 0
-		|| ft_strcmp(cmd, "pwd") == 0 || ft_strcmp(cmd, "export") == 0
-		|| ft_strcmp(cmd, "unset") == 0 || ft_strcmp(cmd, "env") == 0
-		|| ft_strcmp(cmd, "exit") == 0)
-		return (1);
-	return (0);
-}
-
-void	execute_builtin(t_data *data, char **args)
-{
-	if (!args)
-		return ;
-	if (ft_strcmp(args[0], "pwd") == 0)
-		data->last_exit_status = pwd_builtin();
-	else if (ft_strcmp(args[0], "cd") == 0)
-		data->last_exit_status = cd_builtin(data, args);
-	else if (ft_strcmp(args[0], "echo") == 0)
-		data->last_exit_status = echo_builtin(args);
-	else if (ft_strcmp(args[0], "export") == 0)
-		export_builtin(data, args);
-	else if (ft_strcmp(args[0], "unset") == 0)
-		unset_builtin(data, args);
-	else if (ft_strcmp(args[0], "env") == 0)
-		env_builtin(data, args);
-	else if (ft_strcmp(args[0], "exit") == 0)
-		exit_builtin(data, args);
-	return ;
-}
 
 static void	parent_process(int *pipe_fds, int *prev_pipe, t_parser *cmd)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 01:20:10 by sude              #+#    #+#             */
-/*   Updated: 2025/08/19 19:15:10 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/22 19:38:53 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ void	ft_lstadd_back(t_env **head, t_env *new_node)
 	}
 }
 
-//leak olur freeleme yapmak gerek returnlarda
 void	get_env(t_env **env, char **envp)
 {
 	int		i;

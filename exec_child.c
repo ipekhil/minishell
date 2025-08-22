@@ -6,13 +6,13 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:30:26 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/22 18:20:09 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:27:20 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_command_in_child(t_data *data, t_parser *cmd)
+static void	execute_command_in_child(t_data *data, t_parser *cmd)
 {
 	char	*path;
 	char	**temp_env;

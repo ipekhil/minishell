@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 17:27:41 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/19 03:38:20 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/22 19:30:18 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	write_err(const char *msg, const char *arg, const char *msg2)
 	write(2, msg2, ft_strlen(msg2));
 }
 
-int	exit_with_args(t_data *data, char **args)
+static int	exit_with_args(t_data *data, char **args)
 {
 	int	i;
 
@@ -30,7 +30,7 @@ int	exit_with_args(t_data *data, char **args)
 			i++;
 		if (!ft_isdigit(args[1][i]))
 		{
-			write_err("minishell: exit: ", args[1], \
+			write_err("minishell: exit: ", args[1],
 				": numeric argument required\n");
 			data->last_exit_status = 2;
 			data->should_exit = 1;

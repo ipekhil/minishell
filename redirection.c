@@ -6,13 +6,13 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:01 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/17 22:37:16 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:59:24 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_redirection	*new_redirection_node(t_exp *current)
+static t_redirection	*new_redirection_node(t_exp *current)
 {
 	t_redirection	*node;
 
@@ -40,7 +40,7 @@ t_redirection	*new_redirection_node(t_exp *current)
 	return (NULL);
 }
 
-void	add_redir_to_parser(t_redirection **list, t_redirection *new_node)
+static void	add_redir_to_parser(t_redirection **list, t_redirection *new_node)
 {
 	t_redirection	*current;
 
@@ -55,4 +55,49 @@ void	add_redir_to_parser(t_redirection **list, t_redirection *new_node)
 	while (current->next)
 		current = current->next;
 	current->next = new_node;
+}
+
+int	count_args(t_exp *start, t_exp *end)
+{
+	t_exp	*current;
+	int		count;
+
+	count = 0;
+	current = start;
+	while (current != end)
+	{
+		if (current->type == 5)
+			count++;
+		current = current->next;
+	}
+	return (count);
+}
+
+int	parse_command(t_exp *start, t_exp *end, t_parser *node)
+{
+	t_exp			*current;
+	t_redirection	*new_node;
+	int				count;
+
+	count = 0;
+	current = start;
+	while (current != end)
+	{
+		if (current->type == 5)
+		{
+			node->args[count++] = ft_strdup(current->exp_value);
+			current = current->next;
+		}
+		else if (current->type >= 0 && current->type <= 3)
+		{
+			new_node = new_redirection_node(current);
+			current = current->next;
+			if (new_node)
+			{
+				add_redir_to_parser(&node->redirection, new_node);
+				current = current->next;
+			}
+		}
+	}
+	return (1);
 }

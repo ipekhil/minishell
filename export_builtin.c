@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 19:20:34 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/19 03:38:49 by ubuntu           ###   ########.fr       */
+/*   Updated: 2025/08/22 19:11:13 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	export_builtin(t_data *data, char **args)
 	while (*current_arg)
 	{
 		equal_sign = ft_strchr(*current_arg, '=');
-		if (handle_key_value(data, *current_arg, equal_sign) == 0 \
+		if (handle_key_value(data, *current_arg, equal_sign) == 0
 			&& !equal_sign)
 			handle_only_key(data, *current_arg, key);
 		current_arg++;

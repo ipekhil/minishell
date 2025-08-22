@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/08/21 20:27:58 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:47:59 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	routine_loop(t_data *data)
 	while (1)
 	{
 		g_signal_flag = 0;
-		signal_handlers_main();
+		setup_signal_main();
 		data->line = readline("minishell> ");
 		if (!data->line)
 		{
@@ -48,8 +48,6 @@ void	routine_loop(t_data *data)
 		free_all(data, 0);
 		free(data->line);
 	}
-	// free_env(data->env);
-	// free_array(data->char_env);
 	exit(data->last_exit_status);
 }
 

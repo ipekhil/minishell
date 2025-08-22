@@ -6,13 +6,13 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 03:49:52 by sude              #+#    #+#             */
-/*   Updated: 2025/08/19 03:49:55 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:11:47 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void get_exp_len(t_data *data, char *first_val, int *i, int *len)
+static void	get_exp_len(t_data *data, char *first_val, int *i, int *len)
 {
 	char	*key;
 	char	*value;

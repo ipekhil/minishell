@@ -4,12 +4,12 @@ SRCS = main.c \
 	tokenization_utils.c\
 	token_operator.c\
 	free.c \
+	free2.c \
 	get_env.c \
 	expander.c \
 	exp_utils.c \
 	exp_dollar.c \
 	parser.c \
-	parser_utils.c \
 	redirection.c \
 	parse_syntax_control.c \
 	cd_builtin.c \

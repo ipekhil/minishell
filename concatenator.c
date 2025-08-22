@@ -6,13 +6,13 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 15:46:46 by sude              #+#    #+#             */
-/*   Updated: 2025/08/16 17:29:56 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 19:23:33 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_merged(t_exp *start)
+static void	free_merged(t_exp *start)
 {
 	t_exp	*tmp;
 
@@ -27,7 +27,7 @@ void	free_merged(t_exp *start)
 	}
 }
 
-int	ret_num_of_concat(t_exp *current)
+static int	ret_num_of_concat(t_exp *current)
 {
 	int			num_of_concat;
 	t_exp		*tmp;
