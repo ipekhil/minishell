@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/08/22 19:51:47 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 20:38:08 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	tokenization(t_data *data)
 
 	i = 0;
 	if (!check_unmatched_quotes(data->line))
-		return (-1);
+		return (0);
 	while (data->line[i])
 	{
 		if (ft_isspace(data->line[i]))

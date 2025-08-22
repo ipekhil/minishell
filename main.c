@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/08/23 16:14:25 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/22 20:39:10 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,7 @@ static int	process_command(t_data *data)
 {
 	if (g_signal_flag == 1)
 		data->last_exit_status = 130;
-	if (tokenization(data) == -1)
-	{
-		free_all(data, 1);
-		return (-1);
-	}
+	tokenization(data);
 	if (data->should_exit)
 	{
 		if (data->line)
