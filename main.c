@@ -6,45 +6,58 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:00 by sude              #+#    #+#             */
-/*   Updated: 2025/08/22 19:47:59 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 20:14:06 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	routine_loop(t_data *data)
+static int handle_input(t_data *data)
+{
+	data->line = readline("minishell> ");
+	if (!data->line)
+	{
+		free_all(data, 1);
+		write(0, "\n", 1);
+		write(1, "exit\n", 5);
+		return (-1);
+	}
+	if (data->line && data->line[0] != '\0')
+		add_history(data->line);	
+	return (0);
+}
+
+static int process_command(t_data *data)
+{
+	if (g_signal_flag == 1)
+		data->last_exit_status = 130;
+	if (tokenization(data) == -1)
+	{
+		free_all(data, 1);
+		return (-1);
+	}
+	if (data->should_exit)
+	{
+		if (data->line) {
+			free(data->line);
+			data->line = NULL;
+		}
+		free_all(data, 1);
+		return (-1);
+	}
+	return (0);
+}
+
+void routine_loop(t_data *data)
 {
 	while (1)
 	{
 		g_signal_flag = 0;
 		setup_signal_main();
-		data->line = readline("minishell> ");
-		if (!data->line)
-		{
-			free_all(data, 1);
-			write(0, "\n", 1);
-			write(1, "exit\n", 5);
-			break ;
-		}
-		if (data->line && data->line[0] != '\0')
-			add_history(data->line);
-		if (g_signal_flag == 1)
-			data->last_exit_status = 130;
-		if (tokenization(data) == -1)
-		{
-			free_all(data, 1);
-			return ;
-		}
-		if (data->should_exit)
-		{
-			if (data->line)
-			{
-				free(data->line);
-				data->line = NULL;
-			}
-			free_all(data, 1);
-			break ;
-		}
+		if (handle_input(data) == -1)
+			break;
+		if (process_command(data) == -1)
+			break;
 		free_all(data, 0);
 		free(data->line);
 	}
