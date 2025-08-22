@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:30:26 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/22 18:26:27 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 18:55:28 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,33 +78,42 @@ static char *control_path_access(char **paths, char *cmd, char *full_path)
     return (NULL);
 }
 
-char *find_command_path(t_data *data, char *cmd, char **env)
+char *find_relative_path(t_data *data, char *cmd, char **env)
 {
     char **paths;
     char *full_path;
     struct stat st;
+
+	full_path = NULL;
+	paths = search_in_env(env, NULL);
+	free_array(env);
+	if (paths) 
+	{
+		full_path = control_path_access(paths, cmd, NULL);
+		if (!full_path)
+    		handle_err_and_exit(data, cmd, ": command not found\n", 127);
+		if (stat(cmd, &st) == 0)
+			pre_file_check(data, cmd, &data->last_exit_status);
+		return (full_path);
+	}
+	if (stat(cmd, &st) == 0)
+		pre_file_check(data, cmd, &data->last_exit_status);
+	else
+		handle_err_and_exit(data, cmd, ": No such file or directory\n", 127);
+	return (NULL);
+}
+
+char *find_command_path(t_data *data, char *cmd, char **env)
+{
+    char *full_path;
     
 	full_path = NULL;
-	paths = NULL;
-    if (ft_strchr(cmd, '/'))
+	if (ft_strchr(cmd, '/'))
 	{
-        free_array(env);
-        pre_file_check(data, cmd, &data->last_exit_status);
-        return (ft_strdup(cmd));
+		free_array(env);
+		pre_file_check(data, cmd, &data->last_exit_status);
+		return (ft_strdup(cmd));
     }
-    paths = search_in_env(env, NULL);
-    free_array(env);
-    if (paths) 
-	{
-        full_path = control_path_access(paths, cmd, NULL);
-		if (full_path)
-            return (full_path);
-    }
-    if (stat(cmd, &st) == 0)
-        pre_file_check(data, cmd, &data->last_exit_status);
-    if (paths)
-        handle_err_and_exit(data, cmd, ": command not found\n", 127);
-    else
-        handle_err_and_exit(data, cmd, ": No such file or directory\n", 127);
-    return (NULL);
+	full_path = find_relative_path(data, cmd, env);
+	return (full_path);
 }
