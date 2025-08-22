@@ -6,29 +6,11 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:30:26 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/21 23:35:05 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/22 18:20:09 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	not_found_path(t_data *data, t_parser *cmd, char **temp_env)
-{
-	char	**args;
-
-	args = cmd->args;
-	if (cmd->redirection && !args[0])
-	{
-		free_array(temp_env);
-		free_all(data, 1);
-		exit(0);
-	}
-	else
-	{
-		free_array(temp_env);
-		handle_err_and_exit(data, args[0], ": command not found\n", 127);
-	}
-}
 
 void	execute_command_in_child(t_data *data, t_parser *cmd)
 {
@@ -37,14 +19,17 @@ void	execute_command_in_child(t_data *data, t_parser *cmd)
 	char	**args;
 
 	args = cmd->args;
+	if (cmd->redirection && !args[0])
+	{
+		free_all(data, 1);
+		exit(0);
+	}
 	temp_env = convert_env_to_array(data->env);
 	if (!temp_env)
 	{
 		free_all(data, 1);
 		exit(1);
 	}
-	free_array(data->char_env);
-	data->char_env = temp_env;
 	path = find_command_path(data, args[0], temp_env);
 	if (execve(path, args, data->char_env) == -1)
 	{
