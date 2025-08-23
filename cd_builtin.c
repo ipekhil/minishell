@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 16:47:56 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/22 19:22:02 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/23 16:36:20 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,14 @@ static int	change_directory(char *target, t_env **env)
 		return (1);
 	if (chdir(target) == -1)
 	{
-		perror("cd");
+		perror("minishell: cd");
 		free(current_directory);
 		return (1);
 	}
 	new_pwd = getcwd(NULL, 0);
 	if (!new_pwd)
 	{
-		perror("cd");
+		perror("minishell: cd");
 		free(current_directory);
 		return (1);
 	}

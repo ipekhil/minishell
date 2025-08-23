@@ -6,7 +6,7 @@
 /*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 03:49:52 by sude              #+#    #+#             */
-/*   Updated: 2025/08/23 16:20:58 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/23 16:24:03 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,12 @@ void	get_len(t_data *data, char *first_val, int i, int *len)
 	}
 }
 
-static void	handle_dollar_expansion(t_data *data, char *first_val, int *i, char *new_val, int *a_index)
+static void	handle_dollar_expansion(t_data *data, char *key, char *new_val, int *a_index)
 {
-	char	*key;
 	char	*value;
 	int		append_flag;
 
 	append_flag = 0;
-	(*i)++;
-	key = extract_key(&first_val[*i]);
-	if (key[0] == '\0')
-		new_val[(*a_index)++] = '$';
-	*i += ft_strlen(key);
 	value = get_value_of_key(data, key, &append_flag);
 	append_value(new_val, value, a_index);
 	free(key);
@@ -69,13 +63,22 @@ static void	handle_dollar_expansion(t_data *data, char *first_val, int *i, char 
 
 void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 {
-	int	a_index;
-
+	int		a_index;
+	char	*key;
+	
 	a_index = 0;
+	key = NULL;
 	while (first_val[i] != '\0')
 	{
 		if (first_val[i] == '$')
-			handle_dollar_expansion(data, first_val, &i, new_val, &a_index);
+		{
+			i++;
+			key = extract_key(&first_val[i]);
+			if (key[0] == '\0')
+				new_val[(a_index)++] = '$';
+			i += ft_strlen(key);
+			handle_dollar_expansion(data, key, new_val, &a_index);
+		}
 		else
 			new_val[a_index++] = first_val[i++];
 	}

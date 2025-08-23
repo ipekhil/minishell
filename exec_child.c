@@ -6,7 +6,7 @@
 /*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:30:26 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/23 15:56:29 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/23 16:35:07 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	execute_command_in_child(t_data *data, t_parser *cmd)
 	path = find_command_path(data, args[0], temp_env);
 	if (execve(path, args, data->char_env) == -1)
 	{
-		perror("minishell");
+		perror("minishell: ");
 		free(path);
 		free_all(data, 1);
 		exit(127);
