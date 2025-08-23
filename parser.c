@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:20 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/22 19:41:28 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/23 19:42:12 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static t_parser	*new_parser_node(t_exp *start, t_exp *end)
 	if (!parse_command(start, end, node))
 	{
 		node->is_error = 1;
-		printf("HATA\n");
 		return (NULL);
 	}
 	node->args[count] = NULL;

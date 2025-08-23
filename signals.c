@@ -6,7 +6,7 @@
 /*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:53:20 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/23 16:24:48 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/23 19:33:44 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ volatile sig_atomic_t	g_signal_flag = 0;
 static void	signal_handler(int signum)
 {
 	(void)signum;
+	write(STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
