@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_child2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:30:26 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/22 19:27:31 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/23 16:15:32 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,10 @@ static char	*find_relative_path(t_data *data, char *cmd, char **env)
 		if (!full_path)
 			handle_err_and_exit(data, cmd, ": command not found\n", 127);
 		if (stat(cmd, &st) == 0)
+		{
+			free(full_path);
 			pre_file_check(data, cmd, &data->last_exit_status);
+		}
 		return (full_path);
 	}
 	if (stat(cmd, &st) == 0)

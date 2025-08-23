@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 19:15:27 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/22 19:49:05 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/23 16:07:48 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ static void	read_heredoc_lines(t_data *data, char *delimiter, int fd)
 		if (!line)
 		{
 			if (g_signal_flag != 2)
-				printf("minishell: warning: here-document \
-					delimited by end-of-file (wanted '%s')\n", delimiter);
+				printf("minishell: warning: here-document\
+delimited by end-of-file (wanted '%s')\n", delimiter);
 			break ;
 		}
 		if (!ft_strcmp(line, delimiter))

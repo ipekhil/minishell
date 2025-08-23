@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 19:15:47 by sude              #+#    #+#             */
-/*   Updated: 2025/08/22 19:15:50 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/23 16:14:46 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	free_token(t_token *head)
 		current = next;
 	}
 }
-
 
 void	free_expander(t_exp *head)
 {

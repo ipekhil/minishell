@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:30:26 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/22 19:27:20 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/23 15:56:29 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static void	execute_command_in_child(t_data *data, t_parser *cmd)
 	{
 		perror("minishell");
 		free(path);
-		free_array(temp_env);
 		free_all(data, 1);
 		exit(127);
 	}
