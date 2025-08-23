@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:30:26 by ubuntu            #+#    #+#             */
-/*   Updated: 2025/08/23 16:35:07 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/23 22:30:18 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static void	execute_command_in_child(t_data *data, t_parser *cmd)
 	}
 }
 
-void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe)
+void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prv_pipe)
 {
 	setup_child_signals();
-	if (prev_pipe != STDIN_FILENO)
+	if (prv_pipe != STDIN_FILENO)
 	{
-		dup2(prev_pipe, STDIN_FILENO);
-		close(prev_pipe);
+		dup2(prv_pipe, STDIN_FILENO);
+		close(prv_pipe);
 	}
 	if (cmd->next)
 	{

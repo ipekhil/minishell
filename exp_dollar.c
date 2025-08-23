@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_dollar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 03:49:52 by sude              #+#    #+#             */
-/*   Updated: 2025/08/23 16:24:03 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/23 22:32:06 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,14 @@ void	get_len(t_data *data, char *first_val, int i, int *len)
 	}
 }
 
-static void	handle_dollar_expansion(t_data *data, char *key, char *new_val, int *a_index)
+static void	handle_dollar_exp(t_data *data, char *key, char *new, int *a_idx)
 {
 	char	*value;
 	int		append_flag;
 
 	append_flag = 0;
 	value = get_value_of_key(data, key, &append_flag);
-	append_value(new_val, value, a_index);
+	append_value(new, value, a_idx);
 	free(key);
 	if (append_flag)
 		free(value);
@@ -65,7 +65,7 @@ void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 {
 	int		a_index;
 	char	*key;
-	
+
 	a_index = 0;
 	key = NULL;
 	while (first_val[i] != '\0')
@@ -77,7 +77,7 @@ void	expand_token_value(t_data *data, char *first_val, char *new_val, int i)
 			if (key[0] == '\0')
 				new_val[(a_index)++] = '$';
 			i += ft_strlen(key);
-			handle_dollar_expansion(data, key, new_val, &a_index);
+			handle_dollar_exp(data, key, new_val, &a_index);
 		}
 		else
 			new_val[a_index++] = first_val[i++];

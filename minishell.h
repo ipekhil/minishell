@@ -6,7 +6,7 @@
 /*   By: sude <sude@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:21:05 by sude              #+#    #+#             */
-/*   Updated: 2025/08/22 20:04:20 by sude             ###   ########.fr       */
+/*   Updated: 2025/08/23 22:29:38 by sude             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ int		env_builtin(t_data *data, char **args);
 void	exit_builtin(t_data *data, char **args);
 void	write_err(const char *msg, const char *arg, const char *msg2);
 //export_builtin.c
-int	export_builtin(t_data *data, char **args);
+int		export_builtin(t_data *data, char **args);
 t_env	**is_there_var_in_env(t_env **env, char *key, char *value);
 //pwd_builtin.c
 int		pwd_builtin(void);
@@ -132,7 +132,7 @@ int		pwd_builtin(void);
 int		unset_builtin(t_data *data, char **args);
 int		is_valid_key(char *key);
 //exec_child.c
-void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prev_pipe);
+void	child_process(t_data *data, t_parser *cmd, int *pipe_fds, int prv_pipe);
 //exec_child2.c
 char	*find_command_path(t_data *data, char *cmd, char **env);
 //exec_control.c
