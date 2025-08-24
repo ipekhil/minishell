@@ -94,6 +94,7 @@ static char	*find_relative_path(t_data *data, char *cmd, char **env)
 		if (stat(cmd, &st) == 0)
 		{
 			free(full_path);
+			full_path = NULL;
 			pre_file_check(data, cmd, &data->last_exit_status);
 		}
 		return (full_path);
