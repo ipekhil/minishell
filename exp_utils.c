@@ -22,7 +22,8 @@ char	*extract_key(char *token_val)
 	i = -1;
 	while (token_val[l] && !ft_isspace(token_val[l])
 		&& token_val[l] != '"' && token_val[l] != '\''
-		&& token_val[l] != '$')
+		&& token_val[l] != '$'  && token_val[l] != '/'
+		&& token_val[l] != ':')
 		l++;
 	key_to_search = malloc(sizeof(char) * (l + 1));
 	if (!key_to_search)
