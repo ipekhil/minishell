@@ -97,7 +97,10 @@ void	parser(t_data *data)
 	if (!data || !data->expander)
 		return ;
 	if (!syntax_control(data->expander))
+	{
+		data->last_exit_status = 2;
 		return ;
+	}
 	all_tokens_parse(data, data->expander);
 	executor(data);
 	free_parser(data->parser);
