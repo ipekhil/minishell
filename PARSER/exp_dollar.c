@@ -27,6 +27,8 @@ static void	get_exp_len(t_data *data, char *first_val, int *i, int *len)
 		*len += 1;
 	*i += ft_strlen(key);
 	value = get_value_of_key(data, key, &app_flag);
+	if (value == NULL)
+		*len = -1;
 	if (value)
 		*len += ft_strlen(value);
 	free(key);
