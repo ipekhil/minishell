@@ -6,7 +6,7 @@
 /*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/08/25 14:51:16 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/25 19:56:20 by staylan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,12 @@ int	tokenization(t_data *data)
 		else
 			get_combined_token(data, &i);
 	}
+	// t_token *tmp = data->tokens;
+	// while(tmp)
+	// {
+	// 	printf("token: %s\n", tmp->value);
+	// 	tmp=tmp->next;
+	// }
 	expander(data);
 	return (0);
 }
