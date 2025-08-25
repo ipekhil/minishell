@@ -74,7 +74,7 @@ void	expander(t_data *data)
 	{
 		len = 0;
 		get_len(data, tmp->value, 0, &len);
-		if (len != 0)
+		if (len != -1)
 		{
 			add_exp_node(data, tmp, expand_flag);
 			expand_flag = 1;
