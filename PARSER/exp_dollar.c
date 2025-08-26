@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_dollar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hiipek <hiipek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 03:49:52 by sude              #+#    #+#             */
-/*   Updated: 2025/08/25 23:12:58 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/26 16:30:37 by hiipek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,16 @@ static void	get_exp_len(t_data *data, char *first_val, int *i, int *len)
 	(*i)++;
 	key = extract_key(&(first_val[*i]));
 	if (key[0] == '\0')
+	{
 		*len += 1;
+		free(key);
+		return ;
+	}
 	*i += ft_strlen(key);
 	value = get_value_of_key(data, key, &app_flag);
-	if (value == NULL)
+	if (*len == 0 && value == NULL)
 		*len = -1;
-	if (value)
+	else if (value)
 		*len += ft_strlen(value);
 	free(key);
 	if (app_flag)

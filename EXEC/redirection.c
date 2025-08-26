@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hiipek <hiipek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:01 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/25 14:51:16 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/26 16:08:09 by hiipek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,13 @@ int	parse_command(t_exp *start, t_exp *end, t_parser *node)
 
 	count = 0;
 	current = start;
+	new_node = NULL;
 	while (current != end)
 	{
 		if (current->type == 5)
 		{
-			node->args[count++] = ft_strdup(current->exp_value);
+			node->args[count] = ft_strdup(current->exp_value);
+			count++;
 			current = current->next;
 		}
 		else if (current->type >= 0 && current->type <= 3)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hiipek <hiipek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 00:25:07 by sude              #+#    #+#             */
-/*   Updated: 2025/08/25 19:56:20 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/26 15:47:46 by hiipek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,10 @@ int	tokenization(t_data *data)
 
 	i = 0;
 	if (!check_unmatched_quotes(data->line))
+	{
+		data->last_exit_status = 2;	
 		return (0);
+	}
 	while (data->line[i])
 	{
 		if (ft_isspace(data->line[i]))
@@ -120,12 +123,6 @@ int	tokenization(t_data *data)
 		else
 			get_combined_token(data, &i);
 	}
-	// t_token *tmp = data->tokens;
-	// while(tmp)
-	// {
-	// 	printf("token: %s\n", tmp->value);
-	// 	tmp=tmp->next;
-	// }
 	expander(data);
 	return (0);
 }

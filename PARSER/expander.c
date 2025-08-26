@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hiipek <hiipek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 15:32:19 by sude              #+#    #+#             */
-/*   Updated: 2025/08/25 20:23:07 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/26 16:27:32 by hiipek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void	expand_with_variables(t_data *data, t_token *token, t_exp *node)
 
 	len = 0;
 	get_len(data, token->value, 0, &len);
+	//printf("%d\n", len);
 	node->exp_value = malloc(sizeof(char) * (len + 1));
 	if (!node->exp_value)
 		return ;
@@ -70,10 +71,12 @@ void	expander(t_data *data)
 	tmp = data->tokens;
 	data->expander = NULL;
 	expand_flag = 1;
+	len = 0;
 	while (tmp)
 	{
 		len = 0;
-		get_len(data, tmp->value, 0, &len);
+		if (tmp->type == 8 || tmp->type == 9)
+			get_len(data, tmp->value, 0, &len);
 		if (len != -1)
 		{
 			add_exp_node(data, tmp, expand_flag);

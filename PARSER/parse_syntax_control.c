@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_syntax_control.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: staylan <staylan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hiipek <hiipek@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 20:39:13 by hilalipek         #+#    #+#             */
-/*   Updated: 2025/08/25 14:51:16 by staylan          ###   ########.fr       */
+/*   Updated: 2025/08/26 15:46:59 by hiipek           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 static void	print_syntax_error(t_exp *tokens)
 {
 	if (tokens)
-		printf("-minishell: syntax error near unexpected token `%s'\n",
+		printf("minishell: syntax error near unexpected token `%s'\n",
 			tokens->exp_value);
 	else
-		printf("-minishell: syntax error near unexpected token `newline'\n");
+		printf("minishell: syntax error near unexpected token `newline'\n");
 }
 
 static int	heredoc_syntax_control(t_exp *token)
